@@ -1,0 +1,24 @@
+{
+  "url": "https://realfirmware.net/etiqueta-producto/zte/",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Fri, 27 Feb 2026 22:46:11 GMT",
+    "Content-Type": "text/html; charset=UTF-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding",
+    "X-Cache-Enabled": "True",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "X-UA-Compatible": "IE=edge",
+    "Permissions-Policy": "private-state-token-redemption=(self \"https://www.google.com\" \"https://www.gstatic.com\" \"https://recaptcha.net\" \"https://challenges.cloudflare.com\" \"https://hcaptcha.com\"), private-state-token-issuance=(self \"https://www.google.com\" \"https://www.gstatic.com\" \"https://recaptcha.net\" \"https://challenges.cloudflare.com\" \"https://hcaptcha.com\")",
+    "Link": "<https://realfirmware.net/wp-json/>; rel=\"https://api.w.org/\", <https://realfirmware.net/wp-json/wp/v2/product_tag/26>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+    "Set-Cookie": "_http_accept:image/webp=1; path=/",
+    "X-Httpd": "1",
+    "Host-Header": "6b7412fb82ca5edfd0917e3957f05d89",
+    "X-Proxy-Cache": "MISS",
+    "X-Proxy-Cache-Info": "0 NC:000000 UP:SKIP_CACHE_SET_COOKIE",
+    "Content-Encoding": "gzip"
+  }
+}

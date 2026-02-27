@@ -1,0 +1,22 @@
+{
+  "url": "https://realfirmware.net/personalizar-cookies/",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Fri, 27 Feb 2026 22:46:50 GMT",
+    "Content-Type": "text/html; charset=UTF-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding",
+    "X-Cache-Enabled": "True",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "X-UA-Compatible": "IE=edge",
+    "Permissions-Policy": "private-state-token-redemption=(self \"https://www.google.com\" \"https://www.gstatic.com\" \"https://recaptcha.net\" \"https://challenges.cloudflare.com\" \"https://hcaptcha.com\"), private-state-token-issuance=(self \"https://www.google.com\" \"https://www.gstatic.com\" \"https://recaptcha.net\" \"https://challenges.cloudflare.com\" \"https://hcaptcha.com\")",
+    "Link": "<https://realfirmware.net/wp-json/>; rel=\"https://api.w.org/\", <https://realfirmware.net/wp-json/wp/v2/pages/541>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\", <https://realfirmware.net/?p=541>; rel=shortlink",
+    "X-Httpd": "1",
+    "Host-Header": "8441280b0c35cbc1147f8ba998a563a7",
+    "X-Proxy-Cache": "HIT",
+    "Content-Encoding": "gzip"
+  }
+}

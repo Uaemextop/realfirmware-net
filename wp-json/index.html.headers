@@ -1,0 +1,23 @@
+{
+  "url": "https://realfirmware.net/wp-json/",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Fri, 27 Feb 2026 22:46:43 GMT",
+    "Content-Type": "application/json; charset=UTF-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding, Origin",
+    "X-Robots-Tag": "noindex",
+    "Link": "<https://realfirmware.net/wp-json/>; rel=\"https://api.w.org/\"",
+    "Access-Control-Expose-Headers": "X-WP-Total, X-WP-TotalPages, Link",
+    "Access-Control-Allow-Headers": "Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1; mode=block",
+    "Allow": "GET",
+    "X-Httpd": "1",
+    "Host-Header": "8441280b0c35cbc1147f8ba998a563a7",
+    "X-Proxy-Cache": "HIT",
+    "Content-Encoding": "gzip"
+  }
+}
