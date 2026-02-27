@@ -1,0 +1,18 @@
+{
+  "url": "https://realfirmware.net/wp-content/uploads/woocommerce_uploads/2023/04/Firmware-totalplay-HG8145V5-R021-produc-id-G08-G75-V5H-el7eej.zip",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Fri, 27 Feb 2026 23:02:50 GMT",
+    "Content-Type": "application/zip",
+    "Content-Length": "40544567",
+    "Last-Modified": "Thu, 27 Apr 2023 20:02:53 GMT",
+    "Connection": "keep-alive",
+    "ETag": "\"644ad4ed-26aa937\"",
+    "Expires": "Wed, 26 Aug 2026 23:02:50 GMT",
+    "Cache-Control": "max-age=15552000",
+    "Host-Header": "8441280b0c35cbc1147f8ba998a563a7",
+    "X-Proxy-Cache-Info": "DT:1",
+    "Accept-Ranges": "bytes"
+  }
+}

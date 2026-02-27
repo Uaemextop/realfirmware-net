@@ -1,0 +1,18 @@
+{
+  "url": "https://realfirmware.net/wp-content/uploads/woocommerce_uploads/2022/11/F670L_V1.1.20P1N55-bi4zab.zip",
+  "status_code": 200,
+  "headers": {
+    "Server": "nginx",
+    "Date": "Fri, 27 Feb 2026 23:01:53 GMT",
+    "Content-Type": "application/zip",
+    "Content-Length": "19150792",
+    "Last-Modified": "Sun, 13 Nov 2022 08:11:31 GMT",
+    "Connection": "keep-alive",
+    "ETag": "\"6370a6b3-12437c8\"",
+    "Expires": "Wed, 26 Aug 2026 23:01:53 GMT",
+    "Cache-Control": "max-age=15552000",
+    "Host-Header": "8441280b0c35cbc1147f8ba998a563a7",
+    "X-Proxy-Cache-Info": "DT:1",
+    "Accept-Ranges": "bytes"
+  }
+}

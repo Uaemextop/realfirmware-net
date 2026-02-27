@@ -1,0 +1,18 @@
+
+PASOS PARA DESBLOQUEAR LA ONT MEDIATE SUPER USER
+
+1 INGRESAR A LA ONT V5 DE TOTALPLAY CON root admin
+
+2 ya dentro de la ont le bamos a dar un reset y
+reset defauld configuracion.
+
+3 cuando vueva y encienda entre con este usuario y contraseña
+
+user: telecomadmin	
+pass: F0xB734Fr3@j%YEP
+
+queda liberada para su funcionamiento 
+wan, vlan, puertos entre otras opciones para su 
+correcto funcionamiento.
+
+www.realfirmware.net
