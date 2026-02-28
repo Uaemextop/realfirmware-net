@@ -1,0 +1,19 @@
+Desde que subio el firmware negro nucom resetear el equipo
+por el boton y entrar con ese usuario.
+
+user admin
+pass NuCom
+
+cambiar logo
+http://192.168.100.1/modifyLogo.asp
+300x48
+
+poner ont en epon
+http://192.168.100.1/epon.asp
+
+desactiva el boton reset disable
+http://192.168.100.1/noreset.asp
+
+www.realfirmware.net 
+clave del wifi atw
+password

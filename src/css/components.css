@@ -191,12 +191,19 @@
 /* ── Filters ── */
 .filters {
   padding: 0 0 10px;
-  display: none;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  animation: fadeSlideDown 0.2s ease;
 }
-.filters.show { display: flex; }
+.filters.show {
+  max-height: 200px;
+  opacity: 1;
+  padding: 0 0 10px;
+}
 
 .filter-group {
   display: flex;
@@ -767,6 +774,31 @@
   font-size: var(--font-sm);
   color: var(--text2);
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Collapsible sections (reusable) ── */
+.collapsible-section .section-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+}
+.collapsible-section .section-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  max-height: 800px;
+  opacity: 1;
+  margin-top: var(--space-md);
+}
+.collapsible-section.collapsed .section-content {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+.collapsible-section.collapsed .panel-toggle svg {
+  transform: rotate(-90deg);
 }
 
 /* ── Chart ── */
