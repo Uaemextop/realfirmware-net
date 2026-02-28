@@ -32,7 +32,7 @@ async function initStats() {
   document.getElementById('statSize').textContent = formatBytes(totalSize);
   document.getElementById('statDevices').textContent = devices.size;
   document.getElementById('statIsps').textContent = isps.size;
-  document.getElementById('statCategories').textContent = data.categories.length;
+  document.getElementById('statCategories').textContent = data.types.length;
   document.getElementById('statExtensions').textContent = exts.size;
 
   // Render charts

@@ -60,8 +60,8 @@ export function sortEntries(entries, sortKey, sortAsc) {
     switch (sortKey) {
       case 'name': cmp = a.name.localeCompare(b.name, undefined, { numeric: true }); break;
       case 'size': cmp = (a.size || 0) - (b.size || 0); break;
-      case 'type': cmp = (a.ext || '').localeCompare(b.ext || ''); break;
-      case 'category': cmp = (a.category || '').localeCompare(b.category || ''); break;
+      case 'type': cmp = (a.type || '').localeCompare(b.type || ''); break;
+      case 'device': cmp = (a.device || '').localeCompare(b.device || ''); break;
       case 'modified': cmp = (a.modified || '').localeCompare(b.modified || ''); break;
     }
     return sortAsc ? cmp : -cmp;
@@ -128,7 +128,7 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
         </td>
         <td class="fsize col-size">${formatBytes(r.size)}</td>
         <td class="col-type"><span class="ftype">${r.type || e || '—'}</span></td>
-        <td class="col-cat">${r.category || '—'}</td>
+        <td class="col-cat">${r.device || '—'}</td>
         <td class="col-mod">${modDate}</td>
         <td>
           <div class="actions-cell">

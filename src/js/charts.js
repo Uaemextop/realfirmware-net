@@ -15,7 +15,7 @@ const COLORS = [
 export function renderCategoryChart(canvas, files) {
   const counts = {};
   files.forEach(f => {
-    const cat = f.category || 'other';
+    const cat = f.type || 'other';
     counts[cat] = (counts[cat] || 0) + 1;
   });
   const labels = Object.keys(counts).sort();

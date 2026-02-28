@@ -8,10 +8,10 @@ const FILTER_IDS = ['fCat', 'fDev', 'fIsp', 'fType'];
  * Populate filter dropdowns from index metadata
  */
 export function populateFilters(data) {
-  addOptions('#fCat', data.categories || []);
+  addOptions('#fCat', data.types || []);
   addOptions('#fDev', data.devices || []);
   addOptions('#fIsp', data.isps || []);
-  addOptions('#fType', data.types || []);
+  addOptions('#fType', (data.extensions || []).map(e => '.' + e));
 }
 
 function addOptions(selector, items) {
@@ -35,13 +35,13 @@ export function applyFilters(files) {
   const cat = val('#fCat');
   const dev = val('#fDev');
   const isp = val('#fIsp');
-  const type = val('#fType');
+  const ext = val('#fType');
 
   let result = files;
-  if (cat) result = result.filter(f => f.category === cat);
+  if (cat) result = result.filter(f => f.type === cat);
   if (dev) result = result.filter(f => f.device === dev);
   if (isp) result = result.filter(f => f.isp === isp);
-  if (type) result = result.filter(f => f.type === type);
+  if (ext) result = result.filter(f => '.' + f.ext === ext);
   return result;
 }
 
@@ -49,7 +49,7 @@ export function applyFilters(files) {
  * Render active filter tags
  */
 export function renderFilterTags(container, onChange) {
-  const labels = { fCat: 'Category', fDev: 'Device', fIsp: 'ISP', fType: 'Type' };
+  const labels = { fCat: 'Type', fDev: 'Device', fIsp: 'ISP', fType: 'Extension' };
   let html = '';
   FILTER_IDS.forEach(id => {
     const v = val('#' + id);

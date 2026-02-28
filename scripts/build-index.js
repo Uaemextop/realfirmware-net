@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Build script: scans firmware-extracted/ and generates file-index.json
- * with enriched metadata (category, device, ISP, extension, type label).
+ * build-index.js — Scans firmware-extracted/ and generates file-index.json
+ * with enriched metadata: device, category, ISP, extension, type, SHA256 hash.
  */
 const fs = require('fs');
 const path = require('path');
@@ -20,7 +20,12 @@ const TYPE_MAP = {
 };
 
 function getTypeLabel(ext) {
-  return TYPE_MAP[ext] || 'File';
+  return TYPE_MAP[ext] || 'Other';
+}
+
+function sha256(filePath) {
+  const data = fs.readFileSync(filePath);
+  return crypto.createHash('sha256').update(data).digest('hex');
 }
 
 function walkDir(dir) {
@@ -38,46 +43,49 @@ function walkDir(dir) {
 
 const files = walkDir(BASE);
 const index = files.map(fp => {
-  const rel = path.relative(path.join(__dirname, '..'), fp);
+  const rel = path.relative(path.join(__dirname, '..'), fp).replace(/\\/g, '/');
   const st = fs.statSync(fp);
   const parts = path.relative(BASE, fp).split(path.sep);
-  // Structure: category/device/isp/filename  (files at root have parts.length=1)
-  const category = parts.length > 1 ? parts[0] : '';
-  const device = parts.length > 2 ? parts[1] : '';
-  const isp = parts.length > 3 ? parts[2] : '';
+  // Structure: Device/ISP/filename (or root files like MANIFEST.txt)
   const fileName = parts[parts.length - 1];
+  const device = parts.length >= 3 ? parts[0] : (parts.length === 2 ? parts[0] : '');
+  const isp = parts.length >= 3 ? parts[1] : '';
   const ext = path.extname(fileName).replace('.', '').toLowerCase();
+  const size = st.size;
+  const type = getTypeLabel(ext);
 
   return {
-    path: rel.replace(/\\/g, '/'),
+    path: rel,
     name: fileName,
-    size: st.st_size !== undefined ? st.st_size : st.size,
+    size,
     modified: st.mtime.toISOString(),
-    category,
     device,
     isp,
     ext,
-    type: getTypeLabel(ext)
+    type,
+    sha256: sha256(fp)
   };
 }).sort((a, b) => a.path.localeCompare(b.path));
 
-// Also build aggregated metadata
-const categories = [...new Set(index.map(f => f.category))].filter(Boolean).sort();
-const devices = [...new Set(index.map(f => f.device))].filter(Boolean).sort();
-const isps = [...new Set(index.map(f => f.isp))].filter(Boolean).sort();
+// Aggregated metadata
+const devices = [...new Set(index.map(f => f.device).filter(Boolean))].sort();
+const isps = [...new Set(index.map(f => f.isp).filter(Boolean))].sort();
 const types = [...new Set(index.map(f => f.type))].sort();
+const extensions = [...new Set(index.map(f => f.ext).filter(Boolean))].sort();
 const totalSize = index.reduce((s, f) => s + f.size, 0);
 
 const output = {
   generated: new Date().toISOString(),
   totalFiles: index.length,
   totalSize,
-  categories,
   devices,
   isps,
   types,
+  extensions,
   files: index
 };
 
 fs.writeFileSync(OUT, JSON.stringify(output, null, 2));
-console.log(`Generated ${OUT} — ${index.length} files, ${(totalSize / 1024 / 1024).toFixed(1)} MB total`);
+console.log(`Generated ${OUT}`);
+console.log(`  ${index.length} files, ${(totalSize / 1024 / 1024).toFixed(1)} MB`);
+console.log(`  ${devices.length} devices, ${types.length} types, ${isps.length} ISPs`);
