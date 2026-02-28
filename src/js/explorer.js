@@ -176,20 +176,15 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
   // File name click handler
   tbody.querySelectorAll('.file-name-btn').forEach(b => {
     b.addEventListener('click', () => {
-      const isPreviewable = b.dataset.previewable === 'true';
-      if (isPreviewable) {
-        const fileData = {
-          size: parseInt(b.dataset.size) || 0,
-          modified: b.dataset.modified || '',
-          type: b.dataset.type || '',
-          device: b.dataset.device || '',
-          hash: b.dataset.hash || ''
-        };
-        callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext, fileData);
-      } else {
-        // For non-previewable files, open in new tab
-        window.open(b.dataset.url, '_blank');
-      }
+      const fileData = {
+        size: parseInt(b.dataset.size) || 0,
+        modified: b.dataset.modified || '',
+        type: b.dataset.type || '',
+        device: b.dataset.device || '',
+        hash: b.dataset.hash || ''
+      };
+      // Always show preview panel for all files
+      callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext, fileData);
     });
   });
   // File selection checkboxes

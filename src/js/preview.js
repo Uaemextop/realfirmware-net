@@ -237,22 +237,44 @@ export async function showPreview(url, fileName, ext, modal, fileData) {
     }
 
     // For text files, fetch and display content
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const text = await resp.text();
-    fileContent = text;
+    if (isText(ext)) {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+      fileContent = text;
 
-    const previewHtml = renderPreview(text, ext);
+      const previewHtml = renderPreview(text, ext);
+      const metadataHtml = renderMetadata({ ...fileData, name: fileName, ext, url });
+      const actionsHtml = renderActions({ url, name: fileName }, canCopyContent);
+
+      body.innerHTML = `
+        <div class="preview-content">${previewHtml}</div>
+        ${metadataHtml}
+        ${actionsHtml}
+      `;
+
+      bindActionButtons(body, url, fileContent);
+      return;
+    }
+
+    // For unknown/other file types, show metadata and download option
+    const previewHtml = `<div style="text-align:center;padding:var(--space-xl);color:var(--text2)">
+      <svg viewBox="0 0 24 24" width="64" height="64" style="fill:var(--text3);margin-bottom:var(--space-md)">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/>
+        <path d="M14 2v6h6"/>
+      </svg>
+      <p style="font-size:var(--font-md);margin-bottom:var(--space-sm);color:var(--text)">File Preview Not Available</p>
+      <p style="font-size:var(--font-sm)">Use the download button below to access this file</p>
+    </div>`;
     const metadataHtml = renderMetadata({ ...fileData, name: fileName, ext, url });
-    const actionsHtml = renderActions({ url, name: fileName }, canCopyContent);
+    const actionsHtml = renderActions({ url, name: fileName }, false);
 
     body.innerHTML = `
       <div class="preview-content">${previewHtml}</div>
       ${metadataHtml}
       ${actionsHtml}
     `;
-
-    bindActionButtons(body, url, fileContent);
+    bindActionButtons(body, url, null);
   } catch (e) {
     body.innerHTML = `
       <div style="text-align:center;padding:var(--space-xl)">
