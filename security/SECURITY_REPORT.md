@@ -8,7 +8,7 @@
 
 ## Resumen Ejecutivo
 
-Se analizó el crawl completo del sitio realfirmware.net y se identificaron **12 vulnerabilidades o fallos de seguridad** clasificados por severidad. A continuación se documenta cada hallazgo con su ubicación, impacto y recomendación.
+Se analizó el crawl completo del sitio realfirmware.net y se identificaron **13 vulnerabilidades o fallos de seguridad** clasificados por severidad. A continuación se documenta cada hallazgo con su ubicación, impacto y recomendación.
 
 ---
 
@@ -159,6 +159,56 @@ Se analizó el crawl completo del sitio realfirmware.net y se identificaron **12
 - **Impacto:** Permite enumeración de endpoints y posibles ataques de fuerza bruta.
 - **Recomendación:** Implementar rate limiting en endpoints AJAX.
 
+### 13. Protección CAPTCHA Ausente o Mal Configurada
+- **Severidad:** ALTA
+- **Archivos afectados:** `contacto/index.html`, `wp-login.php`, páginas de productos
+- **Descripción:** El sitio tiene infraestructura para CAPTCHA pero **ninguna protección activa**:
+
+  **a) PayPal reCAPTCHA v2 — contenedor vacío (103+ productos):**
+  Las páginas de producto incluyen un `<div id="ppcp-recaptcha-v2-container">` del plugin WooCommerce PayPal Payments, pero no se carga el script `google.com/recaptcha/api.js` ni se configura un `data-sitekey`. Esto indica que la protección reCAPTCHA v2 de PayPal fue habilitada en la configuración del plugin pero el script real nunca se inyecta, dejando el flujo de pago sin verificación anti-bot.
+
+  **b) WPForms — mensajes de error CAPTCHA sin CAPTCHA activo:**
+  El plugin WPForms Lite está configurado con mensajes de error para Google reCAPTCHA (`val_recaptcha_fail_msg`) y Cloudflare Turnstile (`val_turnstile_fail_msg`), y lista `"captcha"` en `readOnlyDisallowedFields`. Sin embargo, **no hay campo CAPTCHA en el formulario de contacto** ni se carga ningún script CAPTCHA. Esto deja el formulario de contacto sin protección contra spam y bots.
+
+  **c) Login sin CAPTCHA:**
+  La página `wp-login.php` no tiene ningún tipo de CAPTCHA (reCAPTCHA, Turnstile ni hCaptcha), lo que la hace vulnerable a ataques de fuerza bruta automatizados.
+
+  **d) Cabecera Permissions-Policy permite dominios CAPTCHA sin usarlos:**
+  La cabecera `Permissions-Policy` en `index.html.headers` permite tokens privados desde `recaptcha.net`, `challenges.cloudflare.com` y `hcaptcha.com`, pero ninguno de estos servicios está activo.
+
+- **Impacto:**
+  - Formularios de contacto expuestos a spam masivo
+  - Login vulnerable a ataques de fuerza bruta
+  - Flujo de pago sin verificación anti-bot
+  - Falsa sensación de seguridad por tener infraestructura CAPTCHA sin activar
+
+- **Recomendación:**
+  1. **Activar reCAPTCHA v3 o Turnstile en WPForms:**
+     - WPForms → Configuración → CAPTCHA → Activar reCAPTCHA v3
+     - Configurar Site Key y Secret Key obtenidos de [Google reCAPTCHA](https://www.google.com/recaptcha/admin)
+
+  2. **Configurar reCAPTCHA en PayPal Payments:**
+     - WooCommerce → Settings → Payments → PayPal → Advanced → Activar reCAPTCHA
+     - Proporcionar Site Key de reCAPTCHA v2 (checkbox) o v3 (invisible)
+
+  3. **Proteger wp-login.php con CAPTCHA:**
+     Instalar un plugin como "Login Security reCAPTCHA" o añadir manualmente:
+     ```php
+     // En functions.php
+     function add_login_recaptcha() {
+         echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+         echo '<div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>';
+     }
+     add_action('login_form', 'add_login_recaptcha');
+     ```
+
+  4. **Alternativa: Cloudflare Turnstile (sin fricción):**
+     ```php
+     // Turnstile es gratuito y no requiere interacción del usuario
+     echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
+     echo '<div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_KEY"></div>';
+     ```
+
 ---
 
 ## Tabla Resumen
@@ -177,6 +227,7 @@ Se analizó el crawl completo del sitio realfirmware.net y se identificaron **12
 | 10 | Cookie sin SameSite | MEDIA | Cookie |
 | 11 | OPML sin cabeceras | BAJA | Cabecera |
 | 12 | Endpoints AJAX expuestos | BAJA | Divulgación |
+| 13 | CAPTCHA ausente/mal configurado | ALTA | Autenticación |
 
 ---
 
@@ -187,5 +238,6 @@ Los scripts de prueba se encuentran en:
 - `security/tests/test_information_disclosure.py` — Pruebas de divulgación de información
 - `security/tests/test_forms_and_tokens.py` — Pruebas de formularios y tokens
 - `security/tests/test_api_exposure.py` — Pruebas de exposición de API
+- `security/tests/test_captcha.py` — Pruebas de configuración y ausencia de CAPTCHA
 
 Ejecutar con: `pytest security/tests/ -v`
