@@ -80,7 +80,8 @@ export function buildRows(files, curPath) {
   const { dirs, files: direct } = getEntries(files, curPath);
   const rows = [];
   if (curPath) {
-    rows.push({ _parent: true, _dir: true, name: '..', path: curPath.slice(0, curPath.lastIndexOf('/')) });
+    const li = curPath.lastIndexOf('/');
+    rows.push({ _parent: true, _dir: true, name: '..', path: li >= 0 ? curPath.slice(0, li) : '' });
   }
   dirs.forEach(d => {
     const dp = (curPath ? curPath + '/' : '') + d;

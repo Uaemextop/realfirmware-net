@@ -91,6 +91,16 @@
     max-height: 300px;
   }
 
+  .info-panel h3 .panel-toggle {
+    display: inline-flex;
+  }
+
+  .info-panel h3 .panel-toggle svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+  }
+
   .toolbar {
     gap: var(--space-sm);
   }
