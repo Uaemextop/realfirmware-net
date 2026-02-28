@@ -49,7 +49,7 @@ export async function downloadDirAsZip(files, dirPath, onProgress, onDone) {
     if (onProgress) onProgress(meta.percent | 0, `Compressing: ${meta.percent.toFixed(0)}%`);
   });
 
-  const name = dirPath ? dirPath.split('/').pop() : 'firmware-extracted';
+  const name = dirPath ? dirPath.split('/').pop() : 'realfirmware';
   saveAs(blob, name + '.zip');
 
   if (onDone) onDone();
