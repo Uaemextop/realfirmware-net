@@ -96,7 +96,7 @@ export function buildRows(files, curPath) {
  * @param {HTMLElement} tbody
  * @param {Array} rows
  * @param {boolean} isSearch
- * @param {Object} callbacks - { onNav, onZipDir, onCopyLink, onPreview }
+ * @param {Object} callbacks - { onNav, onZipDir, onCopyLink, onPreview, onFileSelect }
  */
 export function renderTable(tbody, rows, isSearch, callbacks) {
   const empty = document.getElementById('emptyState');
@@ -128,7 +128,10 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
       const previewable = ['txt','log','bat','sh','cfg','ini','xml','md','jpg','jpeg','png','webp','gif','bin','exe','config','conf','csv','xsl','xsml','json','py','sql','html','css','js','dll','so','bmp','svg'].includes(e);
       html += `<tr>
         <td>
-          <div class="fname">${fileIcon(iconClass(e))}<button class="file-name-btn" data-url="${esc(url)}" data-name="${esc(r.name)}" data-ext="${esc(e)}" data-size="${r.size}" data-modified="${esc(r.modified||'')}" data-type="${esc(r.type||'')}" data-device="${esc(r.device||'')}" data-hash="${esc(r.hash||'')}" data-previewable="${previewable}" title="${esc(r.path)}">${esc(r.name)}</button></div>
+          <div class="fname">
+            <input type="checkbox" class="file-checkbox" data-path="${esc(r.path)}" data-name="${esc(r.name)}" aria-label="Select ${esc(r.name)}">
+            ${fileIcon(iconClass(e))}<button class="file-name-btn" data-url="${esc(url)}" data-name="${esc(r.name)}" data-ext="${esc(e)}" data-size="${r.size}" data-modified="${esc(r.modified||'')}" data-type="${esc(r.type||'')}" data-device="${esc(r.device||'')}" data-hash="${esc(r.hash||'')}" data-previewable="${previewable}" title="${esc(r.path)}">${esc(r.name)}</button>
+          </div>
           ${isSearch ? '<div class="search-result-path">' + esc(r.path) + '</div>' : ''}
         </td>
         <td class="fsize col-size">${formatBytes(r.size)}</td>
@@ -189,6 +192,14 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
       }
     });
   });
+  // File selection checkboxes
+  if (callbacks.onFileSelect) {
+    tbody.querySelectorAll('.file-checkbox').forEach(cb => {
+      cb.addEventListener('change', () => {
+        callbacks.onFileSelect(cb.dataset.path, cb.checked);
+      });
+    });
+  }
 }
 
 /**
