@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealFirmware — File Explorer</title>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--accent2:#3fb950;--hover:#1f2937;--card:#21262d}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.header h1{font-size:20px;font-weight:600;display:flex;align-items:center;gap:8px}
+.header h1 svg{width:24px;height:24px;fill:var(--accent)}
+.stats{margin-left:auto;color:var(--text2);font-size:13px;display:flex;gap:16px}
+.stats span{display:flex;align-items:center;gap:4px}
+
+.breadcrumb{padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px}
+.breadcrumb a{padding:4px 8px;border-radius:6px;transition:background .15s}
+.breadcrumb a:hover{background:var(--hover);text-decoration:none}
+.breadcrumb .sep{color:var(--text2);font-size:12px}
+.breadcrumb .current{color:var(--text);font-weight:600;padding:4px 8px}
+
+.toolbar{padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-box{flex:1;min-width:200px;max-width:400px;position:relative}
+.search-box input{width:100%;padding:8px 12px 8px 36px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;outline:none;transition:border-color .15s}
+.search-box input:focus{border-color:var(--accent)}
+.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:var(--text2)}
+.btn{padding:8px 16px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s;font-weight:500;white-space:nowrap}
+.btn:hover{background:var(--hover);border-color:var(--text2)}
+.btn-primary{background:#238636;border-color:#238636;color:#fff}
+.btn-primary:hover{background:#2ea043;border-color:#2ea043}
+.btn svg{width:16px;height:16px;fill:currentColor}
+
+.container{max-width:1200px;margin:0 auto;padding:0 16px 40px}
+.file-table{width:100%;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:8px}
+.file-table table{width:100%;border-collapse:collapse}
+.file-table th{text-align:left;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;cursor:pointer;user-select:none}
+.file-table th:hover{color:var(--text)}
+.file-table th .sort-icon{margin-left:4px;opacity:.5}
+.file-table td{padding:8px 16px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+.file-table tr:last-child td{border-bottom:none}
+.file-table tbody tr{transition:background .1s}
+.file-table tbody tr:hover{background:var(--hover)}
+
+.file-name{display:flex;align-items:center;gap:10px}
+.file-name svg{width:20px;height:20px;flex-shrink:0}
+.file-name .icon-dir{fill:#58a6ff}
+.file-name .icon-file{fill:var(--text2)}
+.file-name .icon-bin{fill:#f0883e}
+.file-name .icon-doc{fill:#3fb950}
+.file-name .icon-img{fill:#bc8cff}
+.file-name .icon-exe{fill:#f85149}
+.file-name .icon-cfg{fill:#d29922}
+.file-name a{font-weight:500}
+.file-size{color:var(--text2);white-space:nowrap}
+.file-type{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:500;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border)}
+.file-actions .btn{padding:4px 10px;font-size:12px}
+
+.info-panel{margin-top:12px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;display:none}
+.info-panel.show{display:block}
+.info-panel h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.info-item{padding:12px;background:var(--card);border-radius:6px;border:1px solid var(--border)}
+.info-item .label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.info-item .value{font-size:15px;font-weight:600}
+
+.empty{padding:60px 20px;text-align:center;color:var(--text2)}
+.empty svg{width:48px;height:48px;fill:var(--text2);margin-bottom:12px}
+.empty p{font-size:16px}
+
+.progress-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center}
+.progress-overlay.show{display:flex}
+.progress-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center;min-width:300px}
+.progress-box p{margin-bottom:16px;font-size:15px}
+.progress-bar{width:100%;height:8px;background:var(--card);border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--accent2);border-radius:4px;transition:width .3s;width:0%}
+.progress-pct{margin-top:8px;font-size:13px;color:var(--text2)}
+
+.footer{text-align:center;padding:24px;color:var(--text2);font-size:13px;border-top:1px solid var(--border);margin-top:40px}
+
+@media(max-width:768px){
+  .header{padding:12px 16px}
+  .breadcrumb{padding:10px 16px}
+  .toolbar{padding:10px 16px}
+  .file-table td,.file-table th{padding:8px 10px}
+  .col-type,.col-modified{display:none}
+  .stats{margin-left:0;margin-top:8px;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>
+    <svg viewBox="0 0 24 24"><path d="M3 3h8l2 2h8a1 1 0 011 1v13a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
+    RealFirmware — File Explorer
+  </h1>
+  <div class="stats">
+    <span id="stat-files">
+      <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z"/></svg>
+      <span>0 files</span>
+    </span>
+    <span id="stat-size">
+      <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M8 0a8 8 0 110 16A8 8 0 018 0zm0 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM8 4a.75.75 0 01.75.75v2.5h2.5a.75.75 0 010 1.5h-2.5v2.5a.75.75 0 01-1.5 0v-2.5h-2.5a.75.75 0 010-1.5h2.5v-2.5A.75.75 0 018 4z"/></svg>
+      <span>0 B</span>
+    </span>
+  </div>
+</div>
+
+<div class="breadcrumb" id="breadcrumb"></div>
+
+<div class="container">
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 16 16"><path d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"/></svg>
+      <input type="text" id="search" placeholder="Search files…" autocomplete="off">
+    </div>
+    <button class="btn btn-primary" id="btn-download-zip" title="Download current directory as .zip">
+      <svg viewBox="0 0 16 16"><path d="M7.47 10.78a.75.75 0 001.06 0l3.75-3.75a.75.75 0 00-1.06-1.06L8.75 8.44V1.75a.75.75 0 00-1.5 0v6.69L4.78 5.97a.75.75 0 00-1.06 1.06l3.75 3.75zM3.75 13a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5z"/></svg>
+      Download as .zip
+    </button>
+  </div>
+
+  <div id="info-panel" class="info-panel">
+    <h3>
+      <svg viewBox="0 0 16 16" width="18" height="18"><path fill="var(--accent)" d="M8 0a8 8 0 110 16A8 8 0 018 0zm0 4a.75.75 0 00-.75.75v5.5a.75.75 0 001.5 0v-5.5A.75.75 0 008 4zm0 8.25a1 1 0 100-2 1 1 0 000 2z"/></svg>
+      Directory Info
+    </h3>
+    <div class="info-grid" id="info-grid"></div>
+  </div>
+
+  <div class="file-table">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="name" style="width:50%">Name <span class="sort-icon">▲</span></th>
+          <th data-sort="size" class="col-size" style="width:15%">Size</th>
+          <th data-sort="type" class="col-type" style="width:12%">Type</th>
+          <th class="col-modified" style="width:13%">Modified</th>
+          <th style="width:10%">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="file-list"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="empty-state" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z"/></svg>
+    <p>No files found</p>
+  </div>
+</div>
+
+<div class="progress-overlay" id="progress-overlay">
+  <div class="progress-box">
+    <p id="progress-text">Preparing download…</p>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <div class="progress-pct" id="progress-pct">0%</div>
+  </div>
+</div>
+
+<div class="footer">
+  RealFirmware File Explorer &middot; Powered by GitHub Pages
+</div>
+
+<script>
+(function(){
+  const REPO_OWNER = 'Uaemextop';
+  const REPO_NAME = 'realfirmware-net';
+  let BRANCH = 'main';
+  let allFiles = [];
+  let currentPath = '';
+  let sortField = 'name';
+  let sortAsc = true;
+
+  // Detect branch from current URL or default
+  function detectBranch() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('branch')) BRANCH = params.get('branch');
+  }
+
+  function formatSize(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function getExtension(name) {
+    const i = name.lastIndexOf('.');
+    return i > 0 ? name.substring(i + 1).toLowerCase() : '';
+  }
+
+  function getFileTypeLabel(ext) {
+    const map = {
+      bin: 'Firmware', img: 'Firmware',
+      txt: 'Document', docx: 'Document', log: 'Document',
+      bat: 'Script', sh: 'Script', exe: 'Executable',
+      xml: 'Config', cfg: 'Config', ini: 'Config',
+      jpg: 'Image', jpeg: 'Image', png: 'Image', webp: 'Image', gif: 'Image',
+      mp4: 'Video', zip: 'Archive'
+    };
+    return map[ext] || 'File';
+  }
+
+  function getIconClass(ext, isDir) {
+    if (isDir) return 'icon-dir';
+    const map = {
+      bin: 'icon-bin', img: 'icon-bin',
+      txt: 'icon-doc', docx: 'icon-doc', log: 'icon-doc',
+      bat: 'icon-exe', sh: 'icon-exe', exe: 'icon-exe',
+      xml: 'icon-cfg', cfg: 'icon-cfg', ini: 'icon-cfg',
+      jpg: 'icon-img', jpeg: 'icon-img', png: 'icon-img', webp: 'icon-img'
+    };
+    return map[ext] || 'icon-file';
+  }
+
+  function dirSvg() {
+    return '<svg viewBox="0 0 24 24" class="icon-dir"><path d="M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>';
+  }
+
+  function fileSvg(cls) {
+    return `<svg viewBox="0 0 24 24" class="${cls}"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
+  }
+
+  function downloadSvg() {
+    return '<svg viewBox="0 0 16 16"><path d="M7.47 10.78a.75.75 0 001.06 0l3.75-3.75a.75.75 0 00-1.06-1.06L8.75 8.44V1.75a.75.75 0 00-1.5 0v6.69L4.78 5.97a.75.75 0 00-1.06 1.06l3.75 3.75zM3.75 13a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5z"/></svg>';
+  }
+
+  function getEntries(path) {
+    const prefix = path ? path + '/' : '';
+    const dirs = new Set();
+    const files = [];
+    allFiles.forEach(f => {
+      if (!f.path.startsWith(prefix)) return;
+      const rest = f.path.substring(prefix.length);
+      const slashIdx = rest.indexOf('/');
+      if (slashIdx >= 0) {
+        dirs.add(rest.substring(0, slashIdx));
+      } else {
+        files.push(f);
+      }
+    });
+    return { dirs: Array.from(dirs).sort(), files };
+  }
+
+  function getDirStats(dirPath) {
+    const prefix = dirPath ? dirPath + '/' : '';
+    let count = 0, totalSize = 0;
+    allFiles.forEach(f => {
+      if (f.path.startsWith(prefix)) {
+        count++;
+        totalSize += f.size;
+      }
+    });
+    return { count, totalSize };
+  }
+
+  function navigate(path) {
+    currentPath = path;
+    const params = new URLSearchParams(window.location.search);
+    if (path) { params.set('path', path); } else { params.delete('path'); }
+    const qs = params.toString();
+    history.pushState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+    render();
+  }
+
+  function renderBreadcrumb() {
+    const bc = document.getElementById('breadcrumb');
+    const parts = currentPath ? currentPath.split('/') : [];
+    let html = '<a href="#" data-path="">🏠 Root</a>';
+    let accum = '';
+    parts.forEach((p, i) => {
+      html += '<span class="sep">/</span>';
+      accum += (accum ? '/' : '') + p;
+      if (i === parts.length - 1) {
+        html += `<span class="current">${p}</span>`;
+      } else {
+        html += `<a href="#" data-path="${accum}">${p}</a>`;
+      }
+    });
+    bc.innerHTML = html;
+    bc.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); navigate(a.dataset.path); });
+    });
+  }
+
+  function renderInfoPanel() {
+    const panel = document.getElementById('info-panel');
+    const grid = document.getElementById('info-grid');
+    const stats = getDirStats(currentPath);
+    const { dirs, files } = getEntries(currentPath);
+
+    const catMap = {};
+    const prefix = currentPath ? currentPath + '/' : '';
+    allFiles.forEach(f => {
+      if (!f.path.startsWith(prefix)) return;
+      const ext = getExtension(f.path);
+      const t = getFileTypeLabel(ext);
+      catMap[t] = (catMap[t] || 0) + 1;
+    });
+
+    let html = `
+      <div class="info-item"><div class="label">Total Files</div><div class="value">${stats.count}</div></div>
+      <div class="info-item"><div class="label">Total Size</div><div class="value">${formatSize(stats.totalSize)}</div></div>
+      <div class="info-item"><div class="label">Subdirectories</div><div class="value">${dirs.length}</div></div>
+      <div class="info-item"><div class="label">Direct Files</div><div class="value">${files.length}</div></div>
+    `;
+    Object.keys(catMap).sort().forEach(cat => {
+      html += `<div class="info-item"><div class="label">${cat}s</div><div class="value">${catMap[cat]}</div></div>`;
+    });
+    grid.innerHTML = html;
+    panel.classList.add('show');
+  }
+
+  function render() {
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+    renderBreadcrumb();
+    renderInfoPanel();
+
+    const { dirs, files } = getEntries(currentPath);
+
+    let entries = [];
+
+    // Add parent dir link
+    if (currentPath) {
+      entries.push({ type: 'dir', name: '..', path: currentPath.substring(0, currentPath.lastIndexOf('/')), isParent: true });
+    }
+
+    // Directories
+    dirs.forEach(d => {
+      if (searchTerm && !d.toLowerCase().includes(searchTerm)) return;
+      entries.push({ type: 'dir', name: d, path: (currentPath ? currentPath + '/' : '') + d });
+    });
+
+    // Files
+    files.forEach(f => {
+      const name = f.path.split('/').pop();
+      if (searchTerm && !name.toLowerCase().includes(searchTerm)) return;
+      entries.push({ type: 'file', name, path: f.path, size: f.size, modified: f.modified });
+    });
+
+    // Sort
+    entries.sort((a, b) => {
+      // Parent always first
+      if (a.isParent) return -1;
+      if (b.isParent) return 1;
+      // Dirs before files
+      if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+
+      let cmp = 0;
+      if (sortField === 'name') {
+        cmp = a.name.localeCompare(b.name);
+      } else if (sortField === 'size') {
+        cmp = (a.size || 0) - (b.size || 0);
+      } else if (sortField === 'type') {
+        const ea = getExtension(a.name), eb = getExtension(b.name);
+        cmp = ea.localeCompare(eb);
+      }
+      return sortAsc ? cmp : -cmp;
+    });
+
+    const tbody = document.getElementById('file-list');
+    const emptyState = document.getElementById('empty-state');
+
+    if (entries.length === 0) {
+      tbody.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '/').replace(/\/+$/, '') + '/';
+
+    let html = '';
+    entries.forEach(e => {
+      if (e.type === 'dir') {
+        const dirStats = e.isParent ? { count: 0, totalSize: 0 } : getDirStats(e.path);
+        html += `<tr>
+          <td><div class="file-name">${dirSvg()}<a href="#" class="nav-link" data-path="${e.path}">${e.isParent ? '⬆ Parent directory' : e.name}</a></div></td>
+          <td class="file-size col-size">${e.isParent ? '' : dirStats.count + ' files'}</td>
+          <td class="col-type">${e.isParent ? '' : '<span class="file-type">Folder</span>'}</td>
+          <td class="col-modified">—</td>
+          <td class="file-actions">${e.isParent ? '' : '<button class="btn zip-dir-btn" data-path="' + e.path + '" title="Download folder as .zip">' + downloadSvg() + '</button>'}</td>
+        </tr>`;
+      } else {
+        const ext = getExtension(e.name);
+        const typeLabel = getFileTypeLabel(ext);
+        const iconCls = getIconClass(ext, false);
+        const rawUrl = baseUrl + encodeURIComponent(e.path).replace(/%2F/g, '/');
+        html += `<tr>
+          <td><div class="file-name">${fileSvg(iconCls)}<a href="${rawUrl}" target="_blank" title="${e.path}">${e.name}</a></div></td>
+          <td class="file-size col-size">${formatSize(e.size)}</td>
+          <td class="col-type"><span class="file-type">${typeLabel}</span></td>
+          <td class="col-modified">${e.modified || '—'}</td>
+          <td class="file-actions"><a class="btn" href="${rawUrl}" download="${e.name}" title="Download">${downloadSvg()}</a></td>
+        </tr>`;
+      }
+    });
+    tbody.innerHTML = html;
+
+    // Add nav listeners
+    tbody.querySelectorAll('.nav-link').forEach(a => {
+      a.addEventListener('click', ev => { ev.preventDefault(); navigate(a.dataset.path); });
+    });
+
+    // Add zip-dir buttons
+    tbody.querySelectorAll('.zip-dir-btn').forEach(btn => {
+      btn.addEventListener('click', () => downloadDirAsZip(btn.dataset.path));
+    });
+
+    // Update stats
+    const totalStats = getDirStats(currentPath);
+    document.querySelector('#stat-files span:last-child').textContent = totalStats.count + ' files';
+    document.querySelector('#stat-size span:last-child').textContent = formatSize(totalStats.totalSize);
+  }
+
+  async function downloadDirAsZip(dirPath) {
+    const prefix = dirPath ? dirPath + '/' : '';
+    const dirFiles = allFiles.filter(f => f.path.startsWith(prefix));
+    if (dirFiles.length === 0) return;
+
+    const overlay = document.getElementById('progress-overlay');
+    const fill = document.getElementById('progress-fill');
+    const pct = document.getElementById('progress-pct');
+    const txt = document.getElementById('progress-text');
+    overlay.classList.add('show');
+    fill.style.width = '0%';
+
+    const zip = new JSZip();
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '/').replace(/\/+$/, '') + '/';
+
+    let done = 0;
+    const total = dirFiles.length;
+    const batchSize = 5;
+
+    for (let i = 0; i < total; i += batchSize) {
+      const batch = dirFiles.slice(i, i + batchSize);
+      const promises = batch.map(async f => {
+        const relativeName = f.path.substring(prefix.length);
+        try {
+          const url = baseUrl + encodeURIComponent(f.path).replace(/%2F/g, '/');
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const blob = await resp.blob();
+          zip.file(relativeName, blob);
+        } catch (err) {
+          console.warn('Skipping ' + f.path + ': ' + err.message);
+        }
+        done++;
+        const p = Math.round((done / total) * 100);
+        fill.style.width = p + '%';
+        pct.textContent = p + '% (' + done + '/' + total + ')';
+        txt.textContent = 'Downloading: ' + relativeName;
+      });
+      await Promise.all(promises);
+    }
+
+    txt.textContent = 'Generating zip file…';
+    const blob = await zip.generateAsync({ type: 'blob' }, meta => {
+      fill.style.width = meta.percent.toFixed(0) + '%';
+      pct.textContent = 'Compressing: ' + meta.percent.toFixed(0) + '%';
+    });
+
+    const dirName = dirPath ? dirPath.split('/').pop() : 'firmware-extracted';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = dirName + '.zip';
+    a.click();
+    URL.revokeObjectURL(a.href);
+
+    overlay.classList.remove('show');
+  }
+
+  // Sort handler
+  document.querySelectorAll('.file-table th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const field = th.dataset.sort;
+      if (sortField === field) {
+        sortAsc = !sortAsc;
+      } else {
+        sortField = field;
+        sortAsc = true;
+      }
+      document.querySelectorAll('.file-table th .sort-icon').forEach(s => s.textContent = '');
+      th.querySelector('.sort-icon').textContent = sortAsc ? '▲' : '▼';
+      render();
+    });
+  });
+
+  // Search
+  document.getElementById('search').addEventListener('input', render);
+
+  // Download current dir as zip
+  document.getElementById('btn-download-zip').addEventListener('click', () => {
+    downloadDirAsZip(currentPath);
+  });
+
+  // Handle browser back/forward
+  window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    currentPath = params.get('path') || '';
+    render();
+  });
+
+  // Load data
+  async function init() {
+    detectBranch();
+    try {
+      const resp = await fetch('file-index.json');
+      allFiles = await resp.json();
+    } catch (e) {
+      console.error('Failed to load file index:', e);
+      document.getElementById('file-list').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text2)">Failed to load file index. Make sure file-index.json exists.</td></tr>';
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    currentPath = params.get('path') || '';
+    render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
