@@ -221,7 +221,7 @@ function bindEvents() {
   const dz = $('#dlZip');
   if (dz) dz.addEventListener('click', async () => {
     showProgress();
-    await downloadDirAsZip(DATA.files, curPath || 'realfirmware', updateProgress, hideProgress);
+    await downloadDirAsZip(DATA.files, curPath, updateProgress, hideProgress);
   });
 
   // Info panel collapse/expand
@@ -233,8 +233,9 @@ function bindEvents() {
       localStorage.setItem('infoPanelCollapsed', panel.classList.contains('collapsed'));
     }
   });
-  // Restore collapse state
-  if (localStorage.getItem('infoPanelCollapsed') === 'true') {
+  // Restore collapse state (auto-collapse on mobile)
+  const savedCollapsed = localStorage.getItem('infoPanelCollapsed');
+  if (savedCollapsed === 'true' || (savedCollapsed === null && window.innerWidth <= 768)) {
     const panel = $('#infoPanel');
     if (panel) panel.classList.add('collapsed');
   }

@@ -1,9 +1,0 @@
-trying  user:"admin" pass:"admin" 
-reset facTelnetSteps:
-facStep 1:
-OK!
-
-facStep 2:
-OK!
-
-No Luck!

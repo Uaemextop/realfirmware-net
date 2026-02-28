@@ -1,9 +1,0 @@
-www.realfirmware.net
-
-..lo primero es que tiene que hacer es entrar
-a la ont como root admin y darle a restaurar
-de fabrica cuando vuelva a iniciar entre esta clave 
-para el desbloqueo maestro..
-
-user: telecomadmin	
-pass: F0xB734Fr3@j%YEP
