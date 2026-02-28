@@ -1,0 +1,13 @@
+Firmware de limpieza o desbloqueo para ont Huawei HG8245con aceso a
+Firmware upgrade para subir el archivo.
+
+
+1 Entrar a la ont modo super user y subir el archivo HG8245 common ok 
+y dalar update firmawre.
+
+2 la contraseña seran usuario: telecomadmin y contraseña: admintelecom
+
+3 para subir el archivo es en system tool despues firmware update.
+
+www.realfirmware.net
+

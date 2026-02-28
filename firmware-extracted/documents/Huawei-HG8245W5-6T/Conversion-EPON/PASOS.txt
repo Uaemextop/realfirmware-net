@@ -1,0 +1,12 @@
+www.realfirmware.net 
+
+1-subir epon 2 por dentro en upgrade.
+
+entrar a telnet 
+
+root
+admin
+
+su
+set upport mode 2
+quit

@@ -1,0 +1,11 @@
+www.realfirmware.net 
+
+Usuario:
+admin
+y la mac del equipo sin los dos puntos 
+
+Nota = se carga via olt vsol gpon.
+
+
+advance ip es para facilitar la rapidez de 
+sacar la mac y pegarla

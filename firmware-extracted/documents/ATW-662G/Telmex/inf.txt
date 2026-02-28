@@ -1,0 +1,19 @@
+entra con la misma de la ont de telmex
+usuario: TELMEX contraseña:  
+si le dio a reset el usuario es 
+user admin
+pass NuCom
+
+cambiar logo
+http://192.168.1.254/modifyLogo.asp
+
+guardar configuracion
+http://192.168.1.254/changefactorysettings.asp
+
+CONVERTIR A EPON
+http://192.168.1.254/epon.asp
+
+
+www.realfirmware.net 
+
+

@@ -1,0 +1,21 @@
+WWW.REALFIRMWARE.NET
+
+1-APAGUE EL ANTIVIRUS Y FIREWALL PARA UTLIZAR NUESTRO FIRMWARE 
+
+2-LA ETHERNET DE LA PC SIEMPRE LLEVA EL IP 192.168.100.2
+
+-al aplicar el flash apague y prenda LA ont al no parpadear toda las luces prendida cuando 
+se apaguen la luces parar el programa flash HUAWEI
+
+-al momento de encender de nuevo aplique ping 192.168.100.1 -t en MSDOS
+
+-despues del flash 
+
+-ENTRAR A LA ONT
+192.168.100.1
+ 
+3- USER telecomadmin  pass: admintelecom
+
+CLAVE WIFI 	8 eeeeeeee
+
+SI NO ENTIENDE LOS PASOS POR FAVOR COMUNICAR CON ASISTNCIA 

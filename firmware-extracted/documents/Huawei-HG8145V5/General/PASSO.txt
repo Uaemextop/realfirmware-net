@@ -1,0 +1,29 @@
+www.realfirmware.net
+1-Entrar a la ont con root admin y darle un defaul reset o factory reset
+
+2- entrar con el super usuario 
+telecomadmin 
+F0xB734Fr3@j%YEP 
+ 
+3-Subir los siguientes firmware sin reiniciar la ont HG8145v5- y total
+4-Subir en respaldo el xm
+
+5- cuando enciende la ont ejecutar paso 1 cuando ejecute el comando cerrar
+y ejecutar el paso 2 y esperar que la ont se reincie sola
+
+
+contrase;a de la ont es
+admintelecom
+telecomadmin
+
+NOTA
+La ont tienen que decir en informacion del dipositivo boot disable para 
+que se puedan liberar.
+
+Recuerden activar telnet para que funsione todo bien, telnet de windows
+
+www.realfirmware.net 
+
+
+
+

@@ -1,0 +1,25 @@
+www.realfirmware.net
+1-Entrar con el super usuario de totalplay y activar telnet en  seguridad root adminHW
+telecomadmin	
+F0xB734Fr3@j%YEP
+
+Device Access Control
+On this page, you can enable or disable permissions to access the device.
+LAN Service
+Enable the LAN-side PC to access the device using Telnet:	
+
+Flashear la ont con el T2  por 43 segundo
+
+2-Entrar a la ont por telnet 192.168.100.1 root adminHW
+su 
+Shell
+equipmode.sh on
+
+3-si no le coje este comando apagar y prender la ont entrar a telnet con root admin
+su
+shell
+sudo restorehwmode.sh
+cuando diga success
+EquipMode.sh off
+
+reboot
