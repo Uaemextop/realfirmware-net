@@ -1,0 +1,74 @@
+/* ── Keyframe Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Utility animation classes ── */
+.animate-fadeIn { animation: fadeIn 0.3s ease; }
+.animate-slideDown { animation: fadeSlideDown 0.25s ease; }
+.animate-slideUp { animation: fadeSlideUp 0.25s ease; }
+.animate-scaleIn { animation: scaleIn 0.2s ease; }
+.animate-pulse { animation: pulse 1.5s ease-in-out infinite; }
+
+/* ── Loading spinner ── */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+/* ── Skeleton loading ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--border) 50%, var(--card) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Row enter animation ── */
+.file-table tbody tr {
+  animation: fadeSlideUp 0.15s ease backwards;
+}
+.file-table tbody tr:nth-child(1) { animation-delay: 0s; }
+.file-table tbody tr:nth-child(2) { animation-delay: 0.02s; }
+.file-table tbody tr:nth-child(3) { animation-delay: 0.04s; }
+.file-table tbody tr:nth-child(4) { animation-delay: 0.06s; }
+.file-table tbody tr:nth-child(5) { animation-delay: 0.08s; }
+.file-table tbody tr:nth-child(6) { animation-delay: 0.10s; }
+.file-table tbody tr:nth-child(7) { animation-delay: 0.12s; }
+.file-table tbody tr:nth-child(8) { animation-delay: 0.14s; }
+.file-table tbody tr:nth-child(9) { animation-delay: 0.16s; }
+.file-table tbody tr:nth-child(10) { animation-delay: 0.18s; }

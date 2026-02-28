@@ -5,9 +5,28 @@
   "description": "Modern file explorer for RealFirmware extracted files",
   "scripts": {
     "build:index": "node scripts/build-index.js",
-    "build": "npm run build:index"
+    "build:bundle": "node scripts/build.js",
+    "build": "npm run build:index && npm run build:bundle"
   },
   "devDependencies": {
-    "fuse.js": "^7.0.0"
+    "esbuild": "^0.24.2",
+    "html-minifier-terser": "^7.2.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "animate.css": "^4.1.1",
+    "chart.js": "^4.4.7",
+    "dayjs": "^1.11.13",
+    "file-saver": "^2.0.5",
+    "fuse.js": "^7.0.0",
+    "highlight.js": "^11.11.1",
+    "jszip": "^3.10.1",
+    "lazysizes": "^5.3.2",
+    "lunr": "^2.3.9",
+    "marked": "^15.0.6",
+    "normalize.css": "^8.0.1",
+    "notyf": "^3.10.0",
+    "pretty-bytes": "^6.1.1",
+    "tippy.js": "^6.3.7"
   }
 }
