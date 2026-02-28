@@ -1,0 +1,13 @@
+{
+  "name": "realfirmware-explorer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modern file explorer for RealFirmware extracted files",
+  "scripts": {
+    "build:index": "node scripts/build-index.js",
+    "build": "npm run build:index"
+  },
+  "devDependencies": {
+    "fuse.js": "^7.0.0"
+  }
+}
