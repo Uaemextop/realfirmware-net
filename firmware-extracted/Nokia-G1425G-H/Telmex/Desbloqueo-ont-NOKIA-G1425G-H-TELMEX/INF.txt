@@ -1,0 +1,10 @@
+192.168.1.254
+
+usuario 
+AdminGPON
+
+contrasena
+CLAVE DE LA ETIQUETA
+
+
+www.realfirmware.net

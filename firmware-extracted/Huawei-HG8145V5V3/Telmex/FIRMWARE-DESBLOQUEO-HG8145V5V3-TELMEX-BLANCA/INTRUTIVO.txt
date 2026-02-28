@@ -1,0 +1,19 @@
+www.realfirmware.net
+
+1- Entrar a la ont telmex v3 y subir el firmware v22 en , actualización del firmware.
+
+2- Subir el el xml en herramientas, restauración o respaldo.
+nota
+esperamos que encienda 
+
+3 Ejecutar PASO 1 asta que se ejecute el comando y diga on después cerrar ventana.
+
+4 Ejecutar PASO 2 esperar que se reinicie.
+
+fin 
+
+RECUERDE 
+*ACTIVAR TELNET DE WINDOWS 
+* PONER IP FIJA 
+
+www.realfirmware.net 

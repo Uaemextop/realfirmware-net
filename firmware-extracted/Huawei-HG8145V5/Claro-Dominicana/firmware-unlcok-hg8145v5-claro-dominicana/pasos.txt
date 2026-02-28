@@ -1,0 +1,14 @@
+www.realfirmware.net
+pasos 
+
+1-subir el xml hw_ctree a la ont
+2-flasear la ont con el programa 1211 y el firmware HG8145V5 ahora la ip cambia de 10.0.0.1 a 192.168.100.1 
+apagar y prender la ont
+
+3-jecutar clean cuando suba la ont y listo sube limpia 
+
+recuerde tener habilitado telnet para este proceso
+
+usuario cuando este limpia
+admintelecom 
+telecomadmin

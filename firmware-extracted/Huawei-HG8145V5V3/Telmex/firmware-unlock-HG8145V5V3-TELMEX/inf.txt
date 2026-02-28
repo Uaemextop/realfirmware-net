@@ -1,0 +1,15 @@
+PASO 1 ENTRAR A LA ONT CON LA CONTRASE;A DE TELMEX
+SUBIR EL ARCHIVO CONFIG XML
+paso 2 entrar por telnet 192.168.100.1
+root admin
+su
+shell
+
+ejecutar el firmware v2
+equipmode.sh on
+ejecutar el firmware v2
+sudo restorehwmode.sh  reb
+EquipMode.sh off
+reboot
+
+www.realfirmware.net
