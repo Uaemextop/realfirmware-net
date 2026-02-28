@@ -11,13 +11,14 @@ let notyf = null;
  */
 export function initUI() {
   // Initialize notification system
+  const rootStyle = getComputedStyle(document.documentElement);
   notyf = new Notyf({
     duration: 2500,
     position: { x: 'right', y: 'bottom' },
     types: [
-      { type: 'success', background: '#238636', icon: false },
-      { type: 'error', background: '#f85149', icon: false },
-      { type: 'info', background: '#58a6ff', icon: false }
+      { type: 'success', background: rootStyle.getPropertyValue('--green').trim() || '#3fb950', icon: false },
+      { type: 'error', background: rootStyle.getPropertyValue('--red').trim() || '#f85149', icon: false },
+      { type: 'info', background: rootStyle.getPropertyValue('--accent').trim() || '#58a6ff', icon: false }
     ]
   });
 
@@ -30,6 +31,13 @@ export function initUI() {
   if (btn) {
     btn.addEventListener('click', toggleTheme);
     updateThemeIcon(btn);
+  }
+
+  // Setup mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('show'));
   }
 }
 
