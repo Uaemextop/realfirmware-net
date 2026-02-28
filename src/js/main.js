@@ -224,6 +224,21 @@ function bindEvents() {
     await downloadDirAsZip(DATA.files, curPath || 'realfirmware', updateProgress, hideProgress);
   });
 
+  // Info panel collapse/expand
+  const ipt = $('#infoPanelToggle');
+  if (ipt) ipt.addEventListener('click', () => {
+    const panel = $('#infoPanel');
+    if (panel) {
+      panel.classList.toggle('collapsed');
+      localStorage.setItem('infoPanelCollapsed', panel.classList.contains('collapsed'));
+    }
+  });
+  // Restore collapse state
+  if (localStorage.getItem('infoPanelCollapsed') === 'true') {
+    const panel = $('#infoPanel');
+    if (panel) panel.classList.add('collapsed');
+  }
+
   // View mode toggle
   const vmt = $('#toggleViewMode');
   if (vmt) vmt.addEventListener('click', toggleViewMode);

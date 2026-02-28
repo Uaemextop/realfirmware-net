@@ -1,0 +1,21 @@
+entra con la misma de la ont de telmex
+usuario: TELMEX contraseña:  Nm4Pm2Cc3u
+si le dio a reset el usuario es en la de atw
+user admin
+pass NuCom
+
+cambiar logo
+http://192.168.100.1/modifyLogo.asp
+179x38
+
+guardar configuracion
+http://192.168.100.1/changefactorysettings.asp
+
+desactiva el boton reset disable
+http://192.168.100.1/noreset.asp
+
+www.realfirmware.net 
+clave del wifi atw
+
+
+

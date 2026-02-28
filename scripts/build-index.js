@@ -20,8 +20,19 @@ const TYPE_MAP = {
   mp4: 'Video', zip: 'Archive'
 };
 
-function getTypeLabel(ext) {
-  return TYPE_MAP[ext] || 'Other';
+// Known extensionless firmware/system files
+const NAME_TYPE_MAP = {
+  rootfs: 'Firmware',
+  uimage: 'Firmware',
+  fwu_ver: 'Config',
+  hw_ver: 'Config'
+};
+
+function getTypeLabel(ext, name) {
+  if (ext && TYPE_MAP[ext]) return TYPE_MAP[ext];
+  const lower = (name || '').toLowerCase();
+  if (NAME_TYPE_MAP[lower]) return NAME_TYPE_MAP[lower];
+  return 'Other';
 }
 
 function sha256(filePath) {
@@ -63,7 +74,7 @@ const index = files.map(fp => {
   const isp = parts.length >= 3 ? parts[1] : '';
   const ext = path.extname(fileName).replace('.', '').toLowerCase();
   const size = st.size;
-  const type = getTypeLabel(ext);
+  const type = getTypeLabel(ext, fileName);
 
   return {
     path: rel,

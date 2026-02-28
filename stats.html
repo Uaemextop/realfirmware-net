@@ -18,7 +18,10 @@
     <svg viewBox="0 0 24 24"><path d="M3 3h8l2 2h8a1 1 0 011 1v13a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
     RealFirmware
   </div>
-  <div class="nav-links">
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+    <svg viewBox="0 0 16 16" width="20" height="20"><path fill="currentColor" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 7.75zm0 5a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H1.75a.75.75 0 01-.75-.75z"/></svg>
+  </button>
+  <div class="nav-links" id="navLinks">
     <a href="index.html">Explorer</a>
     <a href="stats.html" class="active">Statistics</a>
     <a href="about.html">About</a>
@@ -66,40 +69,52 @@
 
   <!-- Charts -->
   <div class="charts-grid">
-    <div class="chart-card animate-fadeIn">
-      <h3>📁 Files by Category</h3>
-      <canvas id="chartCategory"></canvas>
+    <div class="chart-card animate-fadeIn collapsible-section">
+      <h3 class="section-toggle">📁 Files by Category
+        <button class="panel-toggle" aria-label="Toggle section"><svg viewBox="0 0 16 16"><path d="M12.78 5.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 6.28a.75.75 0 011.06-1.06L8 8.94l3.72-3.72a.75.75 0 011.06 0z"/></svg></button>
+      </h3>
+      <div class="section-content"><canvas id="chartCategory"></canvas></div>
     </div>
-    <div class="chart-card animate-fadeIn">
-      <h3>📄 Files by Type</h3>
-      <canvas id="chartType"></canvas>
+    <div class="chart-card animate-fadeIn collapsible-section">
+      <h3 class="section-toggle">📄 Files by Type
+        <button class="panel-toggle" aria-label="Toggle section"><svg viewBox="0 0 16 16"><path d="M12.78 5.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 6.28a.75.75 0 011.06-1.06L8 8.94l3.72-3.72a.75.75 0 011.06 0z"/></svg></button>
+      </h3>
+      <div class="section-content"><canvas id="chartType"></canvas></div>
     </div>
-    <div class="chart-card animate-fadeIn">
-      <h3>💾 Size by Device (MB)</h3>
-      <canvas id="chartDevice"></canvas>
+    <div class="chart-card animate-fadeIn collapsible-section">
+      <h3 class="section-toggle">💾 Size by Device (MB)
+        <button class="panel-toggle" aria-label="Toggle section"><svg viewBox="0 0 16 16"><path d="M12.78 5.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 6.28a.75.75 0 011.06-1.06L8 8.94l3.72-3.72a.75.75 0 011.06 0z"/></svg></button>
+      </h3>
+      <div class="section-content"><canvas id="chartDevice"></canvas></div>
     </div>
-    <div class="chart-card animate-fadeIn">
-      <h3>🔤 Files by Extension</h3>
-      <canvas id="chartExtension"></canvas>
+    <div class="chart-card animate-fadeIn collapsible-section">
+      <h3 class="section-toggle">🔤 Files by Extension
+        <button class="panel-toggle" aria-label="Toggle section"><svg viewBox="0 0 16 16"><path d="M12.78 5.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 6.28a.75.75 0 011.06-1.06L8 8.94l3.72-3.72a.75.75 0 011.06 0z"/></svg></button>
+      </h3>
+      <div class="section-content"><canvas id="chartExtension"></canvas></div>
     </div>
   </div>
 
   <!-- Top files table -->
-  <div class="chart-card animate-fadeIn" style="margin-top:16px">
-    <h3>🏆 Largest Files</h3>
-    <div class="file-table" style="border:none">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:5%">#</th>
-            <th style="width:40%">Name</th>
-            <th style="width:15%">Size</th>
-            <th style="width:20%">Device</th>
-            <th style="width:20%">Type</th>
-          </tr>
-        </thead>
-        <tbody id="topFilesBody"></tbody>
-      </table>
+  <div class="chart-card animate-fadeIn collapsible-section" style="margin-top:16px">
+    <h3 class="section-toggle">🏆 Largest Files
+      <button class="panel-toggle" aria-label="Toggle section"><svg viewBox="0 0 16 16"><path d="M12.78 5.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 6.28a.75.75 0 011.06-1.06L8 8.94l3.72-3.72a.75.75 0 011.06 0z"/></svg></button>
+    </h3>
+    <div class="section-content">
+      <div class="file-table" style="border:none">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:40%">Name</th>
+              <th style="width:15%">Size</th>
+              <th style="width:20%">Device</th>
+              <th style="width:20%">Type</th>
+            </tr>
+          </thead>
+          <tbody id="topFilesBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

@@ -18,11 +18,37 @@
   }
   .header .nav-links {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: var(--space-sm);
+    gap: 0;
+    box-shadow: var(--shadow-md);
+    z-index: 101;
+    animation: fadeSlideDown 0.2s ease;
+  }
+  .header .nav-links.show {
+    display: flex;
+  }
+  .header .nav-links a {
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    font-size: var(--font-base);
+  }
+  .mobile-menu-btn {
+    display: inline-flex;
   }
 
   .breadcrumb {
     padding: var(--space-sm) var(--space-md);
     font-size: var(--font-sm);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
   }
 
   .container {
@@ -31,7 +57,7 @@
 
   .file-table td,
   .file-table th {
-    padding: 7px var(--space-sm);
+    padding: var(--space-sm);
     font-size: var(--font-sm);
   }
 
@@ -51,9 +77,18 @@
     flex: 1;
   }
 
+  .info-panel {
+    padding: var(--space-md);
+  }
+
   .info-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: var(--space-sm);
+  }
+
+  /* Auto-collapse info panel on mobile */
+  .info-panel .info-grid {
+    max-height: 300px;
   }
 
   .toolbar {
@@ -95,11 +130,38 @@
   }
 
   .modal {
-    max-height: 90vh;
+    max-height: 100vh;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    margin: 0;
   }
 
   .modal-overlay {
+    padding: var(--space-sm);
+  }
+
+  .modal-body {
     padding: var(--space-md);
+    padding-bottom: 0;
+  }
+
+  .file-actions {
+    position: sticky;
+    bottom: 0;
+    flex-direction: column;
+    padding: var(--space-sm);
+    border-radius: 0;
+  }
+
+  .file-actions .btn {
+    min-width: 0;
+    width: 100%;
+    padding: var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  .metadata-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   /* Hide checkboxes on mobile to save space */
@@ -115,6 +177,23 @@
 
   .selection-bar .selection-count {
     text-align: center;
+  }
+
+  /* Better touch targets for file rows */
+  .file-table tbody tr td {
+    min-height: 44px;
+  }
+
+  .fname button, .fname a {
+    padding: var(--space-xs) 0;
+  }
+
+  .actions-cell {
+    gap: var(--space-xs);
+  }
+
+  .actions-cell .btn {
+    padding: var(--space-sm);
   }
 }
 
@@ -143,8 +222,16 @@
   }
 
   .info-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xs);
+  }
+
+  .info-item {
+    padding: var(--space-sm);
+  }
+
+  .info-item .value {
+    font-size: var(--font-base);
   }
 
   .file-table th,
@@ -172,8 +259,13 @@
   }
 
   .filter-group select {
-    min-width: 120px;
+    min-width: 100%;
     font-size: var(--font-xs);
+  }
+
+  .filter-group {
+    flex: 1;
+    min-width: 0;
   }
 
   .about-content h2 {
@@ -190,16 +282,21 @@
   }
 
   .modal {
-    max-height: 95vh;
+    max-height: 100vh;
+    border-radius: 0;
   }
 
   .modal-overlay {
-    padding: var(--space-sm);
+    padding: 0;
   }
 
   .modal-header,
   .modal-body {
     padding: var(--space-md);
+  }
+
+  .modal-body {
+    padding-bottom: 0;
   }
 
   .charts-grid {
@@ -218,8 +315,23 @@
     display: none;
   }
 
+  .file-actions .btn svg {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+  }
+
   #toggleViewMode {
     display: none;
+  }
+
+  .breadcrumb {
+    padding: var(--space-xs) var(--space-md);
+  }
+
+  .breadcrumb button, .breadcrumb a {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-sm);
   }
 }
 
@@ -240,6 +352,10 @@
   .overlay-box {
     min-width: 280px;
     padding: var(--space-xl);
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -1,0 +1,7 @@
+www.realfirmware.net 
+
+1-flashear la ont primero con shell asta que queden la luces fijas
+apagar y prender la ont.
+
+2- flashearla despues con el bin unlock asta que se queden las luces fijas 
+apagar y prender y listo.
