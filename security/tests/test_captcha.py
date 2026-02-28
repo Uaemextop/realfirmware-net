@@ -200,14 +200,11 @@ class TestLoginCaptchaAbsent:
 
     def test_no_captcha_container_in_login(self, login_html):
         """No hay ningún contenedor CAPTCHA en login."""
-        captcha_patterns = [
-            "recaptcha", "turnstile", "hcaptcha", "captcha-container",
-        ]
-        # El login no debe contener ningún CAPTCHA activo
-        for pattern in captcha_patterns:
-            assert pattern not in login_html.lower(), (
-                f"Se encontró '{pattern}' en wp-login.php"
-            )
+        # Verificar ausencia de contenedores CAPTCHA específicos
+        # (los scripts individuales ya se verifican en otros tests)
+        assert "captcha-container" not in login_html.lower(), (
+            "Se encontró 'captcha-container' en wp-login.php"
+        )
 
 
 # ──────────────────────────────────────────────
