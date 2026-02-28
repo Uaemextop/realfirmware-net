@@ -125,7 +125,7 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
       const e = getExt(r.name);
       const url = baseUrl + encodeURIComponent(r.path).replace(/%2F/g, '/');
       const modDate = r.modified ? new Date(r.modified).toLocaleDateString('es', {year:'numeric',month:'short',day:'numeric'}) : '—';
-      const previewable = ['txt','log','bat','sh','cfg','ini','xml','md','jpg','jpeg','png','webp','gif'].includes(e);
+      const previewable = ['txt','log','bat','sh','cfg','ini','xml','md','jpg','jpeg','png','webp','gif','bin','exe','config','conf','csv','xsl','xsml','json','py','sql','html','css','js','dll','so','bmp','svg'].includes(e);
       html += `<tr>
         <td>
           <div class="fname">${fileIcon(iconClass(e))}<a href="${esc(url)}" target="_blank" title="${esc(r.path)}">${esc(r.name)}</a></div>
@@ -137,7 +137,7 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
         <td class="col-mod">${esc(modDate)}</td>
         <td>
           <div class="actions-cell">
-            ${previewable ? '<button class="btn btn-sm btn-ghost preview-btn" data-url="'+esc(url)+'" data-name="'+esc(r.name)+'" data-ext="'+esc(e)+'" data-tippy-content="Preview">'+eyeSvg+'</button>' : ''}
+            ${previewable ? '<button class="btn btn-sm btn-ghost preview-btn" data-url="'+esc(url)+'" data-name="'+esc(r.name)+'" data-ext="'+esc(e)+'" data-size="'+r.size+'" data-modified="'+esc(r.modified||'')+'" data-type="'+esc(r.type||'')+'" data-device="'+esc(r.device||'')+'" data-hash="'+esc(r.hash||'')+'" data-tippy-content="Preview">'+eyeSvg+'</button>' : ''}
             <a class="btn btn-sm btn-ghost" href="${esc(url)}" download="${esc(r.name)}" data-tippy-content="Download">${dlSvg}</a>
             <button class="btn btn-sm btn-ghost link-btn" data-link="${esc(url)}" data-tippy-content="Copy link">${linkSvg}</button>
           </div>
@@ -159,7 +159,16 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
     b.addEventListener('click', () => callbacks.onCopyLink(b.dataset.link));
   });
   tbody.querySelectorAll('.preview-btn').forEach(b => {
-    b.addEventListener('click', () => callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext));
+    b.addEventListener('click', () => {
+      const fileData = {
+        size: parseInt(b.dataset.size) || 0,
+        modified: b.dataset.modified || '',
+        type: b.dataset.type || '',
+        device: b.dataset.device || '',
+        hash: b.dataset.hash || ''
+      };
+      callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext, fileData);
+    });
   });
 }
 
