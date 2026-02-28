@@ -20,7 +20,11 @@ import { populateFilters, applyFilters, renderFilterTags, clearAllFilters, getFi
 import { downloadDirAsZip, fileDownloadUrl } from './download.js';
 import { buildRows, sortEntries, renderTable, renderInfoPanel, dirStats } from './explorer.js';
 import { isPreviewable, showPreview } from './preview.js';
-import { initUI, applyTooltips, copyToClipboard, formatBytes } from './ui.js';
+import { initUI, applyTooltips, copyToClipboard, formatBytes, notifySuccess, notifyError } from './ui.js';
+
+// Make notify functions globally available for preview.js
+window.notifySuccess = notifySuccess;
+window.notifyError = notifyError;
 
 // dayjs for date formatting
 import dayjs from 'dayjs';
@@ -160,9 +164,9 @@ const tableCallbacks = {
     await downloadDirAsZip(DATA.files, path, updateProgress, hideProgress);
   },
   onCopyLink: (link) => copyToClipboard(link),
-  onPreview: (url, name, ext) => {
+  onPreview: (url, name, ext, fileData) => {
     const modal = $('#previewModal');
-    if (modal) showPreview(url, name, ext, modal);
+    if (modal) showPreview(url, name, ext, modal, fileData);
   }
 };
 
