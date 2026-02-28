@@ -43,6 +43,13 @@ export function initUI() {
       }
     });
   }
+
+  // Setup collapsible sections
+  document.querySelectorAll('.collapsible-section .section-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      toggle.closest('.collapsible-section').classList.toggle('collapsed');
+    });
+  });
 }
 
 /**
