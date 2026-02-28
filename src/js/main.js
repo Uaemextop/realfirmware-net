@@ -214,7 +214,7 @@ function bindEvents() {
   const dz = $('#dlZip');
   if (dz) dz.addEventListener('click', async () => {
     showProgress();
-    await downloadDirAsZip(DATA.files, curPath || 'firmware-extracted', updateProgress, hideProgress);
+    await downloadDirAsZip(DATA.files, curPath || 'realfirmware', updateProgress, hideProgress);
   });
 
   // Close preview modal

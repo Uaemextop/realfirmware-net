@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
- * build-index.js — Scans firmware-extracted/ and generates file-index.json
+ * build-index.js — Scans device directories and generates file-index.json
  * with enriched metadata: device, category, ISP, extension, type, SHA256 hash.
  */
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const BASE = path.join(__dirname, '..', 'firmware-extracted');
+const BASE = path.join(__dirname, '..');
 const OUT = path.join(__dirname, '..', 'file-index.json');
+const EXCLUDE_DIRS = ['.git', '.github', 'assets', 'scripts', 'src', 'node_modules', 'dist'];
 
 const TYPE_MAP = {
   bin: 'Firmware', img: 'Firmware',
@@ -28,12 +29,22 @@ function sha256(filePath) {
   return crypto.createHash('sha256').update(data).digest('hex');
 }
 
-function walkDir(dir) {
+function walkDir(dir, isRoot = false) {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    // Skip excluded directories at root level
+    if (isRoot && entry.isDirectory() && EXCLUDE_DIRS.includes(entry.name)) {
+      continue;
+    }
+    // Skip hidden files and specific files at root
+    if (isRoot && (entry.name.startsWith('.') ||
+        ['package.json', 'package-lock.json', 'README.md', 'file-index.json',
+         'index.html', 'about.html', 'stats.html'].includes(entry.name))) {
+      continue;
+    }
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      results.push(...walkDir(full));
+      results.push(...walkDir(full, false));
     } else {
       results.push(full);
     }
@@ -41,14 +52,14 @@ function walkDir(dir) {
   return results;
 }
 
-const files = walkDir(BASE);
+const files = walkDir(BASE, true);
 const index = files.map(fp => {
   const rel = path.relative(path.join(__dirname, '..'), fp).replace(/\\/g, '/');
   const st = fs.statSync(fp);
   const parts = path.relative(BASE, fp).split(path.sep);
   // Structure: Device/ISP/filename (or root files like MANIFEST.txt)
   const fileName = parts[parts.length - 1];
-  const device = parts.length >= 3 ? parts[0] : (parts.length === 2 ? parts[0] : '');
+  const device = parts.length >= 2 ? parts[0] : '';
   const isp = parts.length >= 3 ? parts[1] : '';
   const ext = path.extname(fileName).replace('.', '').toLowerCase();
   const size = st.size;

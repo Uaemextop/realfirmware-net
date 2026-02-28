@@ -128,7 +128,7 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
       const previewable = ['txt','log','bat','sh','cfg','ini','xml','md','jpg','jpeg','png','webp','gif','bin','exe','config','conf','csv','xsl','xsml','json','py','sql','html','css','js','dll','so','bmp','svg'].includes(e);
       html += `<tr>
         <td>
-          <div class="fname">${fileIcon(iconClass(e))}<a href="${esc(url)}" target="_blank" title="${esc(r.path)}">${esc(r.name)}</a></div>
+          <div class="fname">${fileIcon(iconClass(e))}<button class="file-name-btn" data-url="${esc(url)}" data-name="${esc(r.name)}" data-ext="${esc(e)}" data-size="${r.size}" data-modified="${esc(r.modified||'')}" data-type="${esc(r.type||'')}" data-device="${esc(r.device||'')}" data-hash="${esc(r.hash||'')}" data-previewable="${previewable}" title="${esc(r.path)}">${esc(r.name)}</button></div>
           ${isSearch ? '<div class="search-result-path">' + esc(r.path) + '</div>' : ''}
         </td>
         <td class="fsize col-size">${formatBytes(r.size)}</td>
@@ -168,6 +168,25 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
         hash: b.dataset.hash || ''
       };
       callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext, fileData);
+    });
+  });
+  // File name click handler
+  tbody.querySelectorAll('.file-name-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const isPreviewable = b.dataset.previewable === 'true';
+      if (isPreviewable) {
+        const fileData = {
+          size: parseInt(b.dataset.size) || 0,
+          modified: b.dataset.modified || '',
+          type: b.dataset.type || '',
+          device: b.dataset.device || '',
+          hash: b.dataset.hash || ''
+        };
+        callbacks.onPreview(b.dataset.url, b.dataset.name, b.dataset.ext, fileData);
+      } else {
+        // For non-previewable files, open in new tab
+        window.open(b.dataset.url, '_blank');
+      }
     });
   });
 }
