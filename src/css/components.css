@@ -512,7 +512,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 20px;
-  transition: transform var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 .feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .feature-card .feature-icon { font-size: 28px; margin-bottom: 10px; }
