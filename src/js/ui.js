@@ -31,6 +31,18 @@ export function initUI() {
     btn.addEventListener('click', toggleTheme);
     updateThemeIcon(btn);
   }
+
+  // Setup mobile menu toggle
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  if (menuBtn && navLinks) {
+    menuBtn.addEventListener('click', () => navLinks.classList.toggle('show'));
+    document.addEventListener('click', e => {
+      if (!menuBtn.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('show');
+      }
+    });
+  }
 }
 
 /**

@@ -17,7 +17,10 @@
     <svg viewBox="0 0 24 24"><path d="M3 3h8l2 2h8a1 1 0 011 1v13a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
     RealFirmware
   </div>
-  <div class="nav-links">
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+    <svg viewBox="0 0 16 16" width="20" height="20"><path fill="currentColor" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 010 1.5H1.75A.75.75 0 011 7.75zm0 5a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H1.75a.75.75 0 01-.75-.75z"/></svg>
+  </button>
+  <div class="nav-links" id="navLinks">
     <a href="index.html">Explorer</a>
     <a href="stats.html">Statistics</a>
     <a href="about.html" class="active">About</a>
@@ -129,7 +132,7 @@
 </div>
 
 <script>
-// Minimal theme toggle for the about page
+// Minimal theme toggle and mobile menu for the about page
 (function(){
   const saved = localStorage.getItem('theme');
   if (saved) document.documentElement.setAttribute('data-theme', saved);
@@ -140,6 +143,18 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
   });
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  if (menuBtn && navLinks) {
+    menuBtn.addEventListener('click', function() {
+      navLinks.classList.toggle('show');
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuBtn.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('show');
+      }
+    });
+  }
 })();
 </script>
 </body>

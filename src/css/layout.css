@@ -102,6 +102,28 @@ a:focus-visible {
   gap: 5px;
 }
 
+/* ── Mobile Menu Button ── */
+.mobile-menu-btn {
+  display: none;
+  padding: 6px;
+  border-radius: var(--radius);
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text2);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+.mobile-menu-btn:hover {
+  color: var(--text);
+  background: var(--accent-bg);
+}
+.mobile-menu-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .nav-links {
   display: flex;
   gap: var(--space-xs);

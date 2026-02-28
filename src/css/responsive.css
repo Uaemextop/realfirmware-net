@@ -18,6 +18,29 @@
   }
   .header .nav-links {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: var(--space-sm);
+    gap: 0;
+    box-shadow: var(--shadow-md);
+    z-index: 101;
+    animation: fadeSlideDown 0.2s ease;
+  }
+  .header .nav-links.show {
+    display: flex;
+  }
+  .header .nav-links a {
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    font-size: var(--font-base);
+  }
+  .mobile-menu-btn {
+    display: inline-flex;
   }
 
   .breadcrumb {
