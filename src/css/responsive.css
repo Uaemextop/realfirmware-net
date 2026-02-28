@@ -101,6 +101,21 @@
   .modal-overlay {
     padding: var(--space-md);
   }
+
+  /* Hide checkboxes on mobile to save space */
+  .fname .file-checkbox {
+    display: none;
+  }
+
+  .selection-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .selection-bar .selection-count {
+    text-align: center;
+  }
 }
 
 /* Mobile portrait */
@@ -193,6 +208,18 @@
 
   .chart-card {
     padding: var(--space-md);
+  }
+
+  .selection-bar {
+    padding: var(--space-sm);
+  }
+
+  .btn svg {
+    display: none;
+  }
+
+  #toggleViewMode {
+    display: none;
   }
 }
 
