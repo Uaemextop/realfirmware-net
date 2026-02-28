@@ -123,9 +123,8 @@ class TestWooCommerceForms:
     def _get_sample_product(self):
         """Busca un producto de ejemplo en el crawl."""
         import os
-        product_dir = os.path.join(
-            os.path.dirname(__file__), os.pardir, os.pardir, "producto"
-        )
+        from helpers import CRAWL_ROOT
+        product_dir = os.path.join(CRAWL_ROOT, "producto")
         if not os.path.isdir(product_dir):
             return None
         for entry in os.listdir(product_dir):
