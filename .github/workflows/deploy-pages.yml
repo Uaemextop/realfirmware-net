@@ -36,14 +36,20 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare dist
+        run: |
+          mkdir -p dist/assets/js dist/assets/css dist/firmware-extracted
+          cp index.html stats.html about.html dist/
+          cp file-index.json dist/
+          cp -r assets/js/*.js dist/assets/js/
+          cp -r assets/js/*.css dist/assets/js/ 2>/dev/null || true
+          cp -r assets/css/*.css dist/assets/css/
+          cp -rL firmware-extracted/* dist/firmware-extracted/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
-          exclude: |
-            node_modules/**
-            scripts/**
-            .git/**
+          path: ./dist
 
   deploy:
     environment:

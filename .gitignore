@@ -3,3 +3,5 @@ node_modules/
 *.log
 assets/js/*.map
 assets/css/*.map
+desktop.ini
+dist/
