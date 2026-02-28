@@ -443,6 +443,9 @@
   transform: scale(1.1);
 }
 .ic-dir { fill: var(--accent); }
+.ic-parent { fill: var(--text2); transition: fill var(--transition-fast), transform var(--transition-fast); }
+.parent-dir-row:hover .ic-parent { fill: var(--accent); transform: translateX(-2px); }
+.file-table tbody tr.parent-dir-row:hover { background: var(--surface-hover); }
 .ic-fw { fill: var(--warning); }
 .ic-doc { fill: var(--success); }
 .ic-img { fill: var(--purple); }

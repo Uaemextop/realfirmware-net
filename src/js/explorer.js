@@ -10,6 +10,7 @@ function esc(s) {
 
 /* ── Icon SVGs ── */
 const dirIcon = '<svg viewBox="0 0 24 24" class="ic-dir"><path d="M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>';
+const parentDirIcon = '<svg viewBox="0 0 24 24" class="ic-parent"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>';
 const fileIcon = c => `<svg viewBox="0 0 24 24" class="${c}"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
 const dlSvg = '<svg viewBox="0 0 16 16"><path d="M7.47 10.78a.75.75 0 001.06 0l3.75-3.75a.75.75 0 00-1.06-1.06L8.75 8.44V1.75a.75.75 0 00-1.5 0v6.69L4.78 5.97a.75.75 0 00-1.06 1.06l3.75 3.75zM3.75 13a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5z"/></svg>';
 const linkSvg = '<svg viewBox="0 0 16 16"><path d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-.025 5.475a.75.75 0 00-1.06 0l-1.25 1.25a2 2 0 11-2.83-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 000-1.06z"/></svg>';
@@ -113,9 +114,11 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
 
   rows.forEach(r => {
     if (r._dir) {
-      const label = r._parent ? '⬆ Parent directory' : esc(r.name);
-      html += `<tr>
-        <td><div class="fname">${dirIcon}<button data-nav="${esc(r.path)}">${label}</button></div></td>
+      const icon = r._parent ? parentDirIcon : dirIcon;
+      const label = r._parent ? 'Parent directory' : esc(r.name);
+      const rowClass = r._parent ? ' class="parent-dir-row"' : '';
+      html += `<tr${rowClass}>
+        <td><div class="fname">${icon}<button data-nav="${esc(r.path)}">${label}</button></div></td>
         <td class="fsize col-size">${r._parent ? '' : (r.count + ' files · ' + formatBytes(r.size))}</td>
         <td class="col-type">${r._parent ? '' : '<span class="ftype">Folder</span>'}</td>
         <td class="col-cat"></td>
