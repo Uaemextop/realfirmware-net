@@ -289,12 +289,57 @@
 }
 .info-panel h3 {
   font-size: var(--font-base);
-  margin-bottom: 10px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   color: var(--text2);
   font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  user-select: none;
+}
+.info-panel h3 .panel-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius);
+  background: none;
+  border: none;
+  color: var(--text2);
+  cursor: pointer;
+  transition: transform var(--transition-base), color var(--transition-base), background var(--transition-base);
+  font-size: var(--font-sm);
+}
+.info-panel h3 .panel-toggle:hover {
+  background: var(--accent-bg);
+  color: var(--text);
+}
+.info-panel h3 .panel-toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  transition: transform var(--transition-base);
+}
+.info-panel.collapsed h3 .panel-toggle svg {
+  transform: rotate(-90deg);
+}
+.info-panel.collapsed h3 {
+  margin-bottom: 0;
+}
+.info-panel .info-grid {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 10px;
+}
+.info-panel.collapsed .info-grid {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
 }
 .info-grid {
   display: grid;
@@ -632,17 +677,23 @@
 
 /* ── File Actions Styles ── */
 .file-actions {
+  position: sticky;
+  bottom: 0;
   margin-top: var(--space-lg);
-  padding-top: var(--space-lg);
+  padding: var(--space-md);
   border-top: 1px solid var(--border);
+  background: var(--surface);
   display: flex;
   gap: var(--space-sm);
   flex-wrap: wrap;
+  z-index: 2;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 .file-actions .btn {
   flex: 1;
-  min-width: 150px;
+  min-width: 120px;
   justify-content: center;
 }
 
