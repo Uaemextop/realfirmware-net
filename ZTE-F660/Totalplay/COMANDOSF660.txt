@@ -1,5 +1,0 @@
-setmac 1 1538 admin
-setmac 1 1794 admin
-setmac 1 1024 WIFI_2.4G
-setmac 1 1296 12345678
-upgradetest sdefconf 198
