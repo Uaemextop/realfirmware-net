@@ -84,6 +84,6 @@ export async function showPreview(url, fileName, ext, modal) {
     const text = await resp.text();
     body.innerHTML = renderPreview(text, ext);
   } catch (e) {
-    body.innerHTML = `<p style="color:var(--red)">Failed to load preview: ${e.message}</p>`;
+    body.innerHTML = `<p style="color:var(--red)">Failed to load preview</p>`;
   }
 }

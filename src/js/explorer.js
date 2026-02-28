@@ -3,6 +3,11 @@
  */
 import { formatBytes } from './ui.js';
 
+/* ── Helpers ── */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 /* ── Icon SVGs ── */
 const dirIcon = '<svg viewBox="0 0 24 24" class="ic-dir"><path d="M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>';
 const fileIcon = c => `<svg viewBox="0 0 24 24" class="${c}"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
@@ -107,14 +112,14 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
 
   rows.forEach(r => {
     if (r._dir) {
-      const label = r._parent ? '⬆ Parent directory' : r.name;
+      const label = r._parent ? '⬆ Parent directory' : esc(r.name);
       html += `<tr>
-        <td><div class="fname">${dirIcon}<button data-nav="${r.path}">${label}</button></div></td>
+        <td><div class="fname">${dirIcon}<button data-nav="${esc(r.path)}">${label}</button></div></td>
         <td class="fsize col-size">${r._parent ? '' : (r.count + ' files · ' + formatBytes(r.size))}</td>
         <td class="col-type">${r._parent ? '' : '<span class="ftype">Folder</span>'}</td>
         <td class="col-cat"></td>
         <td class="col-mod">—</td>
-        <td>${r._parent ? '' : '<div class="actions-cell"><button class="btn btn-sm btn-ghost zip-dir" data-path="'+r.path+'" data-tippy-content="Download as .zip">'+dlSvg+'</button></div>'}</td>
+        <td>${r._parent ? '' : '<div class="actions-cell"><button class="btn btn-sm btn-ghost zip-dir" data-path="'+esc(r.path)+'" data-tippy-content="Download as .zip">'+dlSvg+'</button></div>'}</td>
       </tr>`;
     } else {
       const e = getExt(r.name);
@@ -123,18 +128,18 @@ export function renderTable(tbody, rows, isSearch, callbacks) {
       const previewable = ['txt','log','bat','sh','cfg','ini','xml','md','jpg','jpeg','png','webp','gif'].includes(e);
       html += `<tr>
         <td>
-          <div class="fname">${fileIcon(iconClass(e))}<a href="${url}" target="_blank" title="${r.path}">${r.name}</a></div>
-          ${isSearch ? '<div class="search-result-path">' + r.path + '</div>' : ''}
+          <div class="fname">${fileIcon(iconClass(e))}<a href="${esc(url)}" target="_blank" title="${esc(r.path)}">${esc(r.name)}</a></div>
+          ${isSearch ? '<div class="search-result-path">' + esc(r.path) + '</div>' : ''}
         </td>
         <td class="fsize col-size">${formatBytes(r.size)}</td>
-        <td class="col-type"><span class="ftype">${r.type || e || '—'}</span></td>
-        <td class="col-cat">${r.device || '—'}</td>
-        <td class="col-mod">${modDate}</td>
+        <td class="col-type"><span class="ftype">${esc(r.type || e || '—')}</span></td>
+        <td class="col-cat">${esc(r.device || '—')}</td>
+        <td class="col-mod">${esc(modDate)}</td>
         <td>
           <div class="actions-cell">
-            ${previewable ? '<button class="btn btn-sm btn-ghost preview-btn" data-url="'+url+'" data-name="'+r.name+'" data-ext="'+e+'" data-tippy-content="Preview">'+eyeSvg+'</button>' : ''}
-            <a class="btn btn-sm btn-ghost" href="${url}" download="${r.name}" data-tippy-content="Download">${dlSvg}</a>
-            <button class="btn btn-sm btn-ghost link-btn" data-link="${url}" data-tippy-content="Copy link">${linkSvg}</button>
+            ${previewable ? '<button class="btn btn-sm btn-ghost preview-btn" data-url="'+esc(url)+'" data-name="'+esc(r.name)+'" data-ext="'+esc(e)+'" data-tippy-content="Preview">'+eyeSvg+'</button>' : ''}
+            <a class="btn btn-sm btn-ghost" href="${esc(url)}" download="${esc(r.name)}" data-tippy-content="Download">${dlSvg}</a>
+            <button class="btn btn-sm btn-ghost link-btn" data-link="${esc(url)}" data-tippy-content="Copy link">${linkSvg}</button>
           </div>
         </td>
       </tr>`;
