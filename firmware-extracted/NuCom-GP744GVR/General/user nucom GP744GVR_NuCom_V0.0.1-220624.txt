@@ -1,0 +1,4 @@
+user: admin
+pass: NuCom
+
+www.realfirmware.net 

@@ -1,0 +1,45 @@
+/* ── CSS Custom Properties & Theme ── */
+:root {
+  /* Dark theme (default) */
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #484f58;
+  --accent: #58a6ff;
+  --accent-bg: rgba(56, 139, 253, 0.1);
+  --green: #3fb950;
+  --green-bg: rgba(63, 185, 80, 0.1);
+  --red: #f85149;
+  --orange: #f0883e;
+  --purple: #bc8cff;
+  --yellow: #d29922;
+  --card: #21262d;
+  --shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --transition: 0.15s ease;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+[data-theme="light"] {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --surface2: #f0f3f6;
+  --border: #d0d7de;
+  --text: #1f2328;
+  --text2: #656d76;
+  --text3: #8b949e;
+  --accent: #0969da;
+  --accent-bg: rgba(9, 105, 218, 0.08);
+  --green: #1a7f37;
+  --green-bg: rgba(26, 127, 55, 0.08);
+  --red: #cf222e;
+  --orange: #bc4c00;
+  --purple: #8250df;
+  --yellow: #9a6700;
+  --card: #f6f8fa;
+  --shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}

@@ -1,0 +1,43 @@
+WWW.REALFIRMEARE.NET
+USUARIO Y CONTRASEÑA
+
+telecomadmin	
+admintelecom
+
+First run the Huawei tool until the ont lights stay on, turn it off and turn it on.
+
+when you run the command equipmode.sh on
+and say on, go back and load the v2 with the huawei tool until all the lights are frozen again and then turn the ont off and on and execute the following command sudo restorehwmode.sh
+
+ejecutar ont ferramenta v2  finish
+power off power on
+
+ telnet 192.168.100.1
+root
+adminHW
+
+su
+shell
+equipmode.sh on enter
+on==
+
+ejecutar ont ferramenta v2  finish
+when you run the command equipmode.sh on
+and say on, go back and load the v2 with the huawei tool until all the lights are frozen again and then turn the ont off and on and execute the following command sudo restorehwmode.sh
+power off power on
+
+ telnet 192.168.100.1
+root
+adminHW
+
+su
+shell
+sudo restorehwmode.sh enter
+success===
+comand
+EquipMode.sh off enter
+off==
+
+reboot
+
+

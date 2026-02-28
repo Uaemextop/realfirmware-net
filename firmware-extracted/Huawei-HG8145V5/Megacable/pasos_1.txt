@@ -1,0 +1,11 @@
+www.realfirmware.net 
+
+1-flashear la ont primero con shell asta que queden la luces fijas
+apagar y prender la ont.
+
+2- flashearla despues con el bin megacablev5 asta que se queden las luces fijas 
+apagar y prender y listo.
+
+www.realfirmware.net
+
+solo funciona para la v5 normal la v12 no

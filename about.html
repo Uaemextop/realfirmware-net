@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealFirmware — About</title>
+<meta name="description" content="About the RealFirmware file explorer and its features">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2358a6ff'><path d='M3 3h8l2 2h8a1 1 0 011 1v13a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z'/></svg>">
+<link rel="stylesheet" href="assets/css/normalize.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo">
+    <svg viewBox="0 0 24 24"><path d="M3 3h8l2 2h8a1 1 0 011 1v13a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
+    RealFirmware
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Explorer</a>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+  <div class="header-right">
+    <button class="btn-icon" id="themeToggle" aria-label="Toggle theme">
+      <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 12a4 4 0 100-8 4 4 0 000 8zm0 1.5a5.5 5.5 0 110-11 5.5 5.5 0 010 11zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="about-content animate-fadeIn">
+    <h2>📂 RealFirmware File Explorer</h2>
+    <p>
+      A modern, client-side file explorer for browsing ONT/router firmware files.
+      All files are organized by device model, with full search, filtering, and download capabilities.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Smart Search</h3>
+        <p>Fuzzy search powered by Fuse.js and full-text indexing via Lunr.js. Find files by name, device, ISP, or type instantly. Press <kbd>/</kbd> to focus.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <h3>Advanced Filters</h3>
+        <p>Filter by category (firmware, documents, config), device model, ISP/variant, and file type. Combine multiple filters for precise results.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Sort & Organize</h3>
+        <p>Sort files by name, size, type, category, or modification date. Click column headers to toggle ascending/descending order.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Direct Links</h3>
+        <p>Every directory state is captured in the URL hash. Copy shareable links to any file or folder with one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Zip Downloads</h3>
+        <p>Download any directory as a .zip file directly in the browser. Powered by JSZip with real-time progress tracking.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👁️</div>
+        <h3>File Preview</h3>
+        <p>Preview text files, configs, scripts, and images without downloading. Syntax highlighting via highlight.js.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Statistics Dashboard</h3>
+        <p>Interactive charts showing file distribution by category, type, device, and extension. Powered by Chart.js.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌓</div>
+        <h3>Dark/Light Theme</h3>
+        <p>Toggle between dark and light themes. Your preference is saved in localStorage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Responsive Design</h3>
+        <p>Works on desktop, tablet, and mobile. Columns adapt to screen size for optimal viewing.</p>
+      </div>
+    </div>
+
+    <h2>🏗️ Architecture</h2>
+    <p>The project uses a Node.js build pipeline with the following dependencies:</p>
+    <ul>
+      <li><strong>Fuse.js</strong> — Fuzzy search engine</li>
+      <li><strong>Lunr.js</strong> — Full-text search indexing</li>
+      <li><strong>JSZip</strong> — Client-side zip file generation</li>
+      <li><strong>FileSaver.js</strong> — Cross-browser file downloads</li>
+      <li><strong>Chart.js</strong> — Interactive statistics charts</li>
+      <li><strong>dayjs</strong> — Lightweight date formatting</li>
+      <li><strong>tippy.js</strong> + <strong>@popperjs/core</strong> — Beautiful tooltips</li>
+      <li><strong>highlight.js</strong> — Syntax highlighting for file preview</li>
+      <li><strong>marked</strong> — Markdown rendering</li>
+      <li><strong>Notyf</strong> — Toast notifications</li>
+      <li><strong>normalize.css</strong> — CSS reset/normalization</li>
+      <li><strong>animate.css</strong> — CSS animations library</li>
+      <li><strong>lazysizes</strong> — Lazy loading for images</li>
+      <li><strong>pretty-bytes</strong> — Human-readable file sizes</li>
+      <li><strong>esbuild</strong> — Ultra-fast JavaScript/CSS bundler</li>
+      <li><strong>html-minifier-terser</strong> — HTML optimization</li>
+    </ul>
+
+    <h2>📁 File Organization</h2>
+    <p>
+      Files are organized by <strong>device model</strong> at the top level (e.g., <code>Huawei-HG8145V5</code>,
+      <code>ZTE-F670L</code>, <code>Nokia-G2425G-A</code>), then by <strong>ISP/operator</strong>
+      (e.g., <code>Totalplay</code>, <code>Telmex</code>, <code>Claro-Dominicana</code>).
+      Each ISP folder contains all related files as a complete package: firmware binaries,
+      documentation, scripts, configuration files, and images — everything needed for that specific variant.
+      Generic files are placed in the <code>General</code> subfolder.
+    </p>
+
+    <h2>🔒 File Integrity</h2>
+    <p>
+      Every file in the index includes a SHA-256 hash for integrity verification.
+      The <code>MANIFEST.txt</code> file in the repository root contains the complete hash listing.
+    </p>
+  </div>
+</div>
+
+<div class="footer">
+  RealFirmware File Explorer · <a href="index.html">Explorer</a> · <a href="stats.html">Statistics</a> · Powered by GitHub Pages
+</div>
+
+<script>
+// Minimal theme toggle for the about page
+(function(){
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.addEventListener('click', function() {
+    const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+})();
+</script>
+</body>
+</html>

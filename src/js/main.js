@@ -1,0 +1,270 @@
+/**
+ * main.js — Entry point for the RealFirmware File Explorer
+ * Imports all modules and orchestrates the application
+ */
+
+// CSS imports (bundled by esbuild)
+import 'normalize.css';
+import 'notyf/notyf.min.css';
+import 'highlight.js/styles/github-dark.css';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/shift-away.css';
+import 'animate.css';
+
+// Lazy-loading for images
+import 'lazysizes';
+
+// Application modules
+import { initSearch, searchFiles } from './search.js';
+import { populateFilters, applyFilters, renderFilterTags, clearAllFilters, getFilterState, setFilterState } from './filters.js';
+import { downloadDirAsZip, fileDownloadUrl } from './download.js';
+import { buildRows, sortEntries, renderTable, renderInfoPanel, dirStats } from './explorer.js';
+import { isPreviewable, showPreview } from './preview.js';
+import { initUI, applyTooltips, copyToClipboard, formatBytes } from './ui.js';
+
+// dayjs for date formatting
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/es';
+dayjs.extend(relativeTime);
+dayjs.locale('es');
+
+/* ── State ── */
+let DATA = null;
+let curPath = '';
+let sortKey = 'name';
+let sortAsc = true;
+let searchMode = false;
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* ── URL Hash State ── */
+function stateToHash() {
+  const p = new URLSearchParams();
+  if (curPath) p.set('p', curPath);
+  const q = $('#searchInput');
+  if (q && q.value) p.set('q', q.value);
+  const fs = getFilterState();
+  Object.entries(fs).forEach(([k, v]) => p.set(k, v));
+  if (sortKey !== 'name') p.set('sort', sortKey);
+  if (!sortAsc) p.set('dir', 'desc');
+  return p.toString();
+}
+
+function hashToState() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  curPath = p.get('p') || '';
+  const q = $('#searchInput');
+  if (q) q.value = p.get('q') || '';
+  setFilterState({
+    fCat: p.get('fCat') || '',
+    fDev: p.get('fDev') || '',
+    fIsp: p.get('fIsp') || '',
+    fType: p.get('fType') || ''
+  });
+  sortKey = p.get('sort') || 'name';
+  sortAsc = p.get('dir') !== 'desc';
+  searchMode = !!(q && q.value);
+}
+
+function pushState() {
+  history.pushState(null, '', '#' + stateToHash());
+}
+
+/* ── Navigation ── */
+function nav(path) {
+  curPath = path || '';
+  searchMode = false;
+  const q = $('#searchInput');
+  if (q) q.value = '';
+  pushState();
+  render();
+}
+
+/* ── Breadcrumb ── */
+function renderBreadcrumb() {
+  const bc = $('#breadcrumb');
+  if (!bc) return;
+  const parts = curPath ? curPath.split('/') : [];
+  let html = '<button data-nav="" title="Root">🏠 Root</button>';
+  let acc = '';
+  parts.forEach((p, i) => {
+    html += '<span class="sep">/</span>';
+    acc += (acc ? '/' : '') + p;
+    if (i === parts.length - 1) html += `<span class="current">${p}</span>`;
+    else html += `<button data-nav="${acc}">${p}</button>`;
+  });
+  bc.innerHTML = html;
+  bc.querySelectorAll('button[data-nav]').forEach(b => {
+    b.addEventListener('click', () => nav(b.dataset.nav));
+  });
+}
+
+/* ── Progress UI ── */
+function showProgress() { const o = $('#overlay'); if (o) o.classList.add('show'); }
+function hideProgress() { const o = $('#overlay'); if (o) o.classList.remove('show'); }
+function updateProgress(pct, msg) {
+  const f = $('#oFill'), p = $('#oPct'), t = $('#oText');
+  if (f) f.style.width = pct + '%';
+  if (p) p.textContent = pct + '%';
+  if (t) t.textContent = msg;
+}
+
+/* ── Main Render ── */
+function render() {
+  const q = $('#searchInput');
+  const query = q ? q.value.trim() : '';
+  searchMode = query.length > 0;
+
+  const clearBtn = $('#clearSearch');
+  if (clearBtn) clearBtn.classList.toggle('show', searchMode);
+
+  // Update sort headers
+  $$('.file-table th[data-sort]').forEach(th => {
+    const k = th.dataset.sort;
+    th.classList.toggle('active', k === sortKey);
+    const arrow = th.querySelector('.arrow');
+    if (arrow) arrow.textContent = k === sortKey ? (sortAsc ? '▲' : '▼') : '';
+  });
+
+  renderBreadcrumb();
+  renderFilterTags($('#activeTags'), () => { pushState(); render(); });
+
+  const filtered = applyFilters(DATA.files);
+
+  if (searchMode) {
+    // Search mode
+    const results = searchFiles(query).filter(f => filtered.includes(f));
+    const rows = results.map(f => ({ ...f, _dir: false }));
+    const panel = $('#infoPanel');
+    if (panel) panel.style.display = 'none';
+    renderTable($('#fileList'), rows, true, tableCallbacks);
+    applyTooltips($('#fileList'));
+    return;
+  }
+
+  // Directory mode
+  renderInfoPanel(filtered, curPath);
+  const rows = buildRows(filtered, curPath);
+  const sorted = sortEntries(rows, sortKey, sortAsc);
+  renderTable($('#fileList'), sorted, false, tableCallbacks);
+  applyTooltips($('#fileList'));
+}
+
+/* ── Table Callbacks ── */
+const tableCallbacks = {
+  onNav: (path) => nav(path),
+  onZipDir: async (path) => {
+    showProgress();
+    await downloadDirAsZip(DATA.files, path, updateProgress, hideProgress);
+  },
+  onCopyLink: (link) => copyToClipboard(link),
+  onPreview: (url, name, ext) => {
+    const modal = $('#previewModal');
+    if (modal) showPreview(url, name, ext, modal);
+  }
+};
+
+/* ── Event Binding ── */
+function bindEvents() {
+  // Sort
+  $$('.file-table th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      if (sortKey === k) sortAsc = !sortAsc;
+      else { sortKey = k; sortAsc = true; }
+      pushState();
+      render();
+    });
+  });
+
+  // Search (debounced)
+  let timer;
+  const q = $('#searchInput');
+  if (q) {
+    q.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { pushState(); render(); }, 200);
+    });
+  }
+  const cb = $('#clearSearch');
+  if (cb) cb.addEventListener('click', () => {
+    if (q) q.value = '';
+    searchMode = false;
+    pushState();
+    render();
+  });
+
+  // Filters
+  ['#fCat','#fDev','#fIsp','#fType'].forEach(s => {
+    const el = $(s);
+    if (el) el.addEventListener('change', () => { pushState(); render(); });
+  });
+  const tf = $('#toggleFilters');
+  if (tf) tf.addEventListener('click', () => $('#filterBar').classList.toggle('show'));
+  const cf = $('#clearFilters');
+  if (cf) cf.addEventListener('click', () => { clearAllFilters(); pushState(); render(); });
+
+  // Download zip
+  const dz = $('#dlZip');
+  if (dz) dz.addEventListener('click', async () => {
+    showProgress();
+    await downloadDirAsZip(DATA.files, curPath || 'firmware-extracted', updateProgress, hideProgress);
+  });
+
+  // Close preview modal
+  const mo = $('#previewOverlay');
+  if (mo) {
+    mo.addEventListener('click', e => { if (e.target === mo) mo.classList.remove('show'); });
+    const close = mo.querySelector('.modal-close');
+    if (close) close.addEventListener('click', () => mo.classList.remove('show'));
+  }
+
+  // Back/forward
+  window.addEventListener('popstate', () => { hashToState(); render(); });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== q) {
+      e.preventDefault();
+      if (q) q.focus();
+    }
+    if (e.key === 'Escape') {
+      if (q) q.blur();
+      if (searchMode) { if (q) q.value = ''; searchMode = false; pushState(); render(); }
+      const mo = $('#previewOverlay');
+      if (mo && mo.classList.contains('show')) mo.classList.remove('show');
+    }
+  });
+}
+
+/* ── Init ── */
+async function init() {
+  initUI();
+
+  try {
+    const resp = await fetch('file-index.json');
+    DATA = await resp.json();
+  } catch (e) {
+    const fl = $('#fileList');
+    if (fl) fl.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text2)">Failed to load file-index.json</td></tr>';
+    return;
+  }
+
+  initSearch(DATA.files);
+  populateFilters(DATA);
+  hashToState();
+  bindEvents();
+  render();
+}
+
+// Boot
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+// Export for stats page
+window.__FIRMWARE_DATA = () => DATA;
