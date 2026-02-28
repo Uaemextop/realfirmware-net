@@ -1,4 +1,20 @@
 /* ── Responsive Breakpoints ── */
+
+/* ── Mobile nav toggle ── */
+.nav-toggle {
+  display: none;
+  padding: 6px;
+  border-radius: 6px;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text2);
+  cursor: pointer;
+  align-items: center;
+  transition: all var(--transition);
+}
+.nav-toggle:hover { color: var(--text); background: var(--accent-bg); }
+.nav-toggle svg { width: 20px; height: 20px; fill: currentColor; }
+
 @media (max-width: 1024px) {
   .charts-grid {
     grid-template-columns: 1fr;
@@ -7,7 +23,26 @@
 
 @media (max-width: 768px) {
   .header { padding: 10px 14px; }
-  .header .nav-links { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .header .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--header-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-xs);
+    z-index: 99;
+  }
+  .header .nav-links.show { display: flex; }
+  .header .nav-links a {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius);
+  }
   .breadcrumb { padding: 8px 14px; }
   .container { padding: 0 12px 40px; }
   .file-table td, .file-table th { padding: 7px 8px; font-size: 13px; }

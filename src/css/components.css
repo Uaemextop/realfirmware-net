@@ -27,7 +27,7 @@
 }
 .search-wrap input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.15);
+  box-shadow: 0 0 0 3px var(--accent-focus);
 }
 .search-wrap .search-icon {
   position: absolute;
@@ -89,8 +89,8 @@
 .btn:hover { background: var(--accent-bg); border-color: var(--accent); }
 .btn svg { width: 16px; height: 16px; fill: currentColor; }
 .btn-sm { padding: 5px 10px; font-size: 12px; }
-.btn-primary { background: #238636; border-color: #238636; color: #fff; }
-.btn-primary:hover { background: #2ea043; border-color: #2ea043; }
+.btn-primary { background: var(--green); border-color: var(--green); color: #fff; }
+.btn-primary:hover { background: var(--green-hover); border-color: var(--green-hover); }
 .btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
 .btn-accent:hover { opacity: 0.9; }
 .btn-ghost { border-color: transparent; background: transparent; }
@@ -167,7 +167,7 @@
   font-size: 12px;
   background: var(--accent-bg);
   color: var(--accent);
-  border: 1px solid rgba(56, 139, 253, 0.3);
+  border: 1px solid var(--accent-border);
   animation: fadeIn 0.2s ease;
 }
 .filter-tag button {
@@ -325,7 +325,7 @@
   margin-top: 2px;
 }
 .search-result-path mark {
-  background: rgba(56, 139, 253, 0.25);
+  background: var(--accent-focus);
   color: var(--accent);
   padding: 0 2px;
   border-radius: 2px;
@@ -347,7 +347,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--overlay-bg);
   z-index: 200;
   align-items: center;
   justify-content: center;
@@ -409,7 +409,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--overlay-bg);
   z-index: 300;
   align-items: center;
   justify-content: center;
@@ -512,9 +512,9 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 20px;
-  transition: transform var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
-.feature-card:hover { transform: translateY(-2px); }
+.feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .feature-card .feature-icon { font-size: 28px; margin-bottom: 10px; }
 .feature-card h3 { font-size: 15px; margin-bottom: 6px; }
 .feature-card p { font-size: 13px; color: var(--text2); }
