@@ -38,13 +38,22 @@ jobs:
 
       - name: Prepare dist
         run: |
-          mkdir -p dist/assets/js dist/assets/css dist/firmware-extracted
+          mkdir -p dist/assets/js dist/assets/css
           cp index.html stats.html about.html dist/
           cp file-index.json dist/
           cp -r assets/js/*.js dist/assets/js/
           cp -r assets/js/*.css dist/assets/js/ 2>/dev/null || true
           cp -r assets/css/*.css dist/assets/css/
-          cp -rL firmware-extracted/* dist/firmware-extracted/
+          # Copy all device directories (excluding hidden files, assets, scripts, src, node_modules, dist)
+          for dir in */; do
+            dirname="${dir%/}"
+            case "$dirname" in
+              .git|.github|assets|scripts|src|node_modules|dist) ;;
+              *) cp -rL "$dir" dist/ ;;
+            esac
+          done
+          # Copy MANIFEST.txt if it exists
+          [ -f MANIFEST.txt ] && cp MANIFEST.txt dist/ || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

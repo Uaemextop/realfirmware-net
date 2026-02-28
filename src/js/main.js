@@ -17,7 +17,7 @@ import 'lazysizes';
 // Application modules
 import { initSearch, searchFiles } from './search.js';
 import { populateFilters, applyFilters, renderFilterTags, clearAllFilters, getFilterState, setFilterState } from './filters.js';
-import { downloadDirAsZip, fileDownloadUrl } from './download.js';
+import { downloadDirAsZip, downloadSelectedAsZip, fileDownloadUrl } from './download.js';
 import { buildRows, sortEntries, renderTable, renderInfoPanel, dirStats } from './explorer.js';
 import { isPreviewable, showPreview } from './preview.js';
 import { initUI, applyTooltips, copyToClipboard, formatBytes, notifySuccess, notifyError } from './ui.js';
@@ -39,6 +39,8 @@ let curPath = '';
 let sortKey = 'name';
 let sortAsc = true;
 let searchMode = false;
+let selectedFiles = new Set();
+let viewMode = localStorage.getItem('viewMode') || 'comfortable';
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
@@ -167,6 +169,11 @@ const tableCallbacks = {
   onPreview: (url, name, ext, fileData) => {
     const modal = $('#previewModal');
     if (modal) showPreview(url, name, ext, modal, fileData);
+  },
+  onFileSelect: (path, checked) => {
+    if (checked) selectedFiles.add(path);
+    else selectedFiles.delete(path);
+    updateSelectionUI();
   }
 };
 
@@ -217,12 +224,34 @@ function bindEvents() {
     await downloadDirAsZip(DATA.files, curPath || 'realfirmware', updateProgress, hideProgress);
   });
 
+  // View mode toggle
+  const vmt = $('#toggleViewMode');
+  if (vmt) vmt.addEventListener('click', toggleViewMode);
+
+  // Download selected
+  const ds = $('#downloadSelected');
+  if (ds) ds.addEventListener('click', downloadSelected);
+
+  // Clear selection
+  const cs = $('#clearSelection');
+  if (cs) cs.addEventListener('click', clearSelection);
+
   // Close preview modal
   const mo = $('#previewOverlay');
   if (mo) {
     mo.addEventListener('click', e => { if (e.target === mo) mo.classList.remove('show'); });
     const close = mo.querySelector('.modal-close');
     if (close) close.addEventListener('click', () => mo.classList.remove('show'));
+
+    // Fullscreen toggle
+    const fst = $('#fullscreenToggle');
+    if (fst) fst.addEventListener('click', () => {
+      const modal = $('#previewModal');
+      if (modal) {
+        modal.classList.toggle('fullscreen');
+        fst.textContent = modal.classList.contains('fullscreen') ? '🗗' : '⛶';
+      }
+    });
   }
 
   // Back/forward
@@ -230,22 +259,95 @@ function bindEvents() {
 
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {
+    // Focus search with /
     if (e.key === '/' && document.activeElement !== q) {
       e.preventDefault();
       if (q) q.focus();
     }
+    // Escape key - clear search or close modal
     if (e.key === 'Escape') {
       if (q) q.blur();
       if (searchMode) { if (q) q.value = ''; searchMode = false; pushState(); render(); }
       const mo = $('#previewOverlay');
       if (mo && mo.classList.contains('show')) mo.classList.remove('show');
     }
+    // Ctrl/Cmd + A - Select all files
+    if ((e.ctrlKey || e.metaKey) && e.key === 'a' && !searchMode) {
+      e.preventDefault();
+      const checkboxes = $$('.file-checkbox:not([disabled])');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+        const path = cb.dataset.path;
+        if (cb.checked) selectedFiles.add(path);
+        else selectedFiles.delete(path);
+      });
+      updateSelectionUI();
+    }
+    // Ctrl/Cmd + D - Download selected files
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd' && selectedFiles.size > 0) {
+      e.preventDefault();
+      downloadSelected();
+    }
+    // Ctrl/Cmd + K - Toggle compact view
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      toggleViewMode();
+    }
   });
+}
+
+/* ── Selection Management ── */
+function updateSelectionUI() {
+  const count = selectedFiles.size;
+  const btn = $('#downloadSelected');
+  const selectionBar = $('#selectionBar');
+
+  if (count > 0) {
+    if (selectionBar) {
+      selectionBar.style.display = 'flex';
+      const countEl = selectionBar.querySelector('.selection-count');
+      if (countEl) countEl.textContent = `${count} file${count > 1 ? 's' : ''} selected`;
+    }
+  } else {
+    if (selectionBar) selectionBar.style.display = 'none';
+  }
+}
+
+function downloadSelected() {
+  if (selectedFiles.size === 0) {
+    notifyError('No files selected');
+    return;
+  }
+
+  const filesToDownload = DATA.files.filter(f => selectedFiles.has(f.path));
+  showProgress();
+  downloadSelectedAsZip(filesToDownload, updateProgress, () => {
+    hideProgress();
+    notifySuccess(`Downloaded ${selectedFiles.size} files`);
+    clearSelection();
+  });
+}
+
+function clearSelection() {
+  selectedFiles.clear();
+  $$('.file-checkbox').forEach(cb => cb.checked = false);
+  updateSelectionUI();
+}
+
+function toggleViewMode() {
+  viewMode = viewMode === 'comfortable' ? 'compact' : 'comfortable';
+  localStorage.setItem('viewMode', viewMode);
+  document.body.setAttribute('data-view', viewMode);
+  notifySuccess(`View mode: ${viewMode}`);
 }
 
 /* ── Init ── */
 async function init() {
   initUI();
+
+  // Apply view mode
+  document.body.setAttribute('data-view', viewMode);
 
   try {
     const resp = await fetch('file-index.json');
