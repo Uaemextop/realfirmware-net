@@ -9,7 +9,7 @@ const crypto = require('crypto');
 
 const BASE = path.join(__dirname, '..');
 const OUT = path.join(__dirname, '..', 'file-index.json');
-const EXCLUDE_DIRS = ['.git', '.github', 'assets', 'scripts', 'src', 'node_modules', 'dist'];
+const EXCLUDE_DIRS = ['.git', '.github', 'assets', 'scripts', 'src', 'node_modules', 'dist', 'tools'];
 
 // Device aliases: variant model names → compatible base device directory
 const DEVICE_ALIASES = {
