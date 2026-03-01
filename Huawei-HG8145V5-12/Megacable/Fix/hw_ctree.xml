@@ -1429,14 +1429,14 @@
 <UrlFilter NumberOfInstances="0"/>
 <Dosfilter SynFloodEn="0" IcmpEchoReplyEn="0" IcmpRedirectEn="1" LandEn="0" SmurfEn="0" WinnukeEn="0" PingSweepEn="0"/>
 <WANSrcWhiteList WANSrcWhiteListEnable="0" WANSrcWhiteListNumberOfEntries="0"/>
-<AclServices HTTPLanEnable="1" HTTPWanEnable="0" FTPLanEnable="1" FTPWanEnable="1" TELNETLanEnable="1" TELNETWanEnable="1" SSHLanEnable="1" SSHWanEnable="1" HTTPPORT="80" FTPPORT="21" TELNETPORT="23" SSHPORT="22" HTTPWifiEnable="1" TELNETWifiEnable="1">
+<AclServices HTTPLanEnable="1" HTTPWanEnable="1" FTPLanEnable="1" FTPWanEnable="1" TELNETLanEnable="1" TELNETWanEnable="1" SSHLanEnable="1" SSHWanEnable="1" HTTPPORT="80" FTPPORT="21" TELNETPORT="23" SSHPORT="22" HTTPWifiEnable="1" TELNETWifiEnable="1">
 <AccessControl AccessControlListEnable="1" AccessControlListNumberOfEntries="1">
 <List NumberOfInstances="1">
 <ListInstance InstanceID="1" SrcPortType="2" SrcPortName="ALL" SrcIp="" ServicePort="HTTP" SrcMac="" ServiceProto="" ServiceProtoPort="" Priority="1" Mode="0" DynamicWanServiceType=""/>
 </List>
 </AccessControl>
-<X_HW_RemoteAccess Enable="0" Port="" Protocol="" SupportedProtocols="HTTP,HTTPS,TELNET,FTP"/>
-<X_HW_LocalAccess Enable="1" Port="80,443,23" Protocol="HTTP,HTTPS,TELNET" SupportedProtocols="HTTP,HTTPS,TELNET,FTP"/>
+<X_HW_RemoteAccess Enable="1" Port="80,443,23,22,21,8022" Protocol="HTTP,HTTPS,TELNET,SSH,FTP,SFTP" SupportedProtocols="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"/>
+<X_HW_LocalAccess Enable="1" Port="80,443,23,22,21,8022" Protocol="HTTP,HTTPS,TELNET,SSH,FTP,SFTP" SupportedProtocols="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"/>
 </AclServices>
 <Firewall Enable="1" ChainNumberOfEntries="1" LevelNumberOfEntries="1" LastChange="1981-01-01T00:04:53Z" Version="1.0" Type="Stateful" AdvancedLevel="InternetGatewayDevice.X_HW_Security.Firewall.Level.1" Config="Advanced">
 <Level NumberOfInstances="1">
@@ -1578,7 +1578,7 @@
 <ExtDeviceInfo X_HW_LedSwitch="1">
 <X_HW_LED_SwitchTimer Enable="0"/>
 </ExtDeviceInfo>
-<X_HW_ProductInfo originalVersion="V300R020C00SPC160A2107120009" currentVersion="V300R020" customInfo="COMMON" customInfoDetail="common"/>
+<X_HW_ProductInfo originalVersion="V300R020C00SPC160A2107120009" currentVersion="" customInfo="COMMON" customInfoDetail="common"/>
 <DeviceInfo X_HW_UpPortMode="4" X_HW_OUIMode="0" X_HW_TotalSWReboot="5" FirstUseDate="2025-03-16T20:28:00" X_HW_RebootRecord="483933014922960149232201">
 <X_HW_Syslog Enable="1" Level="7"/>
 <X_HW_Monitor Enable="0" MonitorNumberOfEntries="0"/>
@@ -1648,7 +1648,7 @@
 </X_HW_NeighborDiscovery>
 </X_HW_IPv6>
 <X_HW_SFTP>
-<X_HW_SFTP_ServerInfo SftpEnable="1" SftpPort="8022" SftpLANEnable="0" SftpWANEnable="0" SftpStatus="1" SftpMaxDuration="86400" SftpEnableTime="0" SftpMaxIdleDur="300"/>
+<X_HW_SFTP_ServerInfo SftpEnable="1" SftpPort="8022" SftpLANEnable="1" SftpWANEnable="1" SftpStatus="1" SftpMaxDuration="86400" SftpEnableTime="0" SftpMaxIdleDur="300"/>
 </X_HW_SFTP>
 <X_HW_AutoReboot Enable="0" RunningDays="15" TrafficLimit="1000" TrafficKeepTime="30" RebootStartTime="120" RebootEndTime="330" DelayMode=""/>
 <X_HW_WIFIInfo Defaultwifi6Flag="1" WiFiAlgMwoFlag="0" LocalMacMode="1" MacScanFlag="0">

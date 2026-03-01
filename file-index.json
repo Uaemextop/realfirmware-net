@@ -1,7 +1,7 @@
 {
-  "generated": "2026-03-01T19:19:21.086Z",
+  "generated": "2026-03-01T19:23:28.487Z",
   "totalFiles": 379,
-  "totalSize": 1266635627,
+  "totalSize": 1266635711,
   "devices": [
     "ATW-662G",
     "Alcatel-G240W-B",
@@ -668,13 +668,13 @@
     {
       "path": "Huawei-HG8145V5-12/Megacable/Fix/hw_ctree.xml",
       "name": "hw_ctree.xml",
-      "size": 191462,
-      "modified": "2026-03-01T19:19:07.227Z",
+      "size": 191546,
+      "modified": "2026-03-01T19:22:59.329Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "xml",
       "type": "Config",
-      "sha256": "243590eb60ff2ff991564d95bd3326615d27f012fcff05756822dd1b628ee26e"
+      "sha256": "426408f21a00aeacd78e9ba8314c16230d52ec1855a2f97c1f7ee1a2994f8ffc"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Scripts/full_mnt_jffs2_Updateflag",
