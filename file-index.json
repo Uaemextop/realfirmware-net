@@ -1,7 +1,7 @@
 {
-  "generated": "2026-03-01T10:02:26.204Z",
-  "totalFiles": 372,
-  "totalSize": 1264347618,
+  "generated": "2026-03-01T10:17:43.477Z",
+  "totalFiles": 374,
+  "totalSize": 1266179522,
   "devices": [
     "ATW-662G",
     "Alcatel-G240W-B",
@@ -536,68 +536,90 @@
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-analisis.txt",
       "name": "HG8145V5-12-analisis.txt",
-      "size": 11449,
-      "modified": "2026-03-01T10:02:17.295Z",
+      "size": 13815,
+      "modified": "2026-03-01T10:08:11.688Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "txt",
       "type": "Document",
-      "sha256": "66b145c7fcf02138187b746945d4ffec7054e4dbd8a524e3f1b3e91c5b4ce081"
+      "sha256": "307c61c9f80a90c595fb158762dc1e70b2a84e19adf7cfce648da48c2baa4f1c"
+    },
+    {
+      "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-COMMON-OK-signinfo-original.bin",
+      "name": "HG8145V5-12-COMMON-OK-signinfo-original.bin",
+      "size": 21026,
+      "modified": "2026-03-01T10:06:29.754Z",
+      "device": "Huawei-HG8145V5-12",
+      "isp": "Megacable",
+      "ext": "bin",
+      "type": "Firmware",
+      "sha256": "dc51ee101af5b78154e87042803fafc9d3440f5a6df94f7f0955bb4039fe8a5d"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-COMMON-OK.bin",
       "name": "HG8145V5-12-COMMON-OK.bin",
       "size": 21026,
-      "modified": "2026-03-01T09:57:40.703Z",
+      "modified": "2026-03-01T10:06:29.754Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "bin",
       "type": "Firmware",
-      "sha256": "8f5ced5021b59dbeeae8dc37bbd05df28dba5d13ac4842f5b36329d6946b9690"
+      "sha256": "cb5b3341abdf6d64a9e963f2115b4abbc80d2acebf0c835bd1c3775567d2632e"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-COMMON-PRE.bin",
       "name": "HG8145V5-12-COMMON-PRE.bin",
       "size": 200027,
-      "modified": "2026-03-01T09:57:40.704Z",
+      "modified": "2026-03-01T10:07:09.265Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "bin",
       "type": "Firmware",
-      "sha256": "ab80c3943bd2e5d256417eec9c7130d2319a55e8e2fcc0253ba1e9605e608473"
+      "sha256": "07c2fc3cdd3edf66bf5d2abf86bcd15f4a4feb1d10f919750dee44e45329799f"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-FULL.bin",
       "name": "HG8145V5-12-FULL.bin",
       "size": 50233629,
-      "modified": "2026-03-01T09:57:40.813Z",
+      "modified": "2026-03-01T10:07:09.376Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "bin",
       "type": "Firmware",
-      "sha256": "bd18ac7326f38c5adc77e9606a017f18e0507830cf72bf806eabdabc81db017f"
+      "sha256": "70261dbb2cc369b77ce3206053e1b0721d2f6c1a3a42688874d9c81ee805a725"
+    },
+    {
+      "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-v2-signinfo-original.bin",
+      "name": "HG8145V5-12-v2-signinfo-original.bin",
+      "size": 1808512,
+      "modified": "2026-03-01T10:06:29.771Z",
+      "device": "Huawei-HG8145V5-12",
+      "isp": "Megacable",
+      "ext": "bin",
+      "type": "Firmware",
+      "sha256": "c3d24fc299a40741522353319316a7347cb3249d34ba31e81c7233b36cd3237e"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-v2.bin",
       "name": "HG8145V5-12-v2.bin",
       "size": 1808512,
-      "modified": "2026-03-01T09:57:40.939Z",
+      "modified": "2026-03-01T10:06:29.761Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "bin",
       "type": "Firmware",
-      "sha256": "fec3fac615708ec5de8d56c0e23bb936b07f90da0bfdd78a7b073853697cf97b"
+      "sha256": "624e648db0e6c6647cef3369a05a9b525f3c8335da1173c1a426095f996a1d56"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Firmware/HG8145V5-12-XPON.bin",
       "name": "HG8145V5-12-XPON.bin",
       "size": 22038,
-      "modified": "2026-03-01T09:57:40.937Z",
+      "modified": "2026-03-01T10:07:09.266Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "bin",
       "type": "Firmware",
-      "sha256": "bc6a373b9f87521cc1406369b8c225b6d5ab675d2db25f19f440e490c0044342"
+      "sha256": "fd74e41cdc3cce5638b20d9d9fba2c0e16acd600704225cf9691e13449f26b81"
     },
     {
       "path": "Huawei-HG8145V5-12/Megacable/Scripts/full_mnt_jffs2_Updateflag",

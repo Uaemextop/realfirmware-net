@@ -147,32 +147,76 @@ SOLUCIÓN APLICADA (4 correcciones de CRC + 3 modificaciones)
 ARCHIVOS GENERADOS
 ================================================================================
 
-  HG8145V5-12-COMMON-OK.bin    (21,026 bytes)
-    Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-OK (dealosgfile.sh)
+  HG8145V5-12-COMMON-OK.bin    (21,026 bytes) — signinfo_v5
+    Base: HG8145v5-COMMON-OK.bin + PIDs 43ED + XML minimal + signinfo_v5
     Función: Restaurar modo hardware + reboot
-    CRCs: FileCRC=0x1B720504 HeadCRC=0xCD7FC201 ✓
+    Secciones: UpgradeCheck.xml + signinfo_v5 + dealosgfile.sh
 
-  HG8145V5-12-COMMON-PRE.bin  (200,027 bytes)
-    Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-PRE (hw_ctree.xml + script)
-    Función: Reemplazar configuración de región/ISP
-    CRCs: FileCRC=0x28DB2FB1 HeadCRC=0x4E502643 ✓
+  HG8145V5-12-COMMON-OK-signinfo-original.bin  (21,026 bytes) — signinfo ORIGINAL
+    Base: HG8145v5-COMMON-OK.bin + PIDs 43ED + XML minimal
+    Función: Igual, pero con signinfo original (path "file:/var/signinfo", header V500)
+    NOTA: El signinfo contiene hashes del firmware ORIGINAL, no del modificado
 
-  HG8145V5-12-XPON.bin        (22,038 bytes)
-    Base: v2.bin (UpgradeCheck + signinfo_v5) + XPON (dealosgfile.sh)
-    Función: Conversión GPON↔EPON (modifica hw_boardinfo obj 0x00000001)
-    CRCs: FileCRC=0x82AB067A HeadCRC=0xA5600CB8 ✓
-
-  HG8145V5-12-FULL.bin        (50,233,629 bytes / 47.9 MB)
-    Base: HG8145V5-.bin (firmware completo con uboot+kernel+rootfs)
-    Modificaciones: PIDs + checks + flash:signinfo → file:/var/signinfo_v5
-    Función: Firmware completo con uboot, kernel, rootfs, plugins
-    CRCs: FileCRC=0xDF58816F HeadCRC=0x11665583 ✓
-
-  HG8145V5-12-v2.bin          (1,808,512 bytes / 1.7 MB)
+  HG8145V5-12-v2.bin          (1,808,512 bytes) — signinfo_v5
     Base: v2.bin original de HG8145V5/Tigo-Colombia
     Modificaciones: 43ED añadido a Product IDs
     Función: Firmware de unlock estándar con rootfs
-    CRCs: FileCRC=0x76754D8F HeadCRC=0x41E91641 ✓
+
+  HG8145V5-12-v2-signinfo-original.bin  (1,808,512 bytes) — signinfo ORIGINAL
+    Base: v2.bin con signinfo_v5 → convertido a signinfo (path + header V500)
+    Función: Igual, pero con signinfo activo
+
+  HG8145V5-12-COMMON-PRE.bin  (200,027 bytes) — signinfo_v5
+    Base: HG8145V5-COMMON-PRE.bin + PIDs 43ED + XML minimal + signinfo_v5
+    Función: Reemplazar configuración de región/ISP
+
+  HG8145V5-12-XPON.bin        (22,038 bytes) — signinfo_v5
+    Base: HG8145V5-XPON.bin + PIDs 43ED + XML minimal + signinfo_v5
+    Función: Conversión GPON↔EPON
+
+  HG8145V5-12-FULL.bin        (50,233,629 bytes / 47.9 MB) — signinfo_v5
+    Base: HG8145V5-.bin (firmware completo)
+    Modificaciones: PIDs + checks + flash:signinfo → file:/var/signinfo_v5
+    Función: Firmware completo con uboot, kernel, rootfs, plugins
+
+  ORDEN RECOMENDADO DE PRUEBA:
+  ────────────────────────────
+  1. HG8145V5-12-COMMON-OK.bin (signinfo_v5, 21KB — más pequeño)
+  2. HG8145V5-12-COMMON-OK-signinfo-original.bin (signinfo original)
+  3. HG8145V5-12-v2.bin (signinfo_v5, 1.8MB)
+  4. HG8145V5-12-v2-signinfo-original.bin (signinfo original)
+  Si ninguno funciona, recopilar nuevos logs con "collectfaultfinish"
+
+================================================================================
+ANÁLISIS DE collectFaultFinish.2.txt (2026-03-01)
+================================================================================
+
+  Errores NUEVOS no vistos en logs anteriores:
+  ─────────────────────────────────────────────
+  0xF720402B @ swm_load_basic.c:494     args: (0, 0x24, 0, 0)
+    → Error en SWM_HeadInfoDeal: fallo al parsear header en offset 0x24
+  0xF720402B @ _load_packet_head.c:130  args: (0x24, 0, 0, 0)
+    → Error en SWM_ReadPacketHead: lectura de header falló en offset 0x24
+    → 0x24 es el offset donde empiezan los Product IDs en el header HWNP
+
+  0xF7204007 @ swm_load_packet.c (múltiples líneas: 702, 797, 911, 1020, 1172, 1523)
+    → Errores en cadena de validación del paquete completo
+    → args (2, 1, 2): severity=2, check=1, detail=2
+    → args (2, 2, 0x2F): severity=2, check=2, detail=47
+    → 0x2F=47 podría ser el tamaño o número de algo inesperado
+
+  0xF7204001 @ w_dm_ver_readfunc.c:110  args: (0x24, 0, 0, 0)
+    → Error leyendo versión de firmware
+  0xF7204001 @ hw_dm_ver_init.c:292
+    → Error inicializando información de versión
+
+  Todos los errores son de 2025-03-16 14:28:01 (NO hay nuevos de 2026-03-01).
+  El dispositivo se reinició en 2026-03-01 03:57 pero no se intentó upload nuevo.
+
+  SWM STATE:
+    STATE: IDLE (SWM disponible para nuevo upload)
+    OPER:  LOAD (última operación fue carga de firmware)
+    PROG:  6%   (progreso alcanzado antes del error)
 
 ================================================================================
 ROOTFS Y CADENA DE VERIFICACIÓN (Análisis Capstone ARM)
