@@ -308,12 +308,6 @@ class FirmwareEditorApp(tk.Tk):
         self.geometry("960x700")
         self.minsize(800, 550)
 
-        # App icon (embedded)
-        try:
-            self.iconbitmap(default="")
-        except Exception:
-            pass
-
         self.firmware = None
         self.modified = False
 
@@ -704,7 +698,7 @@ class FirmwareEditorApp(tk.Tk):
 
     def _on_check_change(self, section):
         changes = {name: var.get() for name, var in self._check_vars.items()}
-        current = section.text_content or new_text_decoder(section.data)
+        current = section.text_content or decode_text(section.data)
         modified = modify_upgrade_checks(current, changes)
 
         # Update the text editor if it exists
@@ -895,7 +889,7 @@ class FirmwareEditorApp(tk.Tk):
         )
 
 
-def new_text_decoder(data):
+def decode_text(data):
     try:
         return data.decode("utf-8")
     except UnicodeDecodeError:

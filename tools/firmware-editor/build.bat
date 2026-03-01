@@ -9,8 +9,6 @@ echo.
 echo Building firmware_editor.exe...
 pyinstaller --onefile --windowed ^
     --name "RealFirmware-HWNP-Editor" ^
-    --icon NONE ^
-    --add-data "README.md;." ^
     firmware_editor.py
 
 echo.
