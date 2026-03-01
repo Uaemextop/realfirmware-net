@@ -1,7 +1,7 @@
 {
-  "generated": "2026-03-01T19:23:28.487Z",
-  "totalFiles": 379,
-  "totalSize": 1266635711,
+  "generated": "2026-03-01T19:29:09.073Z",
+  "totalFiles": 380,
+  "totalSize": 1266735974,
   "devices": [
     "ATW-662G",
     "Alcatel-G240W-B",
@@ -666,10 +666,21 @@
       "sha256": "1f47d706a382d7186c354bb3a10f4126b4d224a46781dc699da36b7b62bba1d1"
     },
     {
+      "path": "Huawei-HG8145V5-12/Megacable/Fix/hw_ctree_all_options.xml",
+      "name": "hw_ctree_all_options.xml",
+      "size": 100263,
+      "modified": "2026-03-01T19:28:05.863Z",
+      "device": "Huawei-HG8145V5-12",
+      "isp": "Megacable",
+      "ext": "xml",
+      "type": "Config",
+      "sha256": "62a0e6408da52fdbea35bbe8cdfbc25a5d90dc7951d4463b4b6738a552842710"
+    },
+    {
       "path": "Huawei-HG8145V5-12/Megacable/Fix/hw_ctree.xml",
       "name": "hw_ctree.xml",
       "size": 191546,
-      "modified": "2026-03-01T19:22:59.329Z",
+      "modified": "2026-03-01T19:28:55.685Z",
       "device": "Huawei-HG8145V5-12",
       "isp": "Megacable",
       "ext": "xml",
