@@ -1,0 +1,289 @@
+================================================================================
+  ANÁLISIS DE FIRMWARE — EchoLife HG8145V5-12 (Megacable)
+  Generado: 2026-03-01
+================================================================================
+
+DISPOSITIVO OBJETIVO
+  Modelo:             EchoLife HG8145V5-12
+  Versión Hardware:   43ED.A
+  GPON Terminal:      CLASS B+ / PRODUCT ID: 2150087996EGQA063098
+  SN:                 4857544347020CB1 (HWTC47020CB1)
+  ISP:                Megacable
+  Estado ONT:         O5 (Operation state)
+
+================================================================================
+FIRMWARE COMPATIBLE — v2.bin (Huawei-HG8145V5V3)
+================================================================================
+
+El HG8145V5-12 (HW: 43ED.A) es una variante de la familia HG8145V5V3.
+El único firmware confirmado que se instala sin error es:
+
+  Archivo:    Huawei-HG8145V5V3/General/Unlock/v2.bin
+  Tamaño:     1,808,512 bytes (1.7 MB)
+  Formato:    HWNP (Huawei Network Package)
+  SHA256:     9179f45bb1facce14501baa88d313eab7462b92b5d1596aa1dd9393da0c6d4f2
+  Secciones:  7
+
+  Product IDs: 120|130|140|141|150|160|170|171|180|190|1B1|1A1|1A0|
+               1B0|1D0|1F1|201|211|221|230|240|260|261|270|271|280|
+               281|291|2A1|431|2D7|2D7D|2D7D.A
+
+  RAZÓN: Todos los CheckEnable están en "0" (deshabilitados), lo que
+  permite que el firmware se instale en CUALQUIER variante de hardware
+  sin restricción de BoardId, ProductId o chipset.
+
+================================================================================
+ANÁLISIS DE SECCIONES — v2.bin
+================================================================================
+
+SECCIÓN 0: UpgradeCheck.xml (1,069 bytes)
+  Destino:    /var/UpgradeCheck.xml
+  Etiqueta:   UPGRDCHECK
+  Contenido:  XML de verificación de compatibilidad de hardware
+  Estado:     TODOS los checks DESHABILITADOS (CheckEnable="0"):
+              - HardVerCheck    → DESHABILITADO
+              - LswChipCheck    → DESHABILITADO
+              - WifiChipCheck   → DESHABILITADO
+              - VoiceChipCheck  → DESHABILITADO
+              - UsbChipCheck    → DESHABILITADO
+              - OpticalCheck    → DESHABILITADO
+              - OtherChipCheck  → DESHABILITADO
+              - ProductCheck    → DESHABILITADO
+              - ProgramCheck    → DESHABILITADO
+              - CfgCheck        → DESHABILITADO
+
+SECCIÓN 1: signinfo_v5 (13,868 bytes)
+  Destino:    /var/signinfo_v5
+  Etiqueta:   SIGNINFO
+  Contenido:  Hashes SHA256 de verificación + cadena de certificados
+  Hashes de verificación:
+    /mnt/jffs2/ProductLineMode  01ba4719c80b6fe911b091a7c05124b6...
+    /var/equipment.tar.gz       aa4c36ef31fd78d71219aa4c4535d8de...
+    /mnt/jffs2/TelnetEnable     01ba4719c80b6fe911b091a7c05124b6...
+    /var/duit9rr.sh             3e11bd163dc14badffcc340adeef21e0...
+    /var/UpgradeCheck.xml       6856f3f8fab4b2629a420a46568161ea...
+  Certificados Huawei (cadena completa):
+    - Huawei Root CA (x7 referencias)
+    - Huawei Code Signing Certificate Authority 2 (x7)
+    - Huawei Timestamp Certificate Authority 2 (x7)
+    - Transmission & Access Product Line Code Signing Certificate
+  Entradas de SN del dispositivo:
+    SN=5c431ef9c1c01622 ID=0 TYPE=4
+    SN=4a25b7af5f3f7cd7 ID=0 TYPE=8
+
+SECCIÓN 2: ProductLineMode (1 byte)
+  Destino:    /mnt/jffs2/ProductLineMode
+  Valor hex:  0x00
+  Propósito:  Controla el modo de línea de producción/fábrica
+              0x00 = Modo normal (no producción)
+              Escribir este archivo desactiva el modo de fábrica
+
+SECCIÓN 3: equipment.tar.gz (1,784,882 bytes — 1.7 MB)
+  Destino:    /var/equipment.tar.gz
+  Formato:    CIFRADO con AES (NO es gzip estándar)
+  Entropía:   256/256 bytes únicos — confirmado cifrado AES
+  Propósito:  Archivo de equipamiento que contiene herramientas
+              de configuración y binarios auxiliares
+  Uso:        Descifrado por aescrypt2 en el dispositivo y extraído
+              a /mnt/jffs2/equipment/ según la versión del firmware
+  Variantes incluidas en el script:
+    - equipment.tar.gz        (principal, para R15C10+)
+    - equipment_cut.tar.gz    (versión reducida para UBI/NAND)
+    - equipment_R13C10.tar.gz (para R013C10)
+    - equipment_R15C00.tar.gz (para R015C00)
+
+SECCIÓN 4: TelnetEnable (1 byte)
+  Destino:    /mnt/jffs2/TelnetEnable
+  Valor hex:  0x76 (carácter 'v')
+  Propósito:  Flag de habilitación de acceso Telnet
+              Escribir este archivo habilita el servicio Telnet en el ONT
+              El valor 'v' (0x76) indica "enabled/verdadero"
+
+SECCIÓN 5: duit9rr.sh (5,811 bytes)
+  Destino:    /var/duit9rr.sh
+  Tipo:       Script de shell (bash/sh)
+  Propósito:  Script principal de desbloqueo — ejecuta la lógica completa
+  Funciones principales:
+    1. HW_Open_Telnet_Ctree_Node()
+       - Copia hw_ctree.xml (configuración del dispositivo)
+       - Intenta descifrar con aescrypt2
+       - Si está cifrado: descifra → modifica → re-cifra
+       - Habilita TELNETLanEnable=1 en AclServices
+       - Habilita CLI Telnet Access=1
+    2. DeleteFileByVersion()
+       - Lee /etc/version para obtener la versión del firmware
+       - Parsea R (release), C (compilación), SPC (service pack)
+       - Selecciona la acción correcta según la versión:
+         · R < 6:    No soportado, limpia archivos
+         · R = 6:    Habilita modo producción (SPC >= 130)
+         · R = 12:   No soportado
+         · R = 13:   Extrae equipment_R13C10.tar.gz (C10, SPC >= 108)
+         · R = 15:   Extrae equipment apropiado (C00 o C10)
+         · R > 15:   Usa equipment para R15C10+
+    3. Flujo de ejecución:
+       echo > /var/notsavedata      ← Previene guardar datos
+       sleep 1
+       HW_Open_Telnet_Ctree_Node    ← Habilita Telnet
+       DeleteFileByVersion           ← Extrae tools según versión
+       echo "success!" && exit 0
+
+SECCIÓN 6: EFS — Equipment Factory Settings (68 bytes)
+  Destino:    /var/efs
+  Etiqueta:   EFS
+  Estructura binaria:
+    0x00-0x03:  03 20 00 05     Tipo EFS v3, longitud 5
+    0x04-0x06:  43 48 53        Marcador "CHS" (Chip/Hardware/Software)
+    0x07:       01              Versión de estructura
+    0x08-0x0B:  00 00 00 05     Flags de configuración
+    0x0C-0x0D:  00 05           Configuración de hardware
+    0x0E-0x0F:  07 DA           Año 2010 (0x07DA = 2010)
+    0x10-0x13:  06 04 10 19     Fecha de fabricación
+    0x14-0x15:  31 25           Revisión PCB "1%"
+    0x1C-0x23:  48 38 30 31     Modelo de placa: "H801EPBA"
+                45 50 42 41     (Huawei 801 EPON/GPON Board tipo A)
+    0x28-0x29:  00 76           Referencia de configuración
+    0x2C-0x2D:  00 76           Referencia secundaria
+  Propósito:  Identifica la plataforma de hardware del ONT
+              H801EPBA = Board type para la familia HG8145
+
+================================================================================
+COMPARACIÓN: v2.bin vs COMMON-OK.bin
+================================================================================
+
+                        v2.bin (funciona)       COMMON-OK.bin (NO funciona)
+  ──────────────────── ─────────────────────── ───────────────────────────
+  Tamaño               1,808,512 bytes         21,026 bytes
+  Secciones             7                       3
+  CheckEnable           TODOS = "0"             TODOS = "1"
+  Product IDs           33 IDs (amplio)         6 IDs (restrictivo)
+  BoardId 43ED (17389)  No listado, pero        No listado, checks
+                        checks deshabilitados   ACTIVOS → RECHAZADO
+  Telnet                Incluye TelnetEnable    No incluye
+  Equipment.tar.gz      1.7 MB (AES cifrado)    No incluye
+  Script                5.8 KB unlock script    47 bytes (solo reboot)
+  EFS                   68 bytes (H801EPBA)     No incluye
+  ProductLineMode       1 byte (0x00)           No incluye
+  signinfo              v5 (13.8 KB)            estándar (16 KB)
+
+  RAZÓN DEL RECHAZO de COMMON-OK.bin:
+  → HardVerCheck CheckEnable="1" + BoardId 17389 NO está en la lista
+  → ProductCheck CheckEnable="1" + "43ED" NO está en la lista de productos
+
+================================================================================
+ANÁLISIS DEL ROOTFS (extraído de HG8145V5-.bin — 48 MB)
+================================================================================
+
+  Sistema de archivos: SquashFS v4.0 (little-endian, LZMA)
+  Tamaño comprimido:   38 MB
+  Tamaño expandido:    161 MB
+  Total archivos:      7,004
+  Total directorios:   916
+  Total symlinks:      334
+  Versión firmware:    V500R020C10SPC212B465
+  Versión WAP:         V800R019C30B010
+  Versión DL:          V100R001C03B050.1.0
+
+ESTRUCTURA DEL ROOTFS:
+  /bin/          — 434 binarios (BusyBox, Broadband, Customize, HwQoETest...)
+  /etc/          — Configuración del sistema (32 módulos de aplicación)
+  /etc/app/      — Módulos: bbsp, cwmp, dlna, monitor, sntp, voip, web...
+  /html/         — 3,502 archivos de interfaz web
+  /lib/          — 429 bibliotecas compartidas (.so)
+  /usr/osgi/     — Framework OSGI para plugins Java
+  /usr/local/    — Plugins preinstalados
+
+MÓDULOS DE APLICACIÓN (/etc/app):
+  bbsp_app, bulk_app, cliuserinfo_app, cmp_app, cms_app, cwmp_app,
+  dlna_app, dot1x_app, ethoam_app, gate_app, monitor_app, pcp_c_app,
+  rip_app, sftp_app, smartont_bbsp_app, sntp_app, ssh_app, syslog_app,
+  tr143_app, tr143_ext_app, udmp_app, upnp_app, voip_app, web_app,
+  webrmt_app, wifi_app, wlan_app
+
+================================================================================
+PLUGINS EXTRAÍDOS
+================================================================================
+
+PLUGINS DE WiFi (SquashFS sección 3 — 3.0 MB):
+
+  Firmware WiFi (QCA9984 — 5GHz):
+    - athwlan.bin         364 KB    Driver principal
+    - athwlan.codeswap.bin 221 KB   Code swap
+    - utf.bin             344 KB    Unified test framework
+    - utf.codeswap.bin    181 KB    UTF code swap
+    - waltest.codeswap.bin 167 KB   WAL test
+    - otp.bin              9 KB    One-time programmable
+
+  Firmware WiFi (AR9888 — 2.4GHz):
+    - athwlan.bin         235 KB    Driver principal
+    - atf.bin             244 KB    Airtime fairness
+    - utf.bin             177 KB    Unified test framework
+
+  Módulos del kernel (.ko):
+    - umac.ko             2.7 MB   Upper MAC (principal)
+    - ath_hal.ko          405 KB   Atheros HAL
+    - ath_dev.ko          383 KB   Atheros device
+    - qca_da.ko           258 KB   QCA direct attach
+    - codec_sdk_le964x.ko 248 KB   Codec SDK (VoIP)
+    - ath_dfs.ko           82 KB   DFS (radar detection)
+    - ath_rate_atheros.ko  75 KB   Rate control
+    - adf.ko               27 KB   Atheros data framework
+    - ath_pktlog.ko        25 KB   Packet logging
+    - hst_tx99.ko          15 KB   TX99 testing
+    - asf.ko               12 KB   Atheros service framework
+    - mem_manager.ko        7 KB   Memory manager
+
+  Herramientas WiFi:
+    - wifitool             90 KB
+    - athtestcmd           85 KB
+    - wrapd_qca            66 KB
+    - wlanconfig           50 KB
+    - athstats             30 KB
+    - apstats              30 KB
+    - lbd                  26 KB
+    - thermaltool           9 KB
+    - tx99tool_bin          9 KB
+    - athstatsclr           5 KB
+
+  Board Data (modelos soportados en plugins):
+    EG8245Q, EG8247Q, HG8245Q, HG8245QTMX, HG8245U, HG8245W,
+    HG8245W5-10, HG8245W5-20, HG8245W5_AIS, HG8247U, HG8247V5,
+    HG8247W, HG8247W5, HG8247W_PTVDF, HN8145Q, HN8255WS,
+    HN8346Q, HN8546Q, HN8546WS, HS1245W, HS2045W, HS8245W,
+    HS8245W_COM, WA8011Y, WA8011YV2
+
+PLUGIN OSGI PREINSTALADO:
+    - kernelapp.cpk (v1.0) — Plugin kernel base
+    - eaiapp.ipk (v20.1.44) — Plugin EAI (carga desde /mnt/jffs2)
+
+================================================================================
+FLASH LAYOUT (128 MB NAND)
+================================================================================
+
+  Flash total:     128 MB (0x08000000)
+  Bootcode:        1 MB (L1boot 128K + L2boot 2×256K + eFuse 128K)
+  UBI Layer:       127 MB
+    flash_config:  2×124K (redundante)
+    slave_param:   2×124K (redundante)
+    allsystem:     2×44 MB (A/B, redundante)
+      - signinfo
+      - uboot
+      - kernel
+      - rootfs
+    wifi_param:    2×124K (redundante)
+    keyfile:       1 MB
+    file_system:   29.5 MB (JFFS2 para configuración usuario)
+
+================================================================================
+NOTAS DE COMPATIBILIDAD PARA HG8145V5-12 (HW: 43ED.A)
+================================================================================
+
+  - El HG8145V5-12 pertenece a la familia HG8145V5V3 (NO la V5 base)
+  - Hardware version 43ED.A es una revisión específica para Megacable
+  - v2.bin funciona porque TODOS los CheckEnable están en "0"
+  - COMMON-OK.bin NO funciona porque los checks están activos y 43ED
+    no está en las listas de BoardId ni ProductCheck
+  - El archivo equipment.tar.gz está cifrado con AES (aescrypt2)
+  - El script duit9rr.sh habilita Telnet y extrae herramientas
+    según la versión del firmware instalado
+  - EFS identifica la plataforma como H801EPBA
+  - Se recomienda usar v2.bin de Huawei-HG8145V5V3 para este dispositivo

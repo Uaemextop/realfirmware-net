@@ -11,6 +11,11 @@ const BASE = path.join(__dirname, '..');
 const OUT = path.join(__dirname, '..', 'file-index.json');
 const EXCLUDE_DIRS = ['.git', '.github', 'assets', 'scripts', 'src', 'node_modules', 'dist'];
 
+// Device aliases: variant model names → compatible base device directory
+const DEVICE_ALIASES = {
+  'Huawei-HG8145V5-12': 'Huawei-HG8145V5'
+};
+
 const TYPE_MAP = {
   bin: 'Firmware', img: 'Firmware',
   txt: 'Document', docx: 'Document', log: 'Document',
@@ -104,6 +109,7 @@ const output = {
   isps,
   types,
   extensions,
+  deviceAliases: DEVICE_ALIASES,
   files: index
 };
 
