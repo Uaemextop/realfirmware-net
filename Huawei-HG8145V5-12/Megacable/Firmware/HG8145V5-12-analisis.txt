@@ -39,7 +39,17 @@ CAUSA DEL ERROR "Firmware Upgrade failed" (AlarmID 104058/104509)
     El firmware construido tenía ItemCRC = 0x00000000 en todas las secciones.
     SWM_CheckItemHeadCrc compara el CRC almacenado vs el computado → FALLO.
 
-  Causa raíz #3 — signinfo vs signinfo_v5:
+  Causa raíz #3 — FileCRC no recalculado:
+    FileCRC = CRC32(file[0x14:HeadLen]) — cubre item descriptors + ProductID
+    Al modificar PIDs y paths de secciones, el FileCRC quedó con el valor
+    original. SWM_CheckPacketHead lo compara → MISMATCH → rechazo a 8%.
+    
+    Descubierto analizando collectFaultFinish.txt (53601 líneas):
+    - SWM state: PROG: 8% (rechazo durante validación de header)
+    - hw_swm_buffer.c:303 error 0xf7204027 (buffer header check failed)
+    - 7 intentos de upgrade, todos fallan en la misma fase temprana
+
+  Causa raíz #4 — signinfo vs signinfo_v5:
     flash:signinfo → código SWM estándar → SIEMPRE verifica firmas CMS
     file:/var/signinfo → código SWM estándar → SIEMPRE verifica hashes SHA-256
     file:/var/signinfo_v5 → código v5 → permite bypass con header zeroed
@@ -57,7 +67,8 @@ FORMATO HWNP (Ingeniería inversa completa)
   0x04     PayloadSize    Big-endian uint32 = total_size - 76
   0x08     HeadCRC        Little-endian uint32 = CRC32(file[0x0C:EOF])
   0x0C     HeadLen        Little-endian uint32 = 0x128 + num*360 - 4
-  0x10     FileCRC        Little-endian uint32 (para particiones flash)
+  0x10     FileCRC        Little-endian uint32 = CRC32(file[0x14:HeadLen])
+                         Cubre: NumItems, version, ProductIDs, todos los descriptores
   0x14     ItemNum        Little-endian uint32 (byte bajo = número de secciones)
   0x18     Version        Little-endian uint32 = 0x01000000
   0x1C     DescSize       Little-endian uint32 = 360
@@ -80,8 +91,14 @@ FORMATO HWNP (Ingeniería inversa completa)
   sección empiezan 4 bytes ANTES del fin de la tabla de descriptores.
 
 ================================================================================
-SOLUCIÓN APLICADA (3 correcciones)
+SOLUCIÓN APLICADA (4 correcciones de CRC + 3 modificaciones)
 ================================================================================
+
+  CRC CHAIN (orden de recálculo):
+    1. ItemCRC = CRC32(file[storedOffset : storedOffset + dataSize]) para cada sección
+    2. FileCRC = CRC32(file[0x14 : HeadLen]) — descriptors + PIDs
+    3. HeadCRC = CRC32(file[0x0C : EOF]) — cubre todo excepto magic + payload + self
+    (FileCRC debe calcularse ANTES de HeadCRC porque HeadCRC lo incluye)
 
   1. Empaquetado continuo sin alineación:
      Los datos de cada sección se colocan inmediatamente después de la anterior.
@@ -168,6 +185,7 @@ EDITOR DE FIRMWARE (tools/firmware-editor/)
   - Al guardar:
     1. Renombra signinfo → signinfo_v5 con magic "whwh" + header zeroed
     2. Recalcula ItemCRC = CRC32(file[storedOff:storedOff+size]) para cada sección
-    3. Recalcula HeadCRC = CRC32(file[0x0C:])
+    3. Recalcula FileCRC = CRC32(file[0x14:HeadLen]) — descriptors + PIDs
+    4. Recalcula HeadCRC = CRC32(file[0x0C:]) — cubre todo el archivo
 
   Construir: pip install pyinstaller && pyinstaller firmware_editor.py --onefile

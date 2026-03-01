@@ -94,9 +94,11 @@ class HWNPFirmware:
         pid_str = data[PID_OFFSET:pid_end].decode("ascii", errors="replace")
         self.product_ids = [s for s in pid_str.split("|") if s]
 
-        # Verify CRC
+        # Verify CRCs
         self.computed_crc = crc32(bytes(data[0x0C:]))
         self.crc_valid = self.computed_crc == self.head_crc
+        self.computed_file_crc = crc32(bytes(data[0x14:self.head_len]))
+        self.file_crc_valid = self.computed_file_crc == self.file_crc
 
         # Parse sections — data is packed continuously from head_len
         self.sections = []
@@ -235,8 +237,14 @@ class HWNPFirmware:
             struct.pack_into("<I", self.raw, desc_off, new_crc)
             section.item_crc = new_crc
 
+    def recalculate_file_crc(self):
+        """Recalculate and update FileCRC = CRC32(data[0x14:HeadLen])."""
+        new_crc = crc32(bytes(self.raw[0x14:self.head_len]))
+        struct.pack_into("<I", self.raw, 0x10, new_crc)
+        self.file_crc = new_crc
+
     def recalculate_crc(self):
-        """Recalculate and update HeadCRC."""
+        """Recalculate and update HeadCRC = CRC32(data[0x0C:EOF])."""
         new_crc = crc32(bytes(self.raw[0x0C:]))
         struct.pack_into("<I", self.raw, 0x08, new_crc)
         self.head_crc = new_crc
@@ -247,6 +255,7 @@ class HWNPFirmware:
         """Save the modified firmware to a file."""
         self.fix_signinfo()
         self.recalculate_item_crcs()
+        self.recalculate_file_crc()
         self.recalculate_crc()
         with open(output_path, "wb") as f:
             f.write(self.raw)
@@ -501,14 +510,16 @@ class FirmwareEditorApp(tk.Tk):
 
         try:
             self.firmware.save(path)
-            crc_hex = f"0x{self.firmware.head_crc:08X}"
-            self.status_var.set(f"Saved: {os.path.basename(path)} — CRC: {crc_hex}")
+            head_crc_hex = f"0x{self.firmware.head_crc:08X}"
+            file_crc_hex = f"0x{self.firmware.file_crc:08X}"
+            self.status_var.set(f"Saved: {os.path.basename(path)} — HeadCRC: {head_crc_hex} FileCRC: {file_crc_hex}")
             self._update_crc_display()
             messagebox.showinfo("Success",
                                 f"Firmware saved successfully!\n\n"
                                 f"File: {os.path.basename(path)}\n"
                                 f"Size: {fmt_bytes(len(self.firmware.raw))}\n"
-                                f"HeadCRC: {crc_hex}")
+                                f"HeadCRC: {head_crc_hex}\n"
+                                f"FileCRC: {file_crc_hex}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save:\n{e}")
 
@@ -811,7 +822,7 @@ class FirmwareEditorApp(tk.Tk):
             ("0x04", "Payload Size", f"0x{fw.payload_size:08X} ({fmt_bytes(fw.payload_size)})"),
             ("0x08", "HeadCRC", f"0x{fw.head_crc:08X}" + (" ✓" if fw.crc_valid else " ✗")),
             ("0x0C", "Head Length", f"0x{fw.head_len:08X} ({fw.head_len})"),
-            ("0x10", "File CRC", f"0x{fw.file_crc:08X}"),
+            ("0x10", "File CRC", f"0x{fw.file_crc:08X}" + (" ✓" if fw.file_crc_valid else " ✗")),
             ("0x14", "Item Count", str(fw.item_num)),
             ("0x18", "Version", f"0x{fw.version:08X}"),
             ("0x1C", "Desc Size", f"{fw.item_desc_size} bytes"),
