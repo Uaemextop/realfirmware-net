@@ -374,7 +374,7 @@ async function init() {
     return;
   }
 
-  initSearch(DATA.files);
+  initSearch(DATA.files, DATA.deviceAliases);
   populateFilters(DATA);
   hashToState();
   bindEvents();

@@ -4,12 +4,23 @@
 
 const FILTER_IDS = ['fCat', 'fDev', 'fIsp', 'fType'];
 
+let storedAliases = {};
+
 /**
  * Populate filter dropdowns from index metadata
  */
 export function populateFilters(data) {
   addOptions('#fCat', data.types || []);
-  addOptions('#fDev', data.devices || []);
+  // Include device aliases in dropdown
+  const devices = [...(data.devices || [])];
+  storedAliases = data.deviceAliases || {};
+  if (storedAliases) {
+    for (const alias of Object.keys(storedAliases)) {
+      if (!devices.includes(alias)) devices.push(alias);
+    }
+    devices.sort();
+  }
+  addOptions('#fDev', devices);
   addOptions('#fIsp', data.isps || []);
   addOptions('#fType', (data.extensions || []).map(e => '.' + e));
 }

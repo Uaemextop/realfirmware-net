@@ -7,12 +7,14 @@ import lunr from 'lunr';
 let fuseInstance = null;
 let lunrIndex = null;
 let fileMap = {};
+let deviceAliases = {};
 
 /**
  * Initialize both search engines with file data
  */
-export function initSearch(files) {
+export function initSearch(files, aliases) {
   fileMap = {};
+  deviceAliases = aliases || {};
   files.forEach((f, i) => {
     f._id = String(i);
     fileMap[f._id] = f;
@@ -67,10 +69,30 @@ export function initSearch(files) {
 export function searchFiles(query, limit = 100) {
   if (!query || !fuseInstance) return [];
 
+  // Expand query using device aliases (e.g. HG8145V5-12 → HG8145V5)
+  let expandedDevice = null;
+  for (const [alias, base] of Object.entries(deviceAliases)) {
+    if (alias.toLowerCase().includes(query.toLowerCase()) ||
+        query.toLowerCase().includes(alias.replace(/^Huawei-/i, '').toLowerCase())) {
+      expandedDevice = base;
+      break;
+    }
+  }
+
   // Fuse results
   const fuseResults = fuseInstance.search(query, { limit });
   const fuseIds = new Set(fuseResults.map(r => r.item._id));
   const results = fuseResults.map(r => r.item);
+
+  // Add alias-expanded results
+  if (expandedDevice) {
+    for (const file of Object.values(fileMap)) {
+      if (!fuseIds.has(file._id) && file.device === expandedDevice && results.length < limit) {
+        fuseIds.add(file._id);
+        results.push(file);
+      }
+    }
+  }
 
   // Lunr results (add any that Fuse missed)
   try {

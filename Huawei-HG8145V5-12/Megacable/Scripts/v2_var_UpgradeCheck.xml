@@ -1,0 +1,45 @@
+radecheck>
+<HardVerCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</HardVerCheck>
+<LswChipCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</LswChipCheck>
+<WifiChipCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</WifiChipCheck>
+<VoiceChipCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</VoiceChipCheck>
+<UsbChipCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</UsbChipCheck>
+<OpticalCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</OpticalCheck>
+<OtherChipCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</OtherChipCheck>
+<ProductCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</ProductCheck>
+<ProgramCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</ProgramCheck>
+<CfgCheck CheckEnable="0">
+<IncludeList Enable="1"/>
+<ExcludeList Enable="0"/>
+</CfgCheck>
+</upgradecheck>
+
+
+whwh

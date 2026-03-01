@@ -1,0 +1,2437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  hw_ctree_all_options.xml
+  ════════════════════════════════════════════════════════════════
+  REFERENCIA COMPLETA de TODAS las opciones de configuración
+  descubiertas en los firmwares Huawei ONT (HG8145V5, HG8247H,
+  HG8245W5, HG8245Q, HG8246M, EG8145V5).
+
+  Fuentes:
+    - 12 firmware .bin extraídos y desencriptados con aescrypt2
+    - Claves: key=0 (V300R017), key=1 (V500R019C10),
+      key=2 (V500R019C00), key=3 (V500R019C10SPC386),
+      key=4 (V500R020C00), key=5 (V500R020C10)
+    - hw_cli.xml (794 comandos CLI ocultos)
+    - hw_flashcfg.xml, hw_bootcfg.xml, hw_aes_tree.xml
+
+  Total: 372 tags, 2203 atributos
+
+  USO: Este archivo es una REFERENCIA. Copie las secciones que
+  necesite a su hw_ctree.xml real. Los valores mostrados son los
+  defaults del firmware. Los comentarios indican valores alternativos.
+
+  ⚠ VALORES RECOMENDADOS PARA FIRMWARE FLASHING marcados con [FLASH]
+  ⚠ OPCIONES OCULTAS NO DOCUMENTADAS marcadas con [HIDDEN]
+  ⚠ OPCIONES DE SEGURIDAD marcadas con [SECURITY]
+  ════════════════════════════════════════════════════════════════
+-->
+<InternetGatewayDevice>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SERVICIOS DE ACCESO (FTP/SSH/Telnet/SFTP/TFTP/HTTP) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<AclServices
+		FTPLanEnable="0"
+		FTPPORT="21"
+		FTPWanEnable="0"
+		HTTPLanEnable="1"
+		HTTPPORT="80"
+		HTTPWanEnable="0"
+		HTTPWifiEnable="1"
+		SSHLanEnable="0"
+		SSHPORT="22"
+		SSHWanEnable="0"
+		TELNETLanEnable="1"
+		TELNETPORT="23"
+		TELNETWanEnable="0"
+		TELNETWifiEnable="1"
+	/>
+	<X_HW_CLITelnetAccess Access="1" TelnetPort="23"/>
+	<X_HW_ServiceManage FtpEnable="0" FtpPort="21" FtpRoorDir="/mnt/usb1_1/" FtpUserNum="0"/>
+	<X_HW_RemoteAccess
+		Enable="1"
+		Port="80,443,23,22,21,8022"
+		Protocol="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"
+		SupportedProtocols="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"
+	/>
+	<X_HW_LocalAccess
+		Enable="1"
+		Port="80,443,23,22,21,8022"
+		Protocol="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"
+		SupportedProtocols="HTTP,HTTPS,TELNET,SSH,FTP,SFTP"
+	/>
+	<X_HW_SFTP_ServerInfo
+		SftpEnable="1"
+		SftpEnableTime="0"
+		SftpLANEnable="1"
+		SftpMaxDuration="86400"
+		SftpMaxIdleDur="300"
+		SftpPort="8022"
+		SftpStatus="1"
+		SftpWANEnable="1"
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- LOGGING Y DEBUG -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_Syslog Enable="1" Level="7"/>
+	<X_HW_SyslogConfig
+		Facility="16"
+		Interface=""
+		LogServerEnable="1"
+		MaxTime="0"
+		PolicyMode="UDP"
+		ServerAddress=""
+		ServerPort="514"
+		Severity=""
+		WatchdogPSK=""
+	/>
+	<X_HW_LogCfg DbgSwitch="0" LogTypeMask="2" MidFlag="2" Port="6543" RtoSwitch="0" SrvAddr="0xC0A86401"/>
+	<X_HW_Reportlog
+		DeviceMac=""
+		Enable="1"
+		LogDateEnd="0"
+		LogDateStart="0"
+		LogTimeEnd="23"
+		LogTimeStart="0"
+		ReportInterval="20"
+		ReportLogMode="1"
+		ReportLogType="255"
+		ReportUrl=""
+	/>
+	<X_HW_Audit Enable="0"/> <!-- [SECURITY] -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- TR-069 / CWMP / GESTIÓN REMOTA -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<ManagementServer [SECURITY]
+		ConnectionRequestPassword=""
+		ConnectionRequestURL=""
+		ConnectionRequestUsername=""
+		DefaultActiveNotificationThrottle="0"
+		DownloadProgressURL=""
+		EnableCWMP="0"
+		KickURL=""
+		ManageableDeviceNotificationLimit="0"
+		ManageableDeviceNumberOfEntries="0"
+		NATDetected="0"
+		ParameterKey="0"
+		Password=""
+		PeriodicInformEnable="1"
+		PeriodicInformInterval="43200"
+		PeriodicInformTime=""
+		STUNEnable="0"
+		STUNMaximumKeepAlivePeriod="0"
+		STUNMinimumKeepAlivePeriod="0"
+		STUNPassword=""
+		STUNServerAddress=""
+		STUNServerPort="0"
+		STUNUsername=""
+		UDPConnectionRequestAddress=""
+		UDPConnectionRequestAddressNotificationLimit="0"
+		URL=""
+		UpgradesManaged="0"
+		Username=""
+		X_HW_CertPassword="test"
+		X_HW_CheckPasswordComplex="0"
+		X_HW_DSCP="0"
+		X_HW_EnableCertificate="0"
+		X_HW_Path="6e0fe45d4d305251ae495de3aa406a54"
+		X_HW_PeriodicInformTime=""
+	/>
+	<X_HW_ACSPro AcsCustomzieMode="0" CycleEnd="7:00" CycleStart="5:30" Enable="0"/> <!-- [HIDDEN] -->
+	<X_HW_AppRemoteManage
+		Ability="0"
+		Heartbeat="60"
+		LocalAdminName="telecomadmin"
+		LocalAdminPassMode="2"
+		LocalAdminPassword="$2|OW4HD7u&gt;3dJKU@8z-j0WmBi:FVMp@(A@4~aaf[6D`l`C:@*RY&amp;W\~K*9&amp;;QES\J..."
+		LocalUserName="root"
+		LocalUserPassMode="2"
+		LocalUserPassword="$2IE+1GV72t&amp;)C&amp;m$i+i6&lt;6myOH$-!`T%&apos;#Q22D6x!@tKy&amp;=_a;Y6S~[8..."
+		LocatePort="17998"
+		MgtURL=""
+		Port=""
+		Version="1.0"
+	/>
+	<X_HW_UserInfo Limit="10" Result="99" Status="99" Times="0" UserId="" UserName="" X_HW_AcsCnnctSatus="0" X_HW_InformStatus="0"/>
+	<X_HW_CheckSafety Enable="0" Status="Finish"/> <!-- [FLASH] [SECURITY] -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- FIRMWARE / VERSIÓN / DOWNGRADE / FLASH -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_ProductInfo currentVersion="V300R019" customInfo="COMMON" customInfoDetail="common" originalVersion="V300R019C10SPC310A2010190234"/> <!-- [FLASH] -->
+	<!-- currentVersion: también: "V300R017", "", "V300R020" -->
+	<!-- originalVersion: también: "V300R017C10SPC115C1707020071", "", "V300R020C10SPC212A2206210275", "V300R020C00SPC240A2105060183", "V300R019C10SPC386A2112160001" ... (+1 more) -->
+	<X_HW_PSIXmlReset ResetFlag="1"/> <!-- [FLASH] -->
+	<X_HW_FLASH_LOCK X_HW_LOCK_STATUS="0"/> <!-- [FLASH] [HIDDEN] -->
+	<X_HW_AutoReboot [FLASH]
+		DelayMode=""
+		Enable="0"
+		RebootEndTime="330"
+		RebootStartTime="120"
+		RunningDays="15"
+		TrafficKeepTime="30"
+		TrafficLimit="1000"
+	/>
+	<X_HW_ConsultCtrl AutoMode="1"/> <!-- [HIDDEN] -->
+	<DeviceConfig ConfigFile="FILE OVER SIZE" PersistentData="CURRENT CONFIG" X_HW_ConfigEncryptionKey=""/> <!-- [FLASH] -->
+	<DeviceInfo
+		FirstUseDate="2025-03-16T20:28:00"
+		X_HW_OUIMode="0"
+		X_HW_RebootRecord="483933014922960149232201"
+		X_HW_TotalSWReboot="5"
+		X_HW_UpPortMode="4"
+	/>
+	<Deviceinfo X_HW_LedSwitch="0"/>
+	<PerformanceDiagnostic DownloadTransports="HTTP,FTP" UploadTransports="HTTP,FTP"/> <!-- [FLASH] -->
+	<SoftwareModules [FLASH]
+		DeploymentUnitNumberOfEntries="0"
+		ExecEnvNumberOfEntries="0"
+		ExecutionUnitNumberOfEntries="0"
+		X_HW_APIListConfigure="0"
+		X_HW_APIListSupport="1"
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SEGURIDAD / FIREWALL / CONTRASEÑAS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_Security [SECURITY]
+		IpFilterInNumberOfEntries="0"
+		IpFilterInPolicy="0"
+		IpFilterInRight="0"
+		IpFilterOutNumberOfEntries="0"
+		IpFilterOutPolicy="0"
+		IpFilterOutRight="0"
+		MacFilterNumberOfEntries="0"
+		MacFilterPolicy="0"
+		MacFilterRight="0"
+		UrlFilterIpConcern="0"
+		UrlFilterPolicy="0"
+		UrlFilterRight="0"
+		WlanMacFilterNumberOfEntries="0"
+		WlanMacFilterPolicy="0"
+		WlanMacFilterRight="0"
+		X_HW_FirewallGeneralLevel="2"
+		X_HW_FirewallLevel="Custom"
+		X_HW_IPv6FWDFireWallEnable="1"
+	/>
+	<Firewall [SECURITY]
+		AdvancedLevel="InternetGatewayDevice.X_HW_Security.Firewall.Level.1"
+		ChainNumberOfEntries="1"
+		Config="Advanced"
+		Enable="1"
+		LastChange="1981-01-01T00:04:53Z"
+		LevelNumberOfEntries="1"
+		Type="Stateful"
+		Version="1.0"
+	/>
+	<Dosfilter IcmpEchoReplyEn="0" IcmpRedirectEn="1" LandEn="0" PingSweepEn="0" SmurfEn="0" SynFloodEn="0" WinnukeEn="0"/> <!-- [SECURITY] -->
+	<X_HW_IteratePassword [HIDDEN] [SECURITY]
+		HashType="0"
+		IterateCount="10000"
+		Password="$2+4oiO2tbr7bgE&lt;O.U&lt;U;&amp;,1y&lt;MC8/@KwO2PC)O(3d,]F=QY!P.thr=LCdT](y&..."
+		Salt="cPXEzT6T8OJHEkHD33jrk0FR"
+	/>
+	<X_HW_WebUserInfo NumberOfInstances="2"/>
+	<X_HW_WebUserInfoInstance [SECURITY]
+		Alias="cpe-1"
+		Enable="1"
+		FactoryPassword="admin"
+		InstanceID="1"
+		ModifyPasswordFlag="0"
+		ModifySuperModeFlag="0"
+		PassMode="2"
+		Password="465c194afb65670f38322df087f0a9bb225cc257e43eb4ac5a0c98ef5b3173ac"
+		Salt="vN6u7pqjBjcgcLlLei5retOD"
+		SuperModeValue="$2^:laOw]c@=JLj3Pd9Z12AT`fT-JENT$`ME&lt;]%&gt;KS$"
+		UserLevel="1"
+		UserName="root"
+	/>
+	<!-- InstanceID: también: "2" -->
+	<!-- Password: también: "402931e04c03e24d360477a9f90b9eb15777e154360f06228be15c37679016ef" -->
+	<!-- UserLevel: también: "0" -->
+	<!-- UserName: también: "telecomadmin" -->
+	<X_HW_CLIUserInfo NumberOfInstances="1"/>
+	<X_HW_CLIUserInfoInstance [SECURITY]
+		AccessInterface=""
+		EncryptMode="3"
+		InstanceID="1"
+		ModifyPWDFlag="0"
+		Salt="mb0kqaQRDeZ9T8wxL/BZmvet"
+		UserGroup=""
+		Username="root"
+		Userpassword="admin"
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- RED / WAN / LAN -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<WANDevice NumberOfInstances="1"/>
+	<WANConnectionDevice NumberOfInstances="1"/>
+	<WANIPConnection NumberOfInstances="1"/>
+	<WANIPConnectionInstance
+		AddressingType="DHCP"
+		AutoDisconnectTime="0"
+		ConnectionTrigger="AlwaysOn"
+		ConnectionType="IP_Routed"
+		DNSEnabled="1"
+		DNSOverrideAllowed="1"
+		DNSServers="1.1.1.1,1.0.0.1"
+		Enable="1"
+		IdleDisconnectTime="0"
+		InstanceID="1"
+		LastConnectionError="ERROR_NONE"
+		MACAddressOverride="0"
+		MaxMTUSize="1467"
+		NATEnabled="1"
+		Name=""
+		PortMappingNumberOfEntries="0"
+		PortTriggerNumberOfEntries="0"
+		PossibleConnectionTypes="IP_Routed,IP_Bridged"
+		RSIPAvailable="0"
+		Reset="0"
+		RouteProtocolRx="Off"
+		ShapingBurstSize="0"
+		ShapingRate="-1"
+		WarnDisconnectDelay="0"
+		X_HW_2nd_IPAddress=""
+		X_HW_2nd_SubnetMask=""
+		X_HW_3rd_IPAddress=""
+		X_HW_3rd_SubnetMask=""
+		X_HW_BindPhyPortInfo=""
+		X_HW_BridgeEnable="0"
+		X_HW_CU_IGMPProxyEnable="0"
+		X_HW_CU_IPForwardModeEnabled="0"
+		X_HW_CU_MLDProxyEnable="0"
+		X_HW_ClientID=""
+		X_HW_DHCPLeaseTime="0"
+		X_HW_DHCPLeaseTimeRemaining="0"
+		X_HW_DHCPServer=""
+		X_HW_DHCPv6ForAddress="0"
+		X_HW_DefaultPri="0"
+		X_HW_Dnsv4ProxyForV6="0"
+		X_HW_DscpToPbitTbl=""
+		X_HW_E8C_DefaultIPv6Gateway=""
+		X_HW_E8C_DsliteAftr=""
+		X_HW_E8C_DsliteEnable="0"
+		X_HW_E8C_DsliteMode="0"
+		X_HW_E8C_IPv6DNSServers=""
+		X_HW_E8C_IPv6DomainName=""
+		X_HW_E8C_IPv6IPAddress=""
+		X_HW_E8C_IPv6IPAddressAlias=""
+		X_HW_E8C_IPv6IPAddressOrigin="AutoConfigured"
+		X_HW_E8C_IPv6Prefix=""
+		X_HW_E8C_IPv6PrefixAlias=""
+		X_HW_E8C_IPv6PrefixDelegationEnabled="0"
+		X_HW_E8C_IPv6PrefixOrigin="PrefixDelegation"
+		X_HW_E8C_IPv6PrefixPltime="0"
+		X_HW_E8C_IPv6PrefixVltime="0"
+		X_HW_E8C_LanInterface=""
+		X_HW_ExServiceList=""
+		X_HW_Flag="0"
+		X_HW_HalfBridgeMode="PPPoE"
+		X_HW_IGMPEnable="0"
+		X_HW_IPArpEcho="60"
+		X_HW_IPArpEnable="0"
+		X_HW_IPArpRetry="3"
+		X_HW_IPForwardList=""
+		X_HW_IPMode="0"
+		X_HW_IPoEName=""
+		X_HW_IPoEPassword=""
+		X_HW_IPv4Enable="1"
+		X_HW_IPv6Enable="0"
+		X_HW_IPv6LLA=""
+		X_HW_IPv6MultiCastVLAN="-1"
+		X_HW_IPv6_PortForwardNumberOfEntries="0"
+		X_HW_LanDhcpEnable="1"
+		X_HW_LowerLayers=""
+		X_HW_LteProfile="0"
+		X_HW_MacId="3"
+		X_HW_MultiCastVLAN="4294967295"
+		X_HW_NPTv6Enable="0"
+		X_HW_NTPServer=""
+		X_HW_NatType="0"
+		X_HW_OperateDisable="0"
+		X_HW_PRI="0"
+		X_HW_PingResponseEnable="1"
+		X_HW_PingResponseWhiteList=""
+		X_HW_PriPolicy="Specified"
+		X_HW_RemoteWanInfo=""
+		X_HW_RouteProtocolAuthKey=""
+		X_HW_RouteProtocolAuthMode="Off"
+		X_HW_RouteProtocolRxMode="Passive"
+		X_HW_SERVICELIST="INTERNET"
+		X_HW_SIPServer=""
+		X_HW_SpeedLimit_DOWN="0"
+		X_HW_SpeedLimit_UP="0"
+		X_HW_StaticRouteInfo=""
+		X_HW_TDE_IPv6AddressPrefixLength="64"
+		X_HW_TDE_IPv6AddressingType="SLAAC"
+		X_HW_TR069FLAG="0"
+		X_HW_TRUE_IPMode=""
+		X_HW_TRUE_IPv6DNSAddressSource=""
+		X_HW_TimeZoneInfo=""
+		X_HW_Tr069Invisible="0"
+		X_HW_UnnumberedModel="0"
+		X_HW_UpPortId="0"
+		X_HW_UpstreamWAN="0"
+		X_HW_VLAN="557"
+		X_HW_VLANMode="2"
+		X_HW_VXLAN_Enable="0"
+		X_HW_VenderClassID=""
+		X_HW_VendorInfo=""
+		X_HW_WanId="0"
+	/>
+	<WANCommonInterfaceConfig
+		CUEnabledForInternet="1"
+		CULayer1DownstreamMaxBitRate="0xFFFFFFFF"
+		CULayer1UpstreamMaxBitRate="0xFFFFFFFF"
+		CUPhysicalLinkStatus="up"
+		EnabledForInternet="1"
+		Layer1DownstreamMaxBitRate="0xFFFFFFFF"
+		Layer1UpstreamMaxBitRate="0xFFFFFFFF"
+		PhysicalLinkStatus="up"
+		StandardUsed=""
+		StandardsSupported=""
+		TotalBytesReceived="0xFFFFFFFF"
+		TotalBytesSent="0xFFFFFFFF"
+		TotalPacketsReceived="0xFFFFFFFF"
+		TotalPacketsSent="0xFFFFFFFF"
+		WANAccessType=""
+	/>
+	<X_HW_WANGlobalControl Enable="1" Time="480"/>
+	<LANDevice NumberOfInstances="1"/>
+	<LANDeviceInstance InstanceID="1" X_HW_WlanEnable="1" X_HW_WlanPowerValue="0"/>
+	<LANEthernetInterfaceConfig NumberOfInstances="5"/>
+	<!-- NumberOfInstances: también: "8" -->
+	<LANHostConfigManagement
+		AllowedMACAddresses=""
+		AssociatedConnection=""
+		DHCPLeaseTime="86400"
+		DHCPRelay="0"
+		DHCPServerConfigurable="1"
+		DHCPServerEnable="1"
+		DHCPStaticAddressNumberOfEntries="1"
+		DNSServers=""
+		DomainName=""
+		IPRouters=""
+		IPv4DNSConfigType="Static"
+		ISPDNSEnable="0"
+		MaxAddress="192.168.100.254"
+		MinAddress="192.168.100.2"
+		PasstThroughLease=""
+		PassthroughLease="600"
+		PassthroughMACAddress=""
+		ReservedAddresses=""
+		SubnetMask="255.255.255.0"
+		UseAllocatedWAN="Normal"
+		UseAllocatedWan=""
+		X_HW_CameraEnd=""
+		X_HW_CameraStart=""
+		X_HW_ComputerEnd=""
+		X_HW_ComputerStart=""
+		X_HW_DHCPL2RelayEnable="1"
+		X_HW_DHCPOption82Enable="0"
+		X_HW_DNSList="1.1.1.1,1.0.0.0"
+		X_HW_HGWEnd=""
+		X_HW_HGWStart=""
+		X_HW_MTU="1500"
+		X_HW_Option125Enable="1"
+		X_HW_Option16Enable="1"
+		X_HW_Option17Enable="1"
+		X_HW_Option60Enable="1"
+		X_HW_PPPoEPITPEnable="0"
+		X_HW_PhoneEnd=""
+		X_HW_PhoneStart=""
+		X_HW_STBEnd=""
+		X_HW_STBStart=""
+		X_HW_TDE_BR_RouterAdvertisementEnable="1"
+		X_HW_TftpServer=""
+		X_HW_TftpServerEnable="0"
+	/>
+	<DHCPConditionalServingPool NumberOfInstances="1"/>
+	<X_HW_IPProtocolVersion Mode="3"/>
+	<Layer3Forwarding
+		DefaultConnectionService=""
+		ForwardNumberOfEntries="0"
+		X_HW_AutoDefaultGatewayEnable="0"
+		X_HW_DefaultGatewayIPAddress=""
+		X_HW_WanDefaultWanName=""
+	/>
+	<Forwarding NumberOfInstances="0"/>
+	<X_HW_DNS
+		CacheEnable="1"
+		CacheReset="0"
+		DNSHijackEnable="0"
+		DNSLockEnable="0"
+		DnsServerEnable="1"
+		FwdHSIClientMACEnable="0"
+		LocalDNSPolicy="1"
+		MACAddressTagging="0"
+		SupportedRecordTypes="AAAA"
+		X_HW_SecureNet="0"
+	/>
+	<X_HW_IPv6Config DomainName="" IPv6DNSConfigType="HGWProxy" IPv6DNSServers="" IPv6DNSWANConnection=""/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ALG / NAT / PROTOCOLOS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_ALG
+		FtpEnable="1"
+		FtpPort="21"
+		H323Enable="1"
+		H323Port="1719-1720"
+		IPSecForward="1"
+		IpSecEnable="1"
+		L2TPEnable="1"
+		L2TPForward="1"
+		L2TPPort="1701"
+		PptpEnable="1"
+		PptpPort="1723"
+		RTCPEnable="0"
+		RTCPPort="0"
+		RTSPEnable="1"
+		RTSPNATPolicy="0"
+		RTSPPort="554"
+		SipEnable="1"
+		SipPort="5060"
+		TftpEnable="1"
+		TftpPort="69"
+	/>
+	<X_HW_MainUPnP Enable="0"/>
+	<X_HW_SlvUPnP Enable="0"/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- WIFI / WLAN -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<WiFi RadioNumberOfEntries="1" X_HW_PairTrigger="None"/>
+	<Radio NumberOfInstances="2"/>
+	<RadioInstance
+		Alias="cpe-2.4G"
+		AutoChannelSupported="1"
+		CountryIEEnable="0"
+		Enable="1"
+		GuardInterval="400nsec"
+		InstanceID="1"
+		LastChange="0"
+		MaxBitRate="0"
+		Name="cpe-2.4G"
+		OperatingFrequencyBand="2.4GHz"
+		Status="Up"
+		SupportedFrequencyBands="2.4GHz"
+		X_HW_RatePriority="0"
+		X_HW_RxChainMask="0"
+		X_HW_SameSSIDStatus="0"
+		X_HW_TxChainMask="0"
+	/>
+	<!-- Alias: también: "cpe-5G" -->
+	<!-- GuardInterval: también: "Auto" -->
+	<!-- InstanceID: también: "2" -->
+	<!-- Name: también: "cpe-5G" -->
+	<!-- OperatingFrequencyBand: también: "5GHz" -->
+	<!-- SupportedFrequencyBands: también: "5GHz" -->
+	<WLANConfiguration NumberOfInstances="2"/>
+	<WLANConfigurationInstance
+		AccessEquipmentMac=""
+		AccessPointAlias="cpe-ssid"
+		AccessPointStatus="Enabled"
+		AllowedMACAddress=""
+		AuthenticationServiceMode="None"
+		AutoChannelEnable="1"
+		AutoRateFallBackEnabled="1"
+		BSSID=""
+		BasicAuthenticationMode="None"
+		BasicDataTransmitRates="1,2,5.5,6,11,12,18,24,36,48,54"
+		BasicEncryptionModes="None"
+		BeaconAdvertisementEnabled="0"
+		BeaconType="WPAand11i"
+		Channel="0"
+		ChannelPlus="0"
+		ChannelsInUse="6"
+		DeviceOperationMode="InfrastructureAccessPoint"
+		DistanceFromRoot="0"
+		Enable="1"
+		IEEE11iAuthenticationMode="PSKAuthentication"
+		IEEE11iEncryptionModes="AESEncryption"
+		InsecureOOBAccessEnabled="0"
+		InstanceID="1"
+		IsolationEnable="0"
+		KeyPassphrase=""
+		LastChange="0"
+		LocationDescription=""
+		LowerLayers="InternetGatewayDevice.LANDevice.1.WiFi.Radio.1"
+		MACAddressControlEnabled="0"
+		MaxBitRate="auto"
+		ModeEnabled="WPA-WPA2-Personal"
+		ModesSupported=""
+		Name="ath0"
+		OperationalDataTransmitRates="1,2,5.5,11,6,9"
+		PeerBSSID=""
+		PossibleChannels=""
+		PossibleDataTransmitRates="1,2,5.5,11,6,9"
+		RadioEnabled="1"
+		RegulatoryDomain="CN"
+		Reset="0"
+		SSID="WirelessNet"
+		SSIDAdvertisementEnabled="1"
+		SSIDAlias="cpe-ssid"
+		SSIDLowerLayers="Device.WiFi.Radio.1"
+		SSIDReference=""
+		SSIDStatus="Up"
+		SSID_Backup="WirelessNet"
+		SecondaryRadiusSecret="$2@9pp&lt;u{*dPj@oP@xL&amp;{&lt;/=]0+`8US/ZsD&lt;JhIZ,N$"
+		SecondaryRadiusServerIPAddr="192.168.0.100"
+		SecondaryRadiusServerPort="1812"
+		Standard="11ng"
+		Status=""
+		TotalAssociations="0"
+		TotalBytesReceived="0"
+		TotalBytesSent="0"
+		TotalIntegrityFailures="0"
+		TotalPSKFailures="0"
+		TotalPacketsReceived="0"
+		TotalPacketsSent="0"
+		TransmitPower="100"
+		TransmitPowerSupported="20,40,60,80,100"
+		UAPSDEnable="0"
+		UAPSDSupported="1"
+		WEPEncryptionLevel="104-bit"
+		WEPKeyIndex="1"
+		WMMEnable="1"
+		WMMSupported="1"
+		WPAAuthenticationMode="PSKAuthentication"
+		WPAEncryptionModes="TKIPEncryption"
+		X_HW_APModuleEnable="1"
+		X_HW_AssociateNum="32"
+		X_HW_AutoChannelPeriodically="1"
+		X_HW_AutoChannelScope=""
+		X_HW_AutoRateFallBackEnabled="1"
+		X_HW_Band="2.4GHz"
+		X_HW_CanUsedForCover="1"
+		X_HW_Channel="6"
+		X_HW_CurrentOperatingChannelBandwidth=""
+		X_HW_DisableMCS="0"
+		X_HW_Dual_bandsupport="1"
+		X_HW_EtherTypeFilter=""
+		X_HW_GroupRekey="3600"
+		X_HW_GuardInterval="Auto"
+		X_HW_HT20="3"
+		X_HW_JointSSIDIndex="0"
+		X_HW_LoopStatus="0"
+		X_HW_MCS="-1"
+		X_HW_Mode="0"
+		X_HW_NSSNum="1"
+		X_HW_OperatingChannelBandwidth=""
+		X_HW_OriginalPassword=""
+		X_HW_OriginalSSID="WirelessNet"
+		X_HW_OriginalSecurityProfile=""
+		X_HW_PowerValue="39"
+		X_HW_Powerlevel="5"
+		X_HW_RFBand="2.4GHz"
+		X_HW_RSSIThreshold="-88"
+		X_HW_RSSIThresholdEnable="1"
+		X_HW_RadiuServer="192.168.0.100"
+		X_HW_RadiusKey=""
+		X_HW_RadiusPort="1812"
+		X_HW_RetryLevel="3"
+		X_HW_RetryTimeout="20"
+		X_HW_ServiceEnable="1"
+		X_HW_Standard="11bgn"
+		X_HW_SupportedChannelBandwidths=""
+		X_HW_SupportedStandards="b,g,n"
+		X_HW_UsedForCover="0"
+		X_HW_VLAN=""
+		X_HW_WAPIAuthenticationMode="WAPIPSK"
+		X_HW_WAPIEncryptionModes="SMS4"
+		X_HW_WAPIPort="3810"
+		X_HW_WAPIServer="192.168.100.200"
+		X_HW_WPAand11iAuthenticationMode="PSKAuthentication"
+		X_HW_WPAand11iEncryptionModes="TKIPandAESEncryption"
+		X_HW_WPSConfigurated="2"
+		X_HW_WPSKeyWord="128"
+		X_HW_WebVisibility="1"
+		X_HW_WifiWorkingMode="0"
+		X_HW_WorkMode="0"
+		X_IEEE80211wEnabled="0"
+		X_OCCACEnables="1"
+		X_QHOPEnables="1"
+		X_SCSEnables="1"
+		X_TxBFEnabled="0"
+		X_TxBFImplicit="0"
+	/>
+	<!-- InstanceID: también: "5" -->
+	<!-- LowerLayers: también: "InternetGatewayDevice.LANDevice.1.WiFi.Radio.2" -->
+	<!-- Name: también: "ath4" -->
+	<!-- SSID: también: "WirelessNet-5G" -->
+	<!-- Standard: también: "11na" -->
+	<!-- X_HW_HT20: también: "0", "1" -->
+	<!-- X_HW_Standard: también: "11ac" -->
+	<WPS
+		ConfigMethodsSupported="PushButton Label"
+		DeviceName=""
+		DevicePassword="12345670"
+		Enable="1"
+		UUID="13814000-1dd2-11b2-bfad-6c71d239aa2f"
+		X_HW_ConfigMethod="PushButton"
+		X_HW_PinGenerator="AP"
+		X_HW_WPSRegistrationState="Stop"
+	/>
+	<!-- Enable: también: "0" -->
+	<!-- X_HW_ConfigMethod: también: "Lable" -->
+	<PreSharedKey NumberOfInstances="1"/>
+	<X_HW_GlobalConfig
+		BandSteeringCapability="0"
+		BandSteeringCycle="30"
+		BandSteeringPolicy="1"
+		BandSteeringSamplingNumber="1"
+		KickHoldTime="2"
+		PreemptRssiThreshold="40"
+		PreemptTime="1"
+	/>
+	<X_HW_WifiShare Enabled="0"/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- GPON / XPON / OMCI -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<XponMode mode="0"/>
+	<X_HW_VendorInfo ConfigVoiceWanVlanFlag="0" vendorflag="0"/>
+	<X_HW_XgponDeviceInfo MutualAuthSwitch="0" PreSharedKey="" RegistrationID=""/>
+	<X_HW_InternalPolicy [HIDDEN]
+		RxPowerAlarmReport="0"
+		RxPowerLowerThreshold="-27000"
+		RxPowerUpperThreshold="-8000"
+		TxPowerAlarmReport="0"
+		TxPowerLowerThreshold="500"
+		TxPowerUpperThreshold="5000"
+	/>
+	<X_HW_PonQualityMonitor BERThreshold="5" Enable="1" MonitorInterval="900"/> <!-- [HIDDEN] -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ENERGÍA / LED / HARDWARE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_APMPolicy EnablePowerSavingMode="1"/>
+	<BatteryModePolicy
+		NotUseCATVService="0"
+		NotUseLanService="0"
+		NotUseRemoteManagement="0"
+		NotUseUsbService="0"
+		NotUseVoiceService="0"
+		NotUseWlanService="0"
+	/>
+	<X_HW_LED_SwitchTimer Enable="0"/>
+	<LedStatus NumberOfInstances="11"/>
+	<LedNum NumberOfInstances="1"/>
+	<!-- NumberOfInstances: también: "2" -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- VOZ / SIP / H248 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<VoiceService NumberOfInstances="1"/>
+	<VoiceProfile NumberOfInstances="1"/>
+	<SIP
+		AuthPassword=""
+		AuthUserName=""
+		DSCPMark="26"
+		EthernetPriorityMark="-1"
+		InboundAuthPassword=""
+		InboundAuthUsername=""
+		Organization=""
+		OutboundProxy=""
+		OutboundProxyPort="5060"
+		ProxyServer=""
+		ProxyServerPort="5060"
+		ProxyServerTransport="UDP"
+		RegisterRetryInterval="30"
+		RegistrarServer=""
+		RegistrarServerPort="5060"
+		RegistrarServerTransport="UDP"
+		RegistrationPeriod="600"
+		SIPResponseMapNumberOfElements="0"
+		TimerT1="500"
+		TimerT2="4000"
+		TimerT4="5000"
+		URI=""
+		UseCodecPriorityInSDPResponse="0"
+		UserAgentDomain=""
+		UserAgentPort="5060"
+		UserAgentTransport=""
+		VLANIDMark=""
+		X_HW_802-1pMark=""
+		X_HW_EmergencyDSCPMark="-1"
+		X_HW_SecondaryOutboundProxy=""
+		X_HW_SecondaryOutboundProxyPort="5060"
+		X_HW_SecondaryProxyServer=""
+		X_HW_SecondaryProxyServerPort="5060"
+		X_HW_SecondaryProxyServerTransport=""
+		X_HW_SecondaryRegistrarServer=""
+		X_HW_SecondaryRegistrarServerPort="5060"
+		X_HW_SecondaryRegistrarServerTransport="UDP"
+		X_HW_SessionTimerLenientCheck="0"
+	/>
+	<X_HW_H248
+		CallAgent1=""
+		CallAgent2=""
+		CallAgentMID1=""
+		CallAgentMID2=""
+		CallAgentPort1="2944"
+		CallAgentPort2="2944"
+		DSCPMark="26"
+		DeviceName=""
+		Domain=""
+		LineName=""
+		LocalPort="2944"
+		MIDFormat="IP"
+		MessageEncodingType="ABNF"
+	/>
+	<MGCP
+		CallAgent1=""
+		CallAgent2=""
+		CallAgentPort1="2727"
+		CallAgentPort2="2727"
+		DSCPMark="26"
+		Domain=""
+		LineName=""
+		LocalPort="2427"
+		MaxRetranCount="7"
+		RegisterMode="Wildcard"
+		RetranIntervalTimer="2"
+	/>
+	<X_HW_SIPProfile ProfileBody="1=2;2=1;3=1;4=0;5=0;6=0;7=1;8=600;9=1;10=0;11=0;12=0;13=1;14=1;15=0;16=0;17=0..." ProfileName=""/>
+	<!-- ProfileBody: también: "1=2;2=1;3=1;4=0;5=0;6=0;7=1;8=600;9=1;10=0;11=0;12=0;13=1;14=1;15=0;16=0;17=0;18=0;19=0;20=1;21=0;22=0;23=64;24=60;25=180;26=32;27=120;28=120;29=30;30=60;31=40;32=60;33=500;34=45;35=0;36=4202735;37=24575;38=532615;39=1039;40=33007;41=1025;42=0;43=0;44=4294967295;45=1;46=1;47=0;48=4294967295;49=0;50=1;51=0;52=2;53=0;54=4294967295;55=1;56=0;57=1;58=1;59=1;60=1;61=2;62=500;63=360;64=20;65=3;66=3;67=6;68=4294967295;69=0;70=0;71=4294967295;72=2;73=4294967295;74=4294967295;75=4294967295;76=4294967295;77=4294967295;78=4294967295;79=4294967295;80=0;81=2;82=0;83=4294967295;84=2;85=1;86=3;87=1;88=180;89=20;90=4;91=20;92=30;93=30;94=180;95=4;96=90;97=30;98=6;99=4;100=120;101=100;102=30;103=30;104=4;105=10;106=10;107=16;108=8;109=2;110=0;111=1;112=2;113=2;114=1;115=2;116=1;117=1;118=1;119=1;120=0;121=1;122=2;123=0;124=0;125=0;126=1;127=0;128=0;129=0;130=1;131=0;132=0;133=1;134=1;135=0;136=1;137=1;138=0;139=3;140=0;141=1;142=1;143=1;144=2;145=1;146=1;147=2;148=1;149=0;150=36000;151=500;152=2;153=1;154=8194;155=0;156=0;157=0;158=0;159=0;160=0;161=1;162=1;163=0;164=0;165=0;166=1;167=0;168=0;169=0;170=0;171=0;172=180;173=90;174=1;175=0;176=0;177=30;178=0;179=0;180=1;181=1;182=0;183=0;184=1;185=1;186=2;187=60000;188=1;189=0;190=0;191=0;192=0;193=0;194=21600;195=0;196=0;197=0;198=0;199=0;200=0;201=0;202=0;203=0;204=480;205=486;206=486;207=1;208=30;209=0;210=1;211=0;212=0;213=0;214=0;215=0;216=0;217=0;218=1;219=1;220=0;221=90;222=1;223=1;224=0;225=20;226=20;227=4;228=0;229=0;230=0;231=0;232=0;233=0;234=0;235=0;236=0;237=0;238=1800;239=0;240=0;241=0;242=1200;243=1;244=0;245=0;246=5;247=0;248=0;249=1;250=4294967295;251=1000;252=0;253=1;254=0;255=0;256=1;257=1;258=0;259=0;260=4294967295;261=1;262=1;263=5;264=0;265=1;266=100;267=1;268=0;269=0;270=0;271=0;272=0;273=0;274=0;275=0;276=0;277=1;278=0;279=0;280=16383;281=0;282=1;283=0;284=0;285=0;286=0;287=0;288=0;289=0;290=0;291=4294967295;292=4294967295;293=4294967295;294=4294967295;295=4294967295;296=4294967295;297=4294967295;298=4294967295;299=4294967295;300=4294967295;301=0;302=0;303=4294967295;304=4294967295;305=0;306=1;307=1;308=2147483639;309=2147483647;310=0;311=2;312=0;313=1;314=0;315=0;316=0;317=0;318=4294967295;319=4294967295;320=4294967295;321=4294967295;322=4294967295;323=0;324=0;325=3;326=1;327=0;328=1;329=0;330=0;331=0;332=0;333=10;334=0;335=30;336=0;337=0;338=0;339=1;340=0;341=0;342=0;343=4294967295;344=1;345=0;346=0;347=1;348=0;349=5;350=0;351=0;352=0;353=0;354=3;355=1;356=0;357=0;358=0;359=0;360=0;361=0;362=0;363=0;364=0;365=0;366=1;367=0;368=0;369=2;370=0;371=0;372=0;373=100;374=0;375=0;376=0;377=0;378=0;379=0;380=0;381=0;382=0;383=0;384=0;385=0;386=0;387=0;388=0;389=3000;390=0", "1=2;2=1;3=1;4=0;5=0;6=0;7=1;8=600;9=1;10=0;11=0;12=0;13=1;14=1;15=0;16=0;17=0;18=0;19=0;20=1;21=0;22=0;23=64;24=60;25=180;26=32;27=120;28=120;29=30;30=60;31=40;32=60;33=500;34=45;35=0;36=4202735;37=24575;38=532615;39=1039;40=33007;41=1025;42=0;43=0;44=4294967295;45=1;46=1;47=0;48=4294967295;49=0;50=1;51=0;52=2;53=0;54=4294967295;55=1;56=0;57=1;58=1;59=1;60=1;61=2;62=500;63=360;64=20;65=3;66=3;67=6;68=4294967295;69=0;70=0;71=4294967295;72=2;73=4294967295;74=4294967295;75=4294967295;76=4294967295;77=4294967295;78=4294967295;79=4294967295;80=0;81=2;82=0;83=4294967295;84=2;85=1;86=3;87=1;88=180;89=20;90=4;91=20;92=30;93=30;94=180;95=4;96=90;97=30;98=6;99=4;100=120;101=100;102=30;103=30;104=4;105=10;106=10;107=16;108=8;109=2;110=0;111=1;112=2;113=2;114=1;115=2;116=1;117=1;118=1;119=1;120=0;121=1;122=2;123=0;124=0;125=0;126=1;127=0;128=0;129=0;130=1;131=0;132=0;133=1;134=1;135=0;136=1;137=1;138=0;139=3;140=0;141=1;142=1;143=1;144=2;145=1;146=1;147=2;148=1;149=0;150=36000;151=500;152=2;153=1;154=8194;155=0;156=0;157=0;158=0;159=0;160=0;161=1;162=1;163=0;164=0;165=0;166=1;167=0;168=0;169=0;170=0;171=0;172=180;173=90;174=1;175=0;176=0;177=30;178=0;179=0;180=1;181=1;182=0;183=0;184=1;185=1;186=2;187=60000;188=1;189=0;190=0;191=0;192=0;193=0;194=21600;195=0;196=0;197=0;198=0;199=0;200=0;201=0;202=0;203=0;204=480;205=486;206=486;207=1;208=30;209=0;210=1;211=0;212=0;213=0;214=0;215=0;216=0;217=0;218=1;219=1;220=0;221=90;222=1;223=1;224=0;225=20;226=20;227=4;228=0;229=0;230=0;231=0;232=0;233=0;234=0;235=0;236=0;237=0;238=1800;239=0;240=0;241=0;242=1200;243=1;244=0;245=0;246=5;247=0;248=0;249=1;250=4294967295;251=1000;252=0;253=1;254=0;255=0;256=1;257=1;258=0;259=0;260=4294967295;261=1;262=1;263=5;264=0;265=1;266=100;267=1;268=0;269=0;270=0;271=0;272=0;273=0;274=0;275=0;276=0;277=1;278=0;279=0;280=16383;281=0;282=1;283=0;284=0;285=0;286=0;287=0;288=0;289=0;290=0;291=4294967295;292=4294967295;293=4294967295;294=4294967295;295=4294967295;296=4294967295;297=4294967295;298=4294967295;299=4294967295;300=4294967295;301=0;302=0;303=4294967295;304=4294967295;305=0;306=1;307=1;308=2147483639;309=2147483647;310=0;311=2;312=0;313=1;314=0;315=0;316=0;317=0;318=4294967295;319=4294967295;320=4294967295;321=4294967295;322=4294967295;323=0;324=0;325=3;326=1;327=0;328=1;329=0;330=0;331=0;332=0;333=10;334=0;335=30;336=0;337=0;338=0;339=1;340=0;341=0;342=0;343=4294967295;344=1;345=0;346=0;347=1;348=0;349=5;350=0;351=0;352=0;353=0;354=3;355=1;356=0;357=0;358=0;359=0;360=0;361=0;362=0;363=0;364=0;365=0;366=1;367=0" -->
+	<X_HW_SIPExtend
+		AuthHeaderFoldingEnable="0"
+		ConferenceFactoryUri=""
+		DNSACheckTTLEnable="1"
+		DNSAStoreLimit="0"
+		DomainDNSGetMode="DNS-A"
+		EntityBasedSessionsTimerFlag="0"
+		MaxForwards="70"
+		MultiHomeMode="DualHomeAutoSwitchOver"
+		PhoneContext=""
+		PortFilterFlag="1"
+		ProxyRefreshMode="NoSwitch"
+		Q850CauseWhenPark="1"
+		Server=""
+		SharedUserMode="Disabled"
+		SoftwareParameters=""
+		ThreeWayMixType="ATABased"
+		TimerMinSe="90"
+		TimerSessionProgress="60"
+		TimerSessionRelProgress="150"
+		TimerTD="32000"
+		ToHeaderStrickFlag="1"
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- USB / ALMACENAMIENTO -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<StorageService NumberOfInstances="1"/>
+	<StorageServiceInstance
+		Enable="1"
+		InstanceID="1"
+		LogicalVolumeNumberOfEntries="0"
+		PhysicalMediumNumberOfEntries="0"
+		UserAccountNumberOfEntries="0"
+	/>
+	<X_HW_Printer Enable="0" Name=""/>
+	<LANUSBInterfaceConfig NumberOfInstances="1"/>
+	<LANUSBInterfaceConfigInstance Enable="1" InstanceID="1" Status="Up" X_HW_USBPortStatus="Harddisk"/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PERSONALIZACIÓN ISP (BBSPCustomization) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<BBSPCustomization
+		AlgPortRsvNum="2"
+		AndlinkSelfAdapt="0"
+		AutoBindSTBPort="0"
+		AutoSelectSlaveApUpPort="0"
+		BindLanPPPoeTransparent="0"
+		BtvQueryCvlan="0"
+		BtvQueryMvlan="0"
+		CU_Ringcheck="0"
+		ConntrackReservation="0"
+		ConntrackTCPEstablishedTimeout="0"
+		ConntrackUDPStreamTimeout="0"
+		DNSLogRecordEnable="1"
+		DSLiteFilterEnable="0"
+		DefaultBindBridgeFirst="0"
+		DefaultBridgeWANMTUSize="0"
+		DefaultWANMTUSize="0"
+		DhcpcProcessT1T2Opt="0"
+		Dhcpv6OptimizeWhenManual="1"
+		DiscoverInterval=""
+		DnsFwdAcc="0"
+		ElevateTcpAckEnable="0"
+		FirewallConfig="1"
+		ForbidFwdLANToWAN="0"
+		ForbiddenOltTelnetBr0="0"
+		GPONClassificationEnable="0"
+		GenericL3Accelerate="0"
+		HGUInteropPolicy="0"
+		HostNameBr0=""
+		IPSecAlgFilterExtend="0"
+		IPTVStatusCheckInterval="60"
+		IPTVStatusThreshold="2000"
+		IPv6DefaultFwdAction="0"
+		IPv6LANEnable="1"
+		IgmpSnoopingGenQueryInterval="300"
+		IgnoreVoipWANFromOLT="0"
+		InternetUnreachablePolicy="0"
+		InteroperabilityPolicy="0"
+		LANAddrGUAEnable="0"
+		LanInheritHsiWanDns="0"
+		LanSideIPv6RDNSSOption="0"
+		LanWebSrcIpList=""
+		MSSAutoAdjust="0"
+		MulticastToUnicast="0"
+		Option120En="1"
+		PPPLcpParaModifyFlag="0"
+		PortScanThreshold="0"
+		PortalMaxRetryTimes="1"
+		PortalUserAgentString="MSIE #Trident#AppleWebKit#Chrome#Safari#Firefox#Gecko"
+		ProtocolFltSupport="0"
+		RedirectDelay="0"
+		RemarkLCP_8021p="4294967295"
+		RemarkTR069_8021p="4294967295"
+		RenewDhcpOnGemAdd="0"
+		RenewRandDelayEnable="0"
+		ReqOpt43="4294967295"
+		ReservedMacEnable="0"
+		RingChkDownLan="0"
+		SYNFloodThreshold="0"
+		SameSubnetWorkMode="0"
+		SendDHCPRenew="1"
+		TemplateITVPort="2"
+		Tr143AckTimes="2"
+		VoipWanSendFreeArp="0"
+		WLANMACFilterSmoothFinish="1"
+		WanAccessForceCloseEnable="0"
+	/>
+	<X_HW_BbspConfig ApUplinkMode="0" RouteStatus="0" UpLinkStatus="0"/> <!-- [HIDDEN] -->
+	<X_HW_EAIInfo Enable="1" Version="V1.0"/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- IPTV / MULTICAST / IGMP -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<X_HW_IPTV
+		BridgeWanProxyEnable="1"
+		GenQueryInterval="125"
+		GenResponseTime="100"
+		IGMPEnable="0"
+		IGMPVersion="2"
+		PPPoEWanProxyMode="PPPoE"
+		PPPoEWanSnoopingMode="IPoEAndPPPoE"
+		ProxyEnable="0"
+		RemarkIPPrecedence="-1"
+		RemarkNNI8021P="-1"
+		RemarkNNIDSCP="-1"
+		RemarkNNIIPPrecedence="-1"
+		RemarkPri="-1"
+		RemarkUNI8021P="-1"
+		RemarkUNIDSCP="-1"
+		RemarkUNIIPPrecedence="-1"
+		Robustness="2"
+		STBNumber="0"
+		SnoopingEnable="1"
+		SpQueryInterval="10"
+		SpQueryNumber="2"
+		SpResponseTime="10"
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- QoS / CALIDAD DE SERVICIO -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<QueueManagement DefaultEthernetPriorityMark="8" Enable="0" X_HW_Mode="OTHER"/>
+	<X_HW_QosEnable enable="0"/>
+	<X_HW_QueueSysCfg DownSchedualMode="sp" QueueLen="16" UpSchedualMode="sp"/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- OTRAS OPCIONES (281 tags adicionales) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+	<APWMMParameter NumberOfInstances="4"/>
+	<APWMMParameterInstance AIFSN="3" AccessCategory="" AckPolicy="0" Alias="cpe-1" ECWMax="6" ECWMin="4" InstanceID="1" ResetFlag="1" TXOP="0"/>
+	<ARPFilter ARPAutoBindEnable="0" Enable="0" LimitNumber="800"/>
+	<AccessControl AccessControlListEnable="1" AccessControlListNumberOfEntries="1"/>
+	<Accounting
+		Enable="0"
+		InterimInterval="0xFFFFFFFF"
+		SecondarySecret=""
+		SecondaryServerIPAddr="192.168.0.100"
+		SecondaryServerPort="1813"
+		ServerPort="1813"
+	/>
+	<AntiDNSRebind Enable="0" SafeDomainNameNumberOfEntries="0"/>
+	<Base NumberOfInstances="1"/>
+	<BaseInstance EepromVersion="" Enable="0" FirmwareVersion="" InstanceID="1" PIN="" RFPI="" Status=""/>
+	<BulkData
+		Enable="0"
+		EncodingTypes="JSON"
+		MaxNumberOfParameterReferences="1024"
+		MaxNumberOfProfiles="64"
+		MinReportingInterval="900"
+		ParameterWildCardSupported="1"
+		ProfileNumberOfEntries="0"
+		Protocols="HTTP"
+		Status="Disabled"
+	/>
+	<CWMP host="" level="0" port=""/>
+	<CallingFeatures
+		CallForwardOnBusyEnable="0"
+		CallForwardOnBusyNumber=""
+		CallForwardOnNoAnswerEnable="0"
+		CallForwardOnNoAnswerNumber=""
+		CallForwardOnNoAnswerRingCount="10"
+		CallForwardUnconditionalEnable="0"
+		CallForwardUnconditionalNumber=""
+		CallTransferEnable="0"
+		CallWaitingEnable="1"
+		CallerIDEnable="1"
+		CallerIDName=""
+		CallerIDNameEnable="0"
+		MWIEnable="1"
+		X_HW_3WayEnable="1"
+		X_HW_CallHoldEnable="1"
+		X_HW_CancelCallWaitingDuringCallEnable="1"
+		X_HW_CentrexDialSecondaryEnable="0"
+		X_HW_CentrexPrefix=""
+		X_HW_ConferenceEnable="0"
+		X_HW_DigitsSendingMethod="OverlapInDialogue"
+		X_HW_HotlineEnable="0"
+		X_HW_HotlineMode="0"
+		X_HW_HotlineNumber=""
+		X_HW_HotlineTimer="5"
+		X_HW_MCIDEnable="0"
+		X_HW_MWIMode="Deferred"
+	/>
+	<Chain NumberOfInstances="1"/>
+	<ChainInstance Alias="StandardChain" Creator="Defaults" Enable="1" InstanceID="1" Name="StandardChain" RuleNumberOfEntries="0"/>
+	<ChinaUnicomTest XponVlanTestSwitch="0"/>
+	<Chip NumberOfInstances="1"/>
+	<ChipInstance ChipIndex="0" ChipTopoID="1" InstanceID="1" PortType="0"/>
+	<ConfigurationByRadio NumberOfInstances="2"/>
+	<ConfigurationByRadioInstance
+		AutoExtendedSSIDIndex="1"
+		FollowMeBssidEnabled="1"
+		ForcedRssiThrehold="-85"
+		HighRssiThreshold="-59"
+		IncreasedRssiThreshold="8"
+		InstanceID="1"
+		LowRssiThreshold="-74"
+		RFBand="2.4G"
+	/>
+	<ContentSharing Enable="1"/>
+	<CpuPort NumberOfInstances="1"/>
+	<CpuPortInstance CpuLogicPortID="0x1001" CpuPhyPortID="0x101001" InstanceID="1"/>
+	<DHCPConditionalServingPoolInstance
+		AssociatedConnection=""
+		Chaddr=""
+		ChaddrExclude="0"
+		ChaddrMask=""
+		ClientID=""
+		ClientIDExclude="0"
+		DHCPLeaseTime="86400"
+		DHCPOptionNumberOfEntries="0"
+		DHCPServerIPAddress=""
+		DHCPStaticAddressNumberOfEntries="0"
+		DNSServers=""
+		DomainName=""
+		Enable="0"
+		IPRouters="192.168.2.1"
+		InstanceID="1"
+		LocallyServed="1"
+		MaxAddress="192.168.2.254"
+		MinAddress="192.168.2.2"
+		PoolOrder="1"
+		ReservedAddresses=""
+		SourceInterface=""
+		SubnetMask="255.255.255.0"
+		UseAllocatedWAN="Normal"
+		UserClassID=""
+		UserClassIDExclude="0"
+		VendorClassID="MSFT 5.0"
+		VendorClassIDExclude="0"
+		VendorClassIDMode="Exact"
+		X_HW_DynamicPortMappingEnable="0"
+		X_HW_NTPList=""
+		X_HW_NormalUserEnable="1"
+		X_HW_Option43=""
+		X_HW_PortMappingMaxPort="65510"
+		X_HW_PortMappingStartPort="65501"
+		X_HW_PortMappingWan=""
+	/>
+	<DHCPStaticAddress NumberOfInstances="1"/>
+	<DHCPStaticAddressInstance Chaddr="50:4e:dc:59:6b:e0" Enable="1" InstanceID="1" Vlan="0" Yiaddr="192.168.100.254"/>
+	<DHCPv4 X_HW_ClientDefaultDSCP="0"/>
+	<DHCPv6 X_HW_ClientDefaultDSCP="0"/>
+	<DbaType type="1"/>
+	<DeploymentUnit NumberOfInstances="1"/>
+	<DeploymentUnitInstance
+		DUID="1"
+		Description="netopen cplugin"
+		ExecutionEnvRef="InternetGatewayDevice.SoftwareModules.ExecEnv.1"
+		ExecutionUnitList="InternetGatewayDevice.SoftwareModules.ExecutionUnit.1"
+		InstanceID="1"
+		Name="kernelapp"
+		Resolved="1"
+		Status="Installed"
+		URL=""
+		UUID="dc3ba86a-c4b8-55ed-992f-5596d3cc2370"
+		Vendor="HUAWEI Technologies Co.,Ltd"
+		Version="22.0.85"
+	/>
+	<Description NumberOfInstances="6"/>
+	<DescriptionInstance EntryID="101" InstanceID="1" ToneEnable="1" ToneFile="" ToneName="" TonePattern="0" ToneRepetitions="0"/>
+	<!-- EntryID: también: "102", "1", "103", "104", "105" -->
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" -->
+	<!-- ToneFile: también: "/etc/ont/voice/DTMF_Confirm_Input.pcm", "/etc/ont/voice/DTMF_Confirm_Fail.pcm", "/etc/ont/voice/DTMF_Confirm_Success.pcm" -->
+	<!-- TonePattern: también: "1", "3", "5" -->
+	<Digitmap DMName="" DigitMap="" DigitMapLongTimer="10" DigitMapShortTimer="5" DigitMapStartTimer="20"/>
+	<Domain NumberOfInstances="5"/>
+	<DomainInstance Description="" ID="0" InstanceID="1" Source="0" UpdateMode="0" UpdateTime="30"/>
+	<Duration NumberOfInstances="4"/>
+	<DurationInstance Enable="0" EndTime="" InstanceID="1" RepeatDay="1,2,3,4,5,6,7" StartTime=""/>
+	<EasyMesh
+		AlMac=""
+		DetectRole=""
+		Em2GRssiThreshold="-74"
+		Em5GRssiThreshold="-71"
+		Enable="0"
+		IncreasedRssi="5"
+		MAPAgent="2"
+		Name="Easymesh_device"
+		Roaming="2"
+		Role="Auto"
+		Version="2.0"
+	/>
+	<EduAcceleration Enable="0" STAIPList="" Status="off" UplinkDscp="40"/>
+	<EthPort NumberOfInstances="5"/>
+	<EthPortInstance EthLogicPortID="5" EthPhyPortID="0x100001" InstanceID="1" PortType="0"/>
+	<!-- EthLogicPortID: también: "4", "3", "2", "1" -->
+	<!-- EthPhyPortID: también: "0x100003", "0x100002", "0x100004", "0x100005" -->
+	<!-- InstanceID: también: "2", "3", "4", "5" -->
+	<!-- PortType: también: "1" -->
+	<EthUkUniCastPktAction AccessMode="unconcerned"/>
+	<Event NumberOfInstances="1"/>
+	<EventInstance Function="" InstanceID="1" ToneID=""/>
+	<Ewcode Enable="0" Encryption="" ServerURL=""/>
+	<ExecEnv NumberOfInstances="1"/>
+	<ExecEnvInstance
+		CurrentRunLevel="0"
+		Enable="1"
+		InitialRunLevel="0"
+		InstanceID="1"
+		Name="LXC 2.0.8"
+		ParentExecEnv=""
+		RequestedRunLevel="0"
+		Reset="0"
+		Status="Disabled"
+		Type="Container"
+		Vendor="GNU LGPL 2.1"
+		Version="2.0.8"
+	/>
+	<ExecutionUnit NumberOfInstances="1"/>
+	<ExecutionUnitInstance
+		AutoStart="1"
+		Description="netopen cplugin"
+		DiskSpaceInUse="0"
+		EUID="1"
+		ExecutionEnvRef="InternetGatewayDevice.SoftwareModules.ExecEnv.1"
+		ExecutionFaultCode="NoFault"
+		ExecutionFaultMessage=""
+		InstanceID="1"
+		MemoryInUse="0"
+		Name="kernelapp"
+		RequestedState=""
+		RunLevel="0"
+		Status="ACTIVE"
+		Vendor="HUAWEI Technologies Co.,Ltd"
+		Version="22.0.85"
+	/>
+	<ExtDeviceInfo X_HW_LedSwitch="1"/>
+	<Extend
+		CallholdTimer="600"
+		DigitMapAutoMatchEnable="1"
+		DisconnectToneType="BusyTone"
+		HeartBeatRetransTimer="60"
+		HeartBeatRetransTimes="3"
+		HeartBeatTimer="600"
+		MWD="60"
+		MWDBaseTime="0"
+		MgcSwitchMethod="SupportSwitch"
+		PortFilterFlag="1"
+		PortFilterTime="5"
+		ProfileIndex="0"
+		ProfileName=""
+		ProfileNego="0"
+		SoftwareParameters=""
+		Topversion="2"
+	/>
+	<FaultReporting Enabled="1" OperationsName="" OperationsNumber=""/>
+	<FaxT38
+		BitRate="0"
+		Enable="0"
+		HighSpeedRedundancy="3"
+		LowSpeedRedundancy="3"
+		TCFMethod="Network"
+		X_HW_NegoAcceptWhenDisabled="1"
+		X_HW_PortAdd2="0"
+		X_HW_T38TrainingComplement="0"
+		X_HW_V21PreProcessMode="0"
+	/>
+	<FilMid NumberOfInstances="16"/>
+	<FilMidInstance InstanceID="1" MID="0"/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+10 more) -->
+	<Filter PPPoEIGMPTransparent="0" SourceIPExcludeFilter=""/>
+	<GameAcceleration Enable="0" STAIPList="" Status="off" UplinkDscp="40"/>
+	<Hosts
+		X_OnlineNumberLAN="0"
+		X_OnlineNumberWlan2G="0"
+		X_OnlineNumberWlan5G="0"
+		X_TotalNumberLAN="0"
+		X_TotalNumberWlan2G="0"
+		X_TotalNumberWlan5G="0"
+	/>
+	<IGMPDiagnostics
+		ChannelAddress=""
+		ChannelProtocol="udp"
+		ChannelStatus=""
+		DiagnosticsState="None"
+		IGMPJoinDelay="0"
+		Interface=""
+		NumberOfIGMPJoins="0"
+		NumberOfIGMPLeaves="0"
+		StreamServerAddress=""
+		Timeout="0"
+	/>
+	<IPInterface NumberOfInstances="2"/>
+	<IPInterfaceInstance
+		Enable="1"
+		IPInterfaceAddressingType="Static"
+		IPInterfaceIPAddress="192.168.100.1"
+		IPInterfaceSubnetMask="255.255.255.0"
+		InstanceID="1"
+		X_HW_AddressConflictDetectionEnable="1"
+		X_HW_RouteProtocolAuthKey=""
+		X_HW_RouteProtocolAuthMode="Off"
+		X_HW_RouteProtocolRx="Off"
+		X_HW_RouteProtocolRxMode="Passive"
+	/>
+	<!-- IPInterfaceIPAddress: también: "192.168.2.1" -->
+	<!-- InstanceID: también: "2" -->
+	<IPv6Address NumberOfInstances="1"/>
+	<IPv6AddressInstance Alias="br0_addr_1" IPv6Address="fe80::1" InstanceID="1"/>
+	<IPv6Prefix NumberOfInstances="1"/>
+	<IPv6PrefixInstance
+		Alias="br0_prefix_1"
+		ChildPrefixMask="::/64"
+		InstanceID="1"
+		Mode="WANDelegated"
+		ParentPrefix=""
+		PreferredLifeTime="3600"
+		Prefix=""
+		ValidLifeTime="7200"
+	/>
+	<!-- Prefix: también: "br0_prefix_1" -->
+	<Interface NumberOfInstances="1"/>
+	<InterfaceInstance
+		Alias="cpe-1"
+		Enable="1"
+		InstanceID="1"
+		LastChange=""
+		LowerLayers=""
+		LowerOpticalThreshold=""
+		LowerTransmitPowerThreshold=""
+		Name=""
+		OpticalSignalLevel=""
+		Status="Up"
+		TransmitOpticalLevel=""
+		UpperOpticalThreshold=""
+		UpperTransmitPowerThreshold=""
+		Upstream="1"
+	/>
+	<InterfaceSetting NumberOfInstances="1"/>
+	<InterfaceSettingInstance
+		Enable="1"
+		InstanceID="1"
+		Interface="InternetGatewayDevice.LANDevice.1.LANHostConfigManagement.IPInterface.1"
+		MaxRtrSolicitations="4294967295"
+		NUDEnable="1"
+		RSEnable="0"
+		RetransTimer="1000"
+		RtrSolicitationInterval="60000"
+		Status="Enabled"
+	/>
+	<InternetGatewayDevice DBEncrypt="1"/>
+	<IpFilterIn NumberOfInstances="0"/>
+	<IpFilterOut NumberOfInstances="0"/>
+	<LANEthernetInterfaceConfigInstance
+		Alias="cpe-1"
+		DuplexMode="Auto"
+		Enable="1"
+		InstanceID="1"
+		MACAddress=""
+		MACAddressControlEnabled="0"
+		MaxBitRate="Auto"
+		Name="eth0:1"
+		Status=""
+		X_HW_L3Enable="0"
+		X_HW_Mode="0"
+		X_HW_MultiCastVlan="1"
+		X_HW_MultiCastVlanAct="0"
+		X_HW_VLAN=""
+		X_TR181_MaxBitRate="-1"
+	/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+2 more) -->
+	<!-- Name: también: "eth0:2", "eth0:3", "eth0:4", "eth0:5", "eth0:6" ... (+2 more) -->
+	<LedNumInstance InstanceID="1" LedColor="1" LedFrequence="4" LedId="2" LedName="PON"/>
+	<!-- InstanceID: también: "2" -->
+	<!-- LedColor: también: "0" -->
+	<!-- LedFrequence: también: "0", "0xFFFFFFFF", "1" -->
+	<!-- LedId: también: "1" -->
+	<!-- LedName: también: "LOS" -->
+	<LedStatusInstance InstanceID="1" LedTotal="1"/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+5 more) -->
+	<!-- LedTotal: también: "2" -->
+	<Level NumberOfInstances="1"/>
+	<LevelInstance
+		Alias="Standard"
+		Chain="InternetGatewayDevice.X_HW_Security.Firewall.Chain.1"
+		DefaultLogPolicy="0"
+		DefaultPolicy="Drop"
+		Description="All outgoing from LAN accept,and incoming to WAN is drop"
+		InstanceID="1"
+		Name="Standard"
+		Order="1"
+		PortMappingEnabled="1"
+	/>
+	<Line NumberOfInstances="2"/>
+	<LineInstance DirectoryNumber="" Enable="Disabled" InstanceID="1" PhyReferenceList="1" X_HW_Priority="0"/>
+	<!-- InstanceID: también: "2" -->
+	<!-- PhyReferenceList: también: "2" -->
+	<List NumberOfInstances="4"/>
+	<ListInstance
+		Codecs="G.711MuLaw"
+		DynamicWanServiceType=""
+		Enable="1"
+		InstanceID="1"
+		Mode="0"
+		PacketizationPeriod="20"
+		Priority="2"
+		ServicePort="HTTP"
+		ServiceProto=""
+		ServiceProtoPort=""
+		SrcIp=""
+		SrcMac=""
+		SrcPortName="ALL"
+		SrcPortType="2"
+	/>
+	<!-- Codecs: también: "G.711ALaw", "G.729", "G.722" -->
+	<!-- InstanceID: también: "2", "3", "4" -->
+	<!-- Priority: también: "1", "3", "4" -->
+	<LogicalVolume NumberOfInstances="1"/>
+	<LogicalVolumeInstance
+		Capacity="59984"
+		Enable="1"
+		Encrypted="0"
+		FileSystem=""
+		FolderNumberOfEntries="0"
+		InstanceID="1"
+		Name="usb-346d-E37A6F_1"
+		PhysicalReference="346d-E37A6F"
+		Status="Offline"
+		UsedSpace="0"
+	/>
+	<LoginInfo IpAddress="192.168.100.3" Time="1742156881" UserName="root"/>
+	<MAP DomainNumberOfEntries="0" Enable="0"/>
+	<MK NumberOfInstances="1"/>
+	<MKInstance Active="0" ID="1" InstanceID="1" Key=""/>
+	<MacFilter NumberOfInstances="0"/>
+	<Mapping NumberOfInstances="6"/>
+	<MappingInstance CadenceType="0" InitialRing="0" InstanceID="1" Pattern="0" RingName=""/>
+	<!-- CadenceType: también: "32" -->
+	<!-- InitialRing: también: "32" -->
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" -->
+	<!-- Pattern: también: "1", "2", "3", "4", "5" -->
+	<MultiSrvPortList PhyPortName=""/>
+	<MulticastABR Enable="0"/>
+	<NAT InterfaceSettingNumberOfEntries="0" PortMappingNumberOfEntries="0"/>
+	<NetInfo DomainName="HOME" HostName="WAP"/>
+	<NetworkServer NetworkProtocolAuthReq="0" SMBEnable="0"/>
+	<OTTConfig Account="" LocalDHCPAuthMode="0" Password=""/>
+	<OfficeAcceleration Enable="0" STAIPList="" Status="off"/>
+	<OmciVersion version="0"/>
+	<OnuId onuid="0"/>
+	<OnuOnLineState FaultCode="0"/>
+	<Optical InterfaceNumberOfEntries="1"/>
+	<ParentalCtrl DefaultPolicy="Allow" Enable="1" ParentCtrlDataSyncInd="1" ParentCtrlMode="2"/>
+	<PhyInterface NumberOfInstances="2"/>
+	<PhyInterfaceInstance InstanceID="1" InterfaceID="1" PhyPort="0"/>
+	<!-- InstanceID: también: "2" -->
+	<!-- InterfaceID: también: "2" -->
+	<!-- PhyPort: también: "1" -->
+	<PhysicalMedium NumberOfInstances="1"/>
+	<PhysicalMediumInstance
+		Capacity="0"
+		ConnectionType=""
+		FirmwareVersion=""
+		Health="OK"
+		HotSwappable="1"
+		InstanceID="1"
+		Model=""
+		Name="346d-E37A6F"
+		Removable="0"
+		SMARTCapable="0"
+		SerialNumber=""
+		Status=""
+		Uptime="0"
+		Vendor=""
+		X_HW_Manufacturer=""
+		X_HW_Product=""
+	/>
+	<PingAcceleration Enable="0" STAIPList="" Status="off"/>
+	<Pool NumberOfInstances="1"/>
+	<PoolInstance InstanceID="1" MaxAddress="0000:0000:0000:0100" MinAddress="0000:0000:0000:0001" Prefix="br0_prefix_1"/>
+	<PortIsolate PortIsolateSwitch="undef"/>
+	<PortalGuideCtrl PortalGuideSupport="1"/>
+	<PreSharedKeyInstance AssociatedDeviceMACAddress="" InstanceID="1" KeyPassphrase="" PreSharedKey="eeeeeeee"/>
+	<PrefixInformation NumberOfInstances="1"/>
+	<PrefixInformationInstance DelegatedWanConnection="" InstanceID="1" Mode="WANDelegated" PreferredLifeTime="3600" Prefix="" ValidLifeTime="7200"/>
+	<Processor NumberOfInstances="1"/>
+	<ProcessorInstance Alias="cpe-1" Architecture="arm" InstanceID="1"/>
+	<Profile
+		NumberOfInstances="0"
+		ProfileBody="0=0;1=2;2=2;3=0;4=0;5=0;6=0;7=0;8=0;9=0;10=0;11=1;12=1;13=0;14=0;15=0;16=0;17..."
+		ProfileName=""
+	/>
+	<RK CreateTime="" ExpiredTime="" Iterations="20" LifeDays="3650" Source="0" Version="0"/>
+	<RTCP Enable="1" TxRepeatInterval="5000" X_HW_RtcpxrFlag="1" X_HW_VqmFlag="0"/>
+	<RTP
+		DSCPMark="46"
+		LocalPortMax="50032"
+		LocalPortMin="50000"
+		TelephoneEventPayloadType="97"
+		VLANIDMark=""
+		X_HW_2833FaxEventFlag="Disable"
+		X_HW_2833FlashHook="0"
+		X_HW_802-1pMark=""
+		X_HW_EmergencyDSCPMark="-1"
+		X_HW_PortName=""
+	/>
+	<Redundancy Enable="0" PayloadType="96" X_HW_EnableAuto="0" X_HW_EnableFixedStart="0" X_HW_Rfc2198For2833="0"/>
+	<RegStatus status="0"/>
+	<ResponseMap NumberOfInstances="2"/>
+	<ResponseMapInstance InstanceID="1" SIPResponseNumber="100" Tone="0" X_HW_Duration="60"/>
+	<!-- InstanceID: también: "2" -->
+	<!-- SIPResponseNumber: también: "493" -->
+	<!-- Tone: también: "1" -->
+	<RingCheck
+		CheckInterval="1"
+		DefaultSpecifidVlan=""
+		EponRingCheckSwitch="0"
+		EthType="0x8300"
+		GponRingCheckSwitch="0"
+		PkgPerSec="5"
+		RingPortReCheckInterval="300"
+	/>
+	<Rule NumberOfInstances="0"/>
+	<SMBServer Netbios="" Workgroup="WORKGROUP"/>
+	<STAWMMParameter NumberOfInstances="4"/>
+	<STAWMMParameterInstance AIFSN="3" AckPolicy="0" ECWMax="10" ECWMin="4" InstanceID="1" TXOP="0"/>
+	<SaveInterval NumberOfInstances="9"/>
+	<SaveIntervalInstance InstanceID="1" Stime="0"/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+3 more) -->
+	<!-- Stime: también: "360000" -->
+	<SecCli debugswitch="1"/>
+	<Server DHCPv6LeaseTime="0" Enable="1" OPTION16Enable="1" OPTION17Enable="1"/>
+	<SessionAction IPv4SessionFwd="1"/>
+	<SpeedLimit DeviceInfo="" Domain="NULL" Enable="0" HgwInfo="" LimitAction=""/>
+	<StackInfo
+		FixedRetransTime="2000"
+		LongTimer="30000"
+		MGProvisionalRespTime="8000"
+		MTUValue="1500"
+		MaxreTransDuration="30000"
+		MaxreTransTime="4000"
+		MaxreTransTimes="7"
+		MinreTransTime="1000"
+		MsgFormat="Short"
+		MsgSegmentation="1"
+		ResponseAckCtrl="0"
+		RetransMode="Fixed"
+		Retransfailoption="Times"
+	/>
+	<StartCodeVersion Version=""/>
+	<Stats
+		AverageFarEndInterarrivalJitter="0"
+		AverageReceiveInterarrivalJitter="0"
+		AverageRoundTripDelay="0"
+		BroadcastPacketsReceived=""
+		BroadcastPacketsSent=""
+		BytesReceived=""
+		BytesSent=""
+		CallsDropped="0"
+		DiscardPacketsReceived=""
+		DiscardPacketsSent=""
+		ErrorsReceived=""
+		ErrorsSent=""
+		FarEndInterarrivalJitter="0"
+		FarEndPacketLossRate="0"
+		IncomingCallsAnswered="0"
+		IncomingCallsConnected="0"
+		IncomingCallsFailed="0"
+		IncomingCallsReceived="0"
+		MulticastPacketsReceived=""
+		MulticastPacketsSent=""
+		OutgoingCallsAnswered="0"
+		OutgoingCallsAttempted="0"
+		OutgoingCallsConnected="0"
+		OutgoingCallsFailed="0"
+		Overruns="0"
+		PacketsLost="0"
+		PacketsReceived=""
+		PacketsSent=""
+		ReceiveInterarrivalJitter="0"
+		ReceivePacketLossRate="0"
+		ResetStatistics="0"
+		RoundTripDelay="0"
+		ServerDownTime="0"
+		TotalCallTime="0"
+		Underruns="0"
+		UnicastPacketsReceived=""
+		UnicastPacketsSent=""
+		UnknownProtoPacketsReceived=""
+		X_HW_AnalogPortOffhookTimerMax="0"
+		X_HW_AnalogPortReleasesCount="0"
+		X_HW_CallSetupTimerMax="0"
+		X_HW_MaxFarEndInterarrivalJitter="0"
+		X_HW_MaxReceiveInterarrivalJitter="0"
+		X_HW_MaxTimeBetweenRTCPPackets="0"
+		X_HW_PacketLossRate="0"
+		X_HW_PartResetStatistics=""
+		X_HW_RTPErrors="0"
+		X_HW_SIPCallFailedToAuthenticateCounter="0"
+		X_HW_SIPCallFailedToConnectCounter="0"
+		X_HW_SIPCallFailureReceivedCounter="0"
+		X_HW_SIPCallTimeoutCounter="0"
+	/>
+	<!-- DiscardPacketsReceived: también: "0" -->
+	<!-- DiscardPacketsSent: también: "0" -->
+	<!-- ErrorsReceived: también: "0" -->
+	<!-- ErrorsSent: también: "0" -->
+	<SupportedDataModel NumberOfInstances="1"/>
+	<SupportedDataModelInstance
+		Alias="cpe-1"
+		Features="VOICE,WIFI,Router"
+		InstanceID="1"
+		URL="https://www.broadband-forum.org/cwmp/tr-181-2-11-0-full.xml"
+		URN="urn:broadband-forum-org:tr-181-2-11-0"
+		UUID="8862c186-5884-5341-b9ab-8c350dc33abd"
+	/>
+	<Templates NumberOfInstances="1"/>
+	<TemplatesInstance
+		DurationPolicy="0"
+		DurationRight="0"
+		EndDate=""
+		InstanceID="1"
+		Name="template"
+		StartDate=""
+		URLCategoryFilterList=""
+		UrlFilterPolicy="0"
+		UrlFilterRight="0"
+	/>
+	<Tests PhoneConnectivity="" TestSelector="" TestState=""/>
+	<Time
+		CurrentLocalTime=""
+		DaylightSavingsEnd="2009-8-30T00:00:00"
+		DaylightSavingsStart="2009-8-1T00:00:00"
+		DaylightSavingsUsed="0"
+		Enable="0"
+		LocalTimeZone="+00:00"
+		LocalTimeZoneName="Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London"
+		NTPServer1="clock.fmt.he.net"
+		NTPServer2="clock.nyc.he.net"
+		NTPServer3=""
+		NTPServer4=""
+		NTPServer5=""
+		Status="Synchronized"
+		X_HW_DaylightSavingsEndDate="9/4/1/0/0/0"
+		X_HW_DaylightSavingsStartDate="7/4/1/0/0/0"
+		X_HW_SynInterval="86400"
+		X_HW_WanName=""
+	/>
+	<TimerConfig
+		AbsSleepTicks="100000"
+		MaxAbsCount="1000"
+		MaxClientAbsCoun="100"
+		MaxClientRealCount="100"
+		MaxRealCount="2000"
+		MaxTimerInGroup="32"
+		RealHashBit="10"
+		RealSleepTicks="5000"
+	/>
+	<TokenObj NumberOfInstances="16"/>
+	<TokenObjInstance InstanceID="1" Token="$2A*Pr)&gt;SKpFM1vtCm5Ph5s2LvP%+)&apos;!X\fMW9Gj+08dh,OmSV0&apos;h@R8O[;~UO$" Used="0"/>
+	<TonePattern NumberOfInstances="5"/>
+	<TonePatternInstance
+		Duration="300"
+		EntryID="1"
+		Frequency1="300"
+		Frequency2="0"
+		Frequency3="0"
+		Frequency4="0"
+		InstanceID="1"
+		NextEntryID="0"
+		Power1="-100"
+		Power2="0"
+		Power3="0"
+		Power4="0"
+		ToneOn="0"
+	/>
+	<!-- Duration: también: "2000", "0" -->
+	<!-- EntryID: también: "2", "3", "4", "5" -->
+	<!-- Frequency1: también: "400" -->
+	<!-- InstanceID: también: "2", "3", "4", "5" -->
+	<!-- NextEntryID: también: "2", "4" -->
+	<!-- ToneOn: también: "1" -->
+	<UntaggedAction ForceTransparent="0"/>
+	<UpMultiCastPktAction RestrainSwitch="0"/>
+	<UpPort NumberOfInstances="1"/>
+	<UpPortInstance InstanceID="1" PortType="0" UpPortLogicPortID="0x2001" UpPortPhyPortID="0x102001"/>
+	<UrlFilter NumberOfInstances="0"/>
+	<UserDefine NumberOfInstances="1"/>
+	<UserDefineInstance InstanceID="1" RingPara1="1000" RingPara2="4000" RingPara3="0" RingPara4="0" RingPara5="0" RingPara6="0" RingType="32"/>
+	<UsrSessionLimit Enable="1" MAXSession="4000"/>
+	<VendorLogFile NumberOfInstances="1"/>
+	<VendorLogFileInstance Alias="cpe-1" InstanceID="1" MaximumSize="0" Name="system_log" Persistent="1"/>
+	<VoiceProcessing ReceiveGain="0" TransmitGain="0"/>
+	<VoiceProfileInstance
+		DTMFMethod="InBand"
+		DigitMap=""
+		DigitMapEnable="1"
+		Enable="Enabled"
+		InstanceID="1"
+		Name=""
+		Region=""
+		SignalingProtocol=""
+		X_HW_DigitMapMatchMode="Min"
+		X_HW_HowlerSendFlag="1"
+		X_HW_KeepTransferActivePeriod="0"
+		X_HW_Option120PriorityMode="1"
+		X_HW_OverseaVer="0"
+		X_HW_PortName=""
+		X_HW_ServerType=""
+	/>
+	<VoiceServiceInstance InstanceID="1" VoiceProfileNumberOfEntries="1"/>
+	<WANConnectionDeviceInstance
+		InstanceID="3"
+		WANIPConnectionNumberOfEntries="1"
+		WANPPPConnectionNumberOfEntries="0"
+		X_HW_CU_802_1p="0"
+		X_HW_CU_VLAN="0"
+		X_HW_CU_VLANEnabled="0"
+	/>
+	<WANDeviceInstance InstanceID="1" WANConnectionNumberOfEntries="0"/>
+	<WANSrcWhiteList WANSrcWhiteListEnable="0" WANSrcWhiteListNumberOfEntries="0"/>
+	<WEPKey NumberOfInstances="4"/>
+	<WEPKeyInstance InstanceID="1" WEPKey="aaaaaaaaaaaaa"/>
+	<!-- InstanceID: también: "2", "3", "4" -->
+	<!-- WEPKey: también: "bbbbbbbbbbbbb", "ccccccccccccc", "ddddddddddddd" -->
+	<WLANMacFilter NumberOfInstances="0"/>
+	<WPS20AuthSupported Enable="0"/>
+	<WiFiSilence SupportSilence="0"/>
+	<WifiAntType Index="0"/>
+	<WlanDfsControl Bsd2GSlientEnable="1" DfsOptimizationEnable="1" DfsSilentEnable="1"/>
+	<WorkMode SupportWorkMode="0"/>
+	<X_CU_User NumberOfInstances="1"/>
+	<X_CU_UserInstance
+		BlackListNumberofEntries="0"
+		Description=""
+		Enable="1"
+		IPFilterNumberOfEntries="0"
+		InstanceID="1"
+		MACFilterNumberOfEntries="0"
+		Name=""
+		NumberOfSubuser="4"
+		URLListFilterMode="0"
+		WhiteListNumberofEntries="0"
+	/>
+	<X_HW_6RDTunnel Enable="0" RdBRIPv4Address="" RdIPv4MaskLen="10" RdMode="Dynamic" RdPrefix="" RdPrefixLen="40"/>
+	<X_HW_APConnnect Bssid="0" LinkHWAP="0" Quality="" Rssi="" SkipLowRSSI="0"/>
+	<X_HW_APService VenderClassId="HWAP"/>
+	<X_HW_AccessLimit Mode="Off" TotalTerminalNumber="0"/>
+	<X_HW_AdvanceConf BeaconPeriod="100" DtimPeriod="1" FragThreshold="2346" RTSThreshold="2346"/>
+	<X_HW_AmpInfo EponProtectParaSwitch="0" EthLoopbackTimeout="0" GemportRateLimitMode="0" SSIDbindRadioSwitch="0" XponSilenceSwitch="0"/>
+	<X_HW_AttachConf
+		AutoChannelRefreshPeriod="900"
+		ChannelsInAvailability="0"
+		TWTEnable="0"
+		UnavailableDFSChannels=""
+		X_HW_ACNumberOfEntries="4"
+		X_HW_ACS_ChannelScope="0"
+		X_HW_ACS_CustomChannel=""
+		X_HW_AcsLevel="5"
+		X_HW_AirtimeFairness="0"
+		X_HW_AirtimeFairnessMode="1"
+		X_HW_AtfEnabled="1"
+		X_HW_AutoChannelRefresh="0"
+		X_HW_AutoChannelRefreshPeriod="15"
+		X_HW_AutoChannelRefreshPeriodCustomer="0"
+		X_HW_AutoChannelRefreshPeriodEnable="1"
+		X_HW_AutoRxPowerSaveEnable="1"
+		X_HW_BFhual="0"
+		X_HW_Backhaul="0"
+		X_HW_CCAReport=""
+		X_HW_CCARequest=""
+		X_HW_ChannelScopeFlag="0"
+		X_HW_DownRateLimit="0"
+		X_HW_EncryptionMode=""
+		X_HW_ExtensionChannel="Auto"
+		X_HW_ExtensionChannel_f="Auto"
+		X_HW_IEEE80211hEnabled="0"
+		X_HW_IEEE80211hSupported="0"
+		X_HW_IsolateControl="0"
+		X_HW_IsolationEnable="0"
+		X_HW_LongRetryLimit="0"
+		X_HW_MNGSsidState="0"
+		X_HW_MacFilterPolicy="0"
+		X_HW_PacketAggregationEnable="1"
+		X_HW_PortIsolation="0"
+		X_HW_PreambleType="auto"
+		X_HW_RPIHistogramReport=""
+		X_HW_RPIHistogramRequest=""
+		X_HW_RadioReference=""
+		X_HW_RetryLimit="0"
+		X_HW_TafHighPriorityMac=""
+		X_HW_TafIBFEnabled="1"
+		X_HW_TxIBFEnabled="1"
+		X_HW_UpRateLimit="0"
+		X_HW_Upstream="0"
+		X_HW_VhtFeatures="0"
+		X_HW_VirtualBsdSsid="0"
+		X_HW_WmmServiceEnable="0"
+		X_MUMIMOEnabled="1"
+	/>
+	<X_HW_AutoBlackList Aging="3600" Enable="0" Reset="3600" Threshold="100"/>
+	<X_HW_BandWidthUpTo160
+		Enable="1"
+		EndTime="6"
+		LowRateThrehold="4"
+		MeasureTimeLength="300"
+		PacketLossRateThrehold="3"
+		PerformCycle="1440"
+		StartTime="2"
+	/>
+	<X_HW_BundleInfo BundleSeqNum="0" BundleSeqNumMin="0"/>
+	<X_HW_CHL_SCAN
+		APScanWaitTime="0"
+		AirtimeThreshold1="0"
+		AirtimeThreshold2="0"
+		AirtimeThreshold3="0"
+		ApBgStart="0"
+		BackScanTime="0"
+		BackWaitTime="0"
+		DFSChScanTime="0"
+		Enable="0"
+		FrontScanTime2G="0"
+		FrontScanTime5G="0"
+		NonDFSChAPScanTime="0"
+	/>
+	<X_HW_CLOUDVR Enable="0" Password="" UserID=""/>
+	<X_HW_CtLastRegisterError Reason="6"/>
+	<X_HW_DHCPOptionInherit
+		DHCPOptionInheritEnable="0"
+		OptionInheritFromWAN=""
+		OptionInheritMode="FromWANPath"
+		OptionList=""
+		ServiceType=""
+		VendorClassID=""
+		VendorClassIDMode="Exact"
+	/>
+	<X_HW_DHCPSLVSERVER
+		DHCPEnable="0"
+		DNSList=""
+		DynamicPortMappingEnable="0"
+		EndIP="192.168.2.254"
+		LeaseTime="86400"
+		NTPList=""
+		NormalUserEnable="1"
+		Option43=""
+		Option60="MSFT 5.0"
+		PortMappingMaxPort="65510"
+		PortMappingStartPort="65501"
+		PortMappingWan=""
+		StartIP="192.168.2.2"
+	/>
+	<X_HW_DMZ DMZEnable="0" DMZHostIPAddress=""/>
+	<X_HW_DataInfo X_HW_DBSavers="WEB" X_HW_LastSaveTime="2025-03-16 14:28:04" X_HW_SaveTimes="42" X_HW_Version="2024/06/29 11:58:02"/>
+	<X_HW_DataModel X_HW_CurrentLink="1"/>
+	<X_HW_DialSN
+		DialSNMode="0"
+		FailSetToneId="101"
+		InputToneId=""
+		IsDialSNSecurityDisabled="0"
+		IsHaveAuthed="0"
+		PONAuthInfoQueryCode=""
+		PONAuthInfoToneId="0"
+		Prefix="**"
+		SucessSetToneId="102"
+		TimerCompleteInput="10"
+		TimerWaitInput="10"
+	/>
+	<X_HW_Digitmap DMName="" DigitMap="" DigitMapLongTimer="10" DigitMapShortTimer="5" DigitMapStartTimer="20"/>
+	<X_HW_DmsService Enable="0" EnableIPv6="0" ShareAllPath="1"/>
+	<X_HW_DspTemplate EchoCancellationEnable="0" Enable="0" JbMode="Static" NLP="Closed" SilenceSuppression="0" WorkMode="Modem"/>
+	<X_HW_E8CIPFwd IPForwardModeEnabled="0"/>
+	<X_HW_EthSpec NumberOfInstances="4"/>
+	<X_HW_EthSpecInstance InstanceID="1" X_HW_HGDetectEnable="1"/>
+	<!-- InstanceID: también: "2", "3", "4" -->
+	<X_HW_Extend
+		Bell103MarkANSEnable="0"
+		BellAnsEnable="1"
+		CalledOffhookShakeTime="200"
+		CallerOffhookShakeTime="80"
+		ClipForceSendFsk="0"
+		ClipFormat="Mdmf-fsk"
+		ClipFskMode="BELL_202"
+		ClipNormalPoleAfterFsk="1"
+		ClipReversePole="0"
+		ClipSendDateTime="1"
+		ClipTasPattern="NO-TAS"
+		ClipTransWhen="AfterRing"
+		Current="25"
+		CurrentOnPark="0"
+		DCTime="100"
+		DTMFBufferMode="2"
+		DTMFClipStartCode="15"
+		DTMFEraseBeforeEnd="0"
+		DefaultCodec="G.711ALaw"
+		DefaultPktLen="20"
+		DetectAnsbarBySingleToneEnable="0"
+		DialMode="First"
+		DialPulseBreakLowerLimit="30"
+		DialPulseBreakUpperLimit="90"
+		DialPulseInterval="240"
+		DialPulseMakeLowerLimit="30"
+		DialPulseMakeUpperLimit="90"
+		DialPulsePeriodLowerLimit="50"
+		DialPulsePeriodUpperLimit="200"
+		DspDtmfDetHighPassFilterValue="0"
+		DspHighPassFilterEnable="1"
+		DspTemplateName=""
+		DtmfDetectAlgorithmMode="0"
+		DtmfDetectLevelLowerAdjust="0"
+		DtmfDetectNegativeTwistAdjust="0"
+		DtmfDetectPositiveTwistAdjust="0"
+		DtmfDetectSnrAdjust="0"
+		DualSilenceDetTime="6250"
+		EchoCancellationEnable="1"
+		FskTime="800"
+		HookFlashDownTime="90"
+		HookFlashUpTime="300"
+		Impedance="2"
+		KcHighLevel="100"
+		KcLowLevel="300"
+		KcType="16Kc"
+		KcVoltage="0"
+		MWIRingFlag="0"
+		OffhookDtaLevel="-15.5dbm0"
+		OffhookDtasAckFskInterval="50"
+		OffhookDtasAckInterval="160"
+		OffhookDtasDuration="80"
+		OffhookFskLevel="-8.5dbm0"
+		OffhookMarkSignalBit="80"
+		OnhookChannelSeizeBit="300"
+		OnhookConfirmTime="0"
+		OnhookDtaLevel="-8.5dbm0"
+		OnhookDtasDuration="100"
+		OnhookDtasFskInterval="250"
+		OnhookFskLevel="-8.5dbm0"
+		OnhookMarkSignalBit="180"
+		PktLostThreshold="400"
+		PlcFlag="0"
+		PowerDenyForOutOfService="0"
+		RTPTermIDNumWidth="6"
+		RTPTermIDPrefix="A100"
+		RTPTermIDStartNum="0"
+		RTPTermIDUniform="0"
+		ReceiveGain="-7db"
+		ReversePoleOnAnswer="0"
+		ReversePolePulse="1"
+		ReversePolePulseLevel="300"
+		RingDCVoltageOverlapped="0"
+		RingFrequency="1"
+		RingVoltage="0"
+		SendGain="0db"
+		SilenceSuppression="0"
+		ToneIdForNoLineConfig="1"
+		UserDefineRingVoltage="74"
+		V18aANSEnable="0"
+		V21hANSEnable="1"
+		V21lANSEnable="0"
+		V22usb1DualFreqANSEnable="1"
+		V22usb1TriFreqANSEnable="0"
+		V25ctANSEnable="0"
+		V32aaANSEnable="1"
+		V8bisCReANSEnable="1"
+		VbdJbAdjustMode="0"
+	/>
+	<X_HW_ExtendDHCPOPTION60 NumberOfInstances="4"/>
+	<X_HW_ExtendDHCPOPTION60Instance Account="" Enable="0" InstanceID="1" Password="" Type="34" Value="" ValueMode="2"/>
+	<X_HW_FaxModem
+		FaxModemPktFix10ms="0"
+		FaxModemVbdCodec="G.711ALaw"
+		FaxModemVbdPTMode="Static"
+		FaxModemVbdPayload="99"
+		FaxNego="1"
+		FaxNegoFlow="V3"
+		IpDtmfFallbackVoice="0"
+		ModemEventMode="Direct"
+	/>
+	<X_HW_HOMENET_NAME name=""/>
+	<X_HW_HttpSpeedTest EnabledForTest="0" Eupassword="" Eupppoename="" ReportURL="" TestURL="" Type="DownLink" WANInterface=""/>
+	<X_HW_IPSpc
+		Codecs="G.711ALaw"
+		EchoCancellationEnable="0"
+		Enable="0"
+		JbMode="Static"
+		LocalTransport=""
+		MediaMode="SendReceive"
+		PacketizationPeriod="20"
+		PortName=""
+		RemoteIP=""
+		RemoteTransport=""
+		SilenceSuppression="0"
+	/>
+	<X_HW_IPv6 IPv6Capable="0"/>
+	<X_HW_IPv6Interface NumberOfInstances="1"/>
+	<X_HW_IPv6InterfaceInstance InstanceID="1" LanInterface=""/>
+	<X_HW_InnerCall Enable="0" Prefix="**123#"/>
+	<X_HW_InnerParameters
+		AdoptOMCIDTMFMethod="1"
+		AutoResetInterfaceTimer="3000"
+		CodecPreferredMode="Narrowband"
+		ConfigurationInterruptCallEnable="1"
+		ConfigureIsolation="0"
+		DelayResetTimerOnExistCall="0"
+		FskBindReceiveGainEnable="1"
+		G722RTPClockRate="0"
+		GracefulTimerOnCallClear="30"
+		NoneOMCISIPAlarmEnable="1"
+		OAMConfigEnable="1"
+		Option120DisplayMode="0"
+		PingTestEnable="0"
+		RFC2833MarkPktRetransEnable="1"
+		RegisterExpiresPriorityMode="0"
+		RegisterTimeOutArpPingEnable="0"
+		SIPAuthPasswordDispalyMode="0"
+		SendGainRelativeEnable="0"
+		ToneBindReceiveGainEnable="0"
+		UserAgentDomainPriorityMode="0"
+		VBDDualDetectReportMode="1"
+	/>
+	<!-- NoneOMCISIPAlarmEnable: también: "0" -->
+	<X_HW_Interface X_HW_OpmEnable="1"/>
+	<X_HW_InternetOffCtrl Enable="0"/>
+	<X_HW_JitBuffer IniAdaptJB="2" IniFixedJB="60" MaxAdaptJB="135" MaxFixedJB="135" MinAdaptJB="2" MinFixedJB="2"/>
+	<X_HW_LANHostManager ControlListMaxNumber="32" ControlListNumber="0" LANHostMaxNumber="64" LANHostNumber="0"/>
+	<X_HW_LineTestThreshold
+		Threshold0="55"
+		Threshold1="15"
+		Threshold10="700"
+		Threshold11="200"
+		Threshold12="350"
+		Threshold13="50"
+		Threshold2="20000"
+		Threshold3="3000"
+		Threshold4="100000"
+		Threshold5="100"
+		Threshold6="2000"
+		Threshold7="2000"
+		Threshold8="2000"
+		Threshold9="20000"
+	/>
+	<X_HW_LoopbackDetection CheckInterval="5" DefaultSpecifidVlan="untagged" EthType="0xfffa" LoopbackEnable="1" RingPortReCheckInterval="300"/>
+	<X_HW_MGCPExtend
+		CallHoldFlag="0"
+		DigitMapInterDigitTimer="4"
+		HBWithMGNameFlag="0"
+		HeartBeatClose="0"
+		HeartBeatMaxreTransTimes="7"
+		HeartBeatTimer="2"
+		HowlToneTimeLength="60"
+		LocalBlockToneType="BusyTone"
+		MgcSwitchFlag="1"
+		MgcType="0"
+		RemoteBlockToneType="BusyTone"
+	/>
+	<X_HW_MGCPStackInfo AtMostOnceTimer="30" IsSendProv="0" ProvTimer="5"/>
+	<X_HW_MGCPauth Rfc2833EncryptKey="" auth="Passive" authInitKey="" authKey="" authmgid=""/>
+	<X_HW_MobileInterface AntennaSet="Auto" Enable="0" LTEBandSet="B1B3B7B20B28"/>
+	<X_HW_Mobile_Backup Enable="0"/>
+	<X_HW_Monitor Enable="0" MonitorNumberOfEntries="0"/>
+	<X_HW_OAMFREQUENCY Value="30"/>
+	<X_HW_OKC Enable="1" ExpiredTimeout="20" ProbeInterval="1" RssiThreshold="-55"/>
+	<X_HW_Option Time="60"/>
+	<X_HW_PPPoE_BridgeWAN_AutoEmulator Enable="0" FailedRetryTimeList="15" Password="" TimeList="1440" Username=""/>
+	<X_HW_PoEControl
+		Enable="1"
+		InvalidSignatureCounter="0"
+		MPSAbsentCounter="0"
+		MaxPowerClass="default"
+		OverloadCounter="0"
+		PowerCapability="incapable"
+		PowerDeniedCounter="0"
+		PowerMode="unconcern"
+		PowerModeCapability="fixed"
+		PowerPriority="high"
+		PowerSupplyStatus="disabled"
+		PoweredDeviceClass="Undefined or feature not supported"
+		ShortCounter="0"
+	/>
+	<!-- PowerMode: también: "signal" -->
+	<X_HW_PortPhyMode NumberOfInstances="4"/>
+	<X_HW_PortPhyModeInstance InstanceID="1" X_HW_PortPhyModeSet="0" X_HW_RandomNumberRangeSet="50"/>
+	<X_HW_PortalManagement DefaultUrl="" Enable="0"/>
+	<X_HW_QosConfig IgnorePQMode="0" LlidQueueMode="0" NniEthQueueSize="0" NniQueueSize="0" QueueDropWaterLine="0" QueueNumPerLlid="4"/>
+	<X_HW_RET_SERVER Enable="0" RtcpPort="8027"/>
+	<X_HW_ReConnect Enable="1"/>
+	<X_HW_RemoteCapServer LocalTransport="50100" PortName="" RemoteIP="" RemoteTransport="0"/>
+	<X_HW_RetryInterval RetryInterval="20"/>
+	<X_HW_RingSchedule Enable="0" Policy="1"/>
+	<X_HW_RobotParameters IntelligentAnnounceEnable="0"/>
+	<X_HW_RouterAdvertisement
+		CurHopLimit="64"
+		DefaultLifetime="1800"
+		Enable="1"
+		IPv6LANMTUUpdated="1"
+		MTU="1500"
+		ManagedFlag="0"
+		MaxRtrAdvInterval="600"
+		MinRtrAdvInterval="200"
+		MobileAgentFlag="0"
+		OtherConfigFlag="1"
+		PreferredRouterFlag="Medium"
+		mode="Manual"
+	/>
+	<X_HW_SIPDigitmap NumberOfInstances="3"/>
+	<X_HW_SIPDigitmapInstance
+		DMName="dmmNormal"
+		DigitMap="[xABCD].S|[xABCD].#"
+		DigitMapLongTimer="10"
+		DigitMapShortTimer="5"
+		DigitMapStartTimer="20"
+		DigitmapType="Normal"
+		InstanceID="1"
+	/>
+	<!-- DMName: también: "dmmScc", "dmmEmg" -->
+	<!-- DigitMap: también: "[*#][*#0-9][0-9*].#|[*#][*#0-9][0-9*].S|##|**xx|#*#|9699#", "" -->
+	<!-- DigitmapType: también: "SCC", "Emergent" -->
+	<!-- InstanceID: también: "2", "3" -->
+	<X_HW_SIPSrvLogic NumberOfInstances="588"/>
+	<X_HW_SIPSrvLogicInstance InstanceID="1" SrvLogicBody="SN=0,SS=0,LS=1,EVT=16,OSS=8,OEVT=18:21:22:26,ACT=9,TIMERLEN=0;"/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+582 more) -->
+	<!-- SrvLogicBody: también: "SN=0,SS=1,LS=3,EVT=16,OSS=8,OEVT=18:21:22:26:25,ACT=9,TIMERLEN=0;", "SN=0,SS=1,LS=3,EVT=18,OSS=11,OEVT=19:26:28,ACT=4:45:37:20,TIMERLEN=0;", "SN=0,SS=1,LS=3,EVT=25,OSS=9,OEVT=18:16:23:26,ACT=4:45:37:22,TIMERLEN=0;", "SN=0,SS=1,LS=3,EVT=26,OSS=0,OEVT=16:17:19:69,ACT=5,TIMERLEN=0;", "SN=0,SS=1,LS=8,EVT=16,OSS=8,OEVT=18:21:22:24,ACT=57,TIMERLEN=0;" ... (+582 more) -->
+	<X_HW_SIPSrvPri NumberOfInstances="11"/>
+	<X_HW_SIPSrvPriInstance InstanceID="1" ServiceID="4"/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+5 more) -->
+	<!-- ServiceID: también: "5", "2", "21", "3", "1" ... (+5 more) -->
+	<X_HW_SIPStringDefine NumberOfInstances="39"/>
+	<X_HW_SIPStringDefineInstance InstanceID="1" StringBody=""/>
+	<!-- InstanceID: también: "2", "3", "4", "5", "6" ... (+33 more) -->
+	<!-- StringBody: también: "null", "HUAWEI-EchoLife %M%/%V%", "unsubscribe", "*39#", "HUAWEI-%M%/%V%" -->
+	<X_HW_SimulateTest
+		AutoTestResult=""
+		CallHoldTimer="30"
+		CallType="Default"
+		CalledFailReason=""
+		CalledNumber=""
+		CalledNumberToRemote=""
+		CalledWaitTimer="30"
+		CallerFailReason=""
+		Conclusion="Success"
+		DTMFReceiveSequence=""
+		DTMFSendSequence=""
+		DailDTMFConfirmEnable="0"
+		DailDTMFConfirmNumber="#"
+		DailDTMFConfirmResult="0"
+		DialDTMFConfirmEnable="0"
+		DialDTMFConfirmNumber="#"
+		DialDTMFConfirmResult="0"
+		FailedResponseCode="0"
+		IsAuto="0"
+		Status=""
+		TestType="None"
+	/>
+	<X_HW_SimulateTestParameters
+		CalledNumberDialInterval="500"
+		DTMFSendDelay="3"
+		DTMFSendInterval="100"
+		DTMFSendPeriod="100"
+		DialDTMFConfirmFailToneId="104"
+		DialDTMFConfirmInputToneId="103"
+		DialDTMFConfirmSucessToneId="105"
+	/>
+	<X_HW_SlaveAPConfig WifiSyncAccessCfg="1" WifiSyncEnable="1"/>
+	<X_HW_SmartCAT
+		Enable="0"
+		IncrPercentToSwitch="0"
+		LowRateThrehold="50"
+		MaxRetryTimes="10"
+		MeasureTimeLength="300"
+		PacketLossRateThrehold="3"
+		PerformCycle="480"
+	/>
+	<X_HW_SmartTopo
+		AdjustCycleMax="3"
+		AutoTopoCheckTime="30"
+		Enable="1"
+		LowRateThrehold="200"
+		MeasureTime="10"
+		PacketLossRateThrehold="5"
+		RSSIThrehold="27"
+		SilenceCycle="15"
+		UserPolicy="2"
+	/>
+	<X_HW_Spec X_HW_EthTrapEnable="1" X_HW_ForbidUploadOtherOLT="" X_HW_GemCarEnable="0" X_HW_HGDetectEnable="0" X_HW_HGVlan="3999"/>
+	<X_HW_StatusCodeMap NumberOfInstances="2"/>
+	<X_HW_StatusCodeMapInstance InstanceID="1" Q850Code="" Scene="" StatusCode=""/>
+	<!-- InstanceID: también: "2" -->
+	<X_HW_UpRateDiag UploadURL=""/>
+	<X_HW_UpmodeConfig NumberOfInstances="2"/>
+	<X_HW_UpmodeConfigInstance BSSID="" CfgFlag="" InstanceID="1" Key="" RFBand="2.4GHz" SSID="" SecurityMode="" UpAccessMode="4"/>
+	<X_HW_UseBandSteering CurrentBand="5GHz" NumberOfInstances="2" RssiThreshold="20"/>
+	<X_HW_UseBandSteeringInstance
+		BackoffTime="10"
+		ChannelUtilization="0"
+		CurrentBand="2.4GHz"
+		InstanceID="1"
+		LoadbalanceBuffer="10"
+		LoadbalanceThreshold="90"
+		MinStaPhyRateThreshold="16"
+		RssiBackoffThreshold="48"
+		RssiBuffer="3"
+		RssiThreshold="0"
+	/>
+	<X_HW_UserContractInfo DsInternetBandwidth="0" UsInternetBandwidth="0"/>
+	<X_HW_UserDscpPriMapWMMQos NumberOfInstances="64"/>
+	<X_HW_UserDscpPriMapWMMQosInstance InstanceID="1" WMM="1"/>
+	<X_HW_UserEthPriMapWMMQos NumberOfInstances="8"/>
+	<X_HW_UserEthPriMapWMMQosInstance InstanceID="1" WMM="1"/>
+	<X_HW_UserTosPriMapWMMQos P0="AC_BE" P1="AC_BK" P2="AC_BK" P3="AC_BE" P4="AC_VI" P5="AC_VI" P6="AC_VO" P7="AC_VO"/>
+	<X_HW_VideoDevice DSCP="40" Enable="0"/>
+	<X_HW_WIFIInfo Defaultwifi6Flag="1" LocalMacMode="1" MacScanFlag="0" WiFiAlgMwoFlag="0"/>
+	<X_HW_WLANConfiguration BSSID="" Key="" RFBand="5GHz" SSID="" SecurityMode=""/>
+	<X_HW_WLANShutDownCtrl Enable="0" ScheduleEnable="0" ScheduleNumberOfEntries="0"/>
+	<X_HW_WLANSwitchTimer ControlCycle="DAY" Enable="0" EndTime="" SSIDMask="0" StartTime=""/>
+	<X_HW_WifiCoverService
+		AutoExtended="1"
+		AutoExtendedPolicy="0"
+		AutoExtendedSSIDIndex="1"
+		AutoSwitchAP="1"
+		ConditionalSwitchThrehold="-75"
+		Enable="1"
+		ForceKickInterval="3600"
+		ForcedSwitchThrehold="-79"
+		IspExtended="0"
+		MacKickTime="5000"
+		RETEnable="0"
+		RETRtcpPort="8027"
+		SteeringSensitivity="1"
+		SyncWifiSwitch="0"
+		X_HW_CascadeForbidden="0"
+	/>
+	<X_HW_WpsDefaultPin NumberOfInstances="16"/>
+	<X_HW_WpsDefaultPinInstance DevicePassword="$2yO~5.BLywWlJ5(YN.;/Xb&quot;a24HuQXHZh}^NVbc!($" InstanceID="1"/>
+	<X_HW_eMDI
+		ConsecutiveLost="0"
+		DIP="255.255.255.255"
+		DPort="0"
+		DiagnosingDIP=""
+		DiagnosingMvlan="0"
+		DiagnosingSIP=""
+		ELF_F="0"
+		Enable="0"
+		Interval="60"
+		LostPackets="0"
+		MVlanId="0xffff"
+		OutOfOrder="0"
+		SIP="255.255.255.255"
+		Thresholdpkts="5"
+		Time="0"
+		TotalPackets="0"
+		WindowPackets="100"
+	/>
+	<X_HW_iaccess Enable="0" ReportEnable="0" SecPlatEnable="2" SecPlatStatus="0"/>
+	<X_HW_policy_route NumberOfInstances="1"/>
+	<X_HW_policy_routeInstance
+		Description=""
+		DhcpSrvPool=""
+		EtherType=""
+		InstanceID="3"
+		IsDefaultRule="0"
+		IsUnBind="0"
+		PhyPortName=""
+		PolicyRouteType="SourcePhyPort"
+		VenderClassId=""
+		VlanId="0"
+		WanName="wan1.3.ip1"
+	/>
+	<auth HeaderSecurityType="md5" Rfc2833EncryptKey="" auth="0" authHeader="0" authInitKey="" authmgid=""/>
+	<hosts NumberOfInstances="13"/>
+	<hostsInstance
+		ConnectInterface="LAN3"
+		DevType=""
+		DhcpDevType=""
+		DhcpName=""
+		InstanceID="1"
+		IsAPFlag="0"
+		IsOnlineFlag="0"
+		LastStatusChangeTime="1981-01-01T00:00:59Z"
+		MACAddress="180373b1ff87"
+		Name=""
+		RequestOptionList=""
+	/>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- COMANDOS CLI OCULTOS (del firmware hw_cli.xml) -->
+<!-- Estos comandos se ejecutan via Telnet/SSH con acceso root -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--
+
+  ── FIRMWARE/FLASH ──
+    display femPar info                                     → InternetGatewayDevice.X_HW_FemParaInfo
+    display firmware version                                → InternetGatewayDevice.X_HW_DEBUG.SMP.DM.SpecialFwVer
+    display flashlock status                                → InternetGatewayDevice.X_HW_FLASH_LOCK
+    display startcode version                               → InternetGatewayDevice.X_HW_SSMPPDT.StartCodeVersion
+    set flashlock                                           → InternetGatewayDevice.X_HW_FLASH_LOCK
+    wifi del fem calibration                                → InternetGatewayDevice.X_HW_FemDelCali
+    wifi del fem par                                        → InternetGatewayDevice.X_HW_FemDelFile
+
+  ── CONFIG/BACKUP ──
+    display backup list                                     → InternetGatewayDevice.X_HW_DEBUG.SMP.DisplayBackupFilelist
+    display bms                                             → InternetGatewayDevice.X_HW_DEBUG.SMP.DisplayBMSConfiguration
+    display ftp config status                               → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayftpconfigstatus
+    display rf config                                       → InternetGatewayDevice.X_HW_DEBUG.AMP.RF
+    display wlan config                                     → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayWlanConfig
+    get port config                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.LANPort.CommonConfig
+    get port config all                                     → InternetGatewayDevice.X_HW_DEBUG.AMP.CommonConfigAll
+    restore backup                                          → InternetGatewayDevice.DeviceInfo.X_HW_AutoBackupRestore
+    restore default configuration                           → InternetGatewayDevice.X_HW_DEBUG.SMP.DM.RestoreDefaultConfiguration
+    set port config                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.LANPort.CommonConfig
+    vspa reset                                              → InternetGatewayDevice.X_HW_DEBUG.VSPA.vspareset
+
+  ── NETWORK/WAN ──
+    debugging voip remote-diagnose                          → InternetGatewayDevice.X_HW_DEBUG.VSPA.RemoteDiagnose
+    debugging voip signaling                                → InternetGatewayDevice.X_HW_DEBUG.VSPA.DebugVoipSignaling
+    display voip call log                                   → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayCallLog
+    display voip call statistics                            → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayCallStat
+    display voip calltest result                            → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayVoipCallTest
+    display voip dsp jbdata                                 → InternetGatewayDevice.X_HW_DEBUG.VSPA.jbdatadisplay
+    display voip dsp para diagnose state                    → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydspparastate
+    display voip dsp para diagnose statistics               → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydspparastatistics
+    display voip dsp tonedetect                             → InternetGatewayDevice.X_HW_DEBUG.VSPA.tonedetectdisplay
+    display voip rightflag                                  → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayVoiceRightFlag
+    display voip ring info                                  → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayRingInfo
+    display voip service state                              → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayServiceState
+    undo debugging voip remote-diagnose                     → InternetGatewayDevice.X_HW_DEBUG.VSPA.UndoRemoteDiagnose
+    undo debugging voip signaling                           → InternetGatewayDevice.X_HW_DEBUG.VSPA.UndoDebugVoipSignaling
+    voip calltest start                                     → InternetGatewayDevice.X_HW_DEBUG.VSPA.VoipCallTestStart
+    voip calltest stop                                      → InternetGatewayDevice.X_HW_DEBUG.VSPA.VoipCallTestStop
+    voip remote-diagnose parameters                         → InternetGatewayDevice.X_HW_DEBUG.VSPA.RemoteCapServer
+    voip service flush                                      → InternetGatewayDevice.X_HW_DEBUG.VSPA.voipserviceflush
+    voip set account                                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.voipsetaccount
+    voip set service                                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.voipsetservice
+
+  ── WIFI ──
+    add wifi filter                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.AddWlanFilterIndex
+    add wlan                                                → InternetGatewayDevice.LANDevice.WLANConfiguration
+    del wifi filter                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.DelWlanFilterIndex
+    del wlan                                                → InternetGatewayDevice.LANDevice.WLANConfiguration
+    display debugwifilog info                               → InternetGatewayDevice.X_HW_DEBUG.AMP.DebugWifiLogInfo
+    display wifi antenna rssi                               → InternetGatewayDevice.X_HW_DEBUG.WifiAntennaRSSI
+    display wifi ap                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiAp
+    display wifi associate                                  → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiAssociateVDF
+    display wifi factory                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiFactoryInfo
+    display wifi filter                                     → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayWlanFilterIndex
+    display wifi information                                → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiInformation
+    display wifi multicast                                  → InternetGatewayDevice.X_HW_DEBUG.AMP.ShowWifiMulticast
+    display wifi neighbor                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiNeighbor
+    display wifi radio                                      → InternetGatewayDevice.X_HW_DEBUG.AMP.GetWifiRadio
+    display wifichip                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiChipTypeName
+    display wlan mac filter                                 → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayWlanMacFilter
+    display wlan staevent                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.StaEvent
+    display wlan stainfo                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayWlanStaInfo
+    get wifi acs channels                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiBandAutoChannelGet
+    get wifi atm                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.AtmStat
+    get wifi para                                           → InternetGatewayDevice.LANDevice.WiFi
+    get wlan advance                                        → InternetGatewayDevice.LANDevice.WLANConfiguration.X_HW_AdvanceConf
+    get wlan associated                                     → InternetGatewayDevice.LANDevice.WLANConfiguration.AssociatedDevice
+    get wlan basic                                          → InternetGatewayDevice.LANDevice.WLANConfiguration
+    get wlan enable                                         → InternetGatewayDevice.LANDevice
+    get wlan isolate                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.GETSSIDISOLATE
+    get wlan stats                                          → InternetGatewayDevice.LANDevice.WLANConfiguration.Stats
+    get wlan txpower                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.GetWlanTxPower
+    get wlan wps                                            → InternetGatewayDevice.LANDevice.WLANConfiguration.WPS
+    set ssid                                                → InternetGatewayDevice.X_HW_DEBUG.AMP.SSIDInfo
+    set wifi acs 2G                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiBandAutoChannelSet2G
+    set wifi acs 5G                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiBandAutoChannelSet5G
+    set wifi atm                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.AtmStatSet
+    set wifi expert                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.SetWifiRadioAdvance
+    set wifi filter                                         → InternetGatewayDevice.X_HW_DEBUG.AMP.SetWlanFilterMode
+    set wifi para                                           → InternetGatewayDevice.LANDevice.WiFi
+    set wifi radio                                          → InternetGatewayDevice.X_HW_DEBUG.AMP.WifiBandEnableChannel
+    set wlan advance                                        → InternetGatewayDevice.LANDevice.WLANConfiguration.X_HW_AdvanceConf
+    set wlan basic                                          → InternetGatewayDevice.LANDevice.WLANConfiguration
+    set wlan enable                                         → InternetGatewayDevice.LANDevice
+    set wlan isolate                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.SETSSIDISOLATE
+    set wlan psk                                            → InternetGatewayDevice.LANDevice.WLANConfiguration.PreSharedKey
+    set wlan staboost                                       → InternetGatewayDevice.X_HW_DEBUG.AMP.StaBoost
+    set wlan wep key                                        → InternetGatewayDevice.LANDevice.WLANConfiguration.WEPKey
+    set wlan wps                                            → InternetGatewayDevice.LANDevice.WLANConfiguration.WPS
+    set wps                                                 → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_WpsActivate
+    wlan mac filter disable                                 → InternetGatewayDevice.X_HW_DEBUG.AMP.WlanMacFilterDisable
+    wlan mac filter enable                                  → InternetGatewayDevice.X_HW_DEBUG.AMP.WlanMacFilterEnable
+
+  ── DEBUG ──
+    debugging dsp diagnose                                  → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdspdiagnose
+    debugging dsp para diagnose                             → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdspparadiagnose
+    debugging dsp record                                    → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdsprecord
+    debugging dsp t38diag                                   → InternetGatewayDevice.X_HW_DEBUG.VSPA.sett38diag
+    display last call log                                   → InternetGatewayDevice.X_HW_DEBUG.VSPA.DisplayLastCallLog
+    display udm debug                                       → InternetGatewayDevice.X_HW_DEBUG.AMP.UDM
+    set udm debug                                           → InternetGatewayDevice.X_HW_DEBUG.AMP.UDM
+    set voicedebug                                          → InternetGatewayDevice.X_HW_DEBUG.VSPA.VoiceDebugSwitch
+    udm clear log                                           → InternetGatewayDevice.X_HW_DEBUG.AMP.ClearUdmLog
+    udm show log                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.ShowUdmLog
+    undo debugging dsp diagnose                             → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdspdiagnoseoff
+    undo debugging dsp para diagnose                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdspparadiagnoseoff
+    undo debugging dsp record                               → InternetGatewayDevice.X_HW_DEBUG.VSPA.debugdsprecordoff
+    undo debugging dsp t38diag                              → InternetGatewayDevice.X_HW_DEBUG.VSPA.sett38diagdisable
+    vspa debug                                              → InternetGatewayDevice.X_HW_DEBUG.VSPA.voicedebug
+
+  ── SECURITY ──
+    display mac ap                                          → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayMacInfo
+    display mac ap brief                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayApInfo
+    display macaddress                                      → InternetGatewayDevice.X_HW_DEBUG.LSW_DEBUG.GETMACADD
+    display port mac num                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.DisplayPortMacNum
+    get mac agingtime                                       → InternetGatewayDevice.X_HW_DEBUG.AMP.LswConfig.MacAgingTime
+    test tr069 inform end                                   → InternetGatewayDevice.X_HW_DEBUG.SMP.TestTr069InformEnd
+    test tr069 inform start                                 → InternetGatewayDevice.X_HW_DEBUG.SMP.TestTr069InformStart
+
+  ── GPON/PON ──
+    clear poncnt dnstatistic                                → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntDnStatCls
+    clear poncnt gemport upstatistic                        → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntUpGemStatCls
+    clear poncnt upstatistic                                → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntUpStatCls
+    clear rogue flag                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.RogueFlag
+    display optic                                           → InternetGatewayDevice.X_HW_DEBUG.AMP.Optic
+    display poncnt dnstatistic                              → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntDnStatDis
+    display poncnt gemport upstatistic                      → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntUpGemStatDis
+    display poncnt upstatistic                              → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntUpStatDis
+    get opm switch                                          → InternetGatewayDevice.Optical.X_HW_Interface
+    get optic txmode                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.GetOptTxMode
+    get poncnt upgemport                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.PonCntUpGemportGet
+    get rogue status                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.RogueStatus
+    set opm                                                 → InternetGatewayDevice.Optical.X_HW_Interface
+    set rogue                                               → InternetGatewayDevice.X_HW_DEBUG.AMP.RogueStatus
+
+  ── SYSTEM ──
+    display board-temperatures                              → InternetGatewayDevice.X_HW_DEBUG.SMP.BoardTemperature
+    get port isolate                                        → InternetGatewayDevice.X_HW_AMPConfig.PortIsolate
+    get port poe info                                       → InternetGatewayDevice.LANDevice.LANEthernetInterfaceConfig.X_HW_PoEControl
+    get port poe powerfailureinfo                           → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_PortPoEPowerFailureInfo
+    get port poe running info                               → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_PortPoERunInfo
+    mtest                                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.DDRTest
+    set led                                                 → InternetGatewayDevice.X_HW_DEBUG.AMP.LedTest
+    set port isolate                                        → InternetGatewayDevice.X_HW_AMPConfig.PortIsolate
+    set port poe info                                       → InternetGatewayDevice.LANDevice.LANEthernetInterfaceConfig.X_HW_PoEControl
+    vspa display port status                                → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayportstate
+
+  ── OTHER ──
+    amp show                                                → InternetGatewayDevice.X_HW_DEBUG.LSW_DEBUG.STAT
+    del portvlan                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.DelPortVlan
+    display access mode                                     → InternetGatewayDevice.X_HW_DEBUG.AMP.AccessModeDisp
+    display appcert info                                    → InternetGatewayDevice.X_HW_SSMPPDT.AppcertInfo
+    display childcert info                                  → InternetGatewayDevice.X_HW_SSMPPDT.ChildcertInfo
+    display edge_ont info                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.FttrDisplayEdgeInfo
+    display filter rf                                       → InternetGatewayDevice.X_HW_AmpInfo
+    display iperf client result                             → InternetGatewayDevice.X_HW_DataModel.X_HW_IperfSpeedTest.IperfClient
+    display iperf server result                             → InternetGatewayDevice.X_HW_DataModel.X_HW_IperfSpeedTest.IperfServer
+    display itvdfsn                                         → InternetGatewayDevice.X_HW_DEBUG.SMP.DM.ItvdfSn
+    display rootcert info                                   → InternetGatewayDevice.X_HW_SSMPPDT.RootcertInfo
+    display specsn                                          → InternetGatewayDevice.X_HW_DEBUG.SMP.DM.SpecSn
+    display speed test result                               → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_GetSpeedResult
+    display usb devList                                     → InternetGatewayDevice.X_HW_UsbInterface.X_HW_UsbStorageDevice
+    display voicelinetest                                   → InternetGatewayDevice.X_HW_DEBUG.VSPA.potscircuittestresult
+    get ap retrans                                          → InternetGatewayDevice.WANDevice.WANCommonInterfaceConfig.X_HW_RetransConfig
+    get eth hgdetect                                        → InternetGatewayDevice.X_HW_AmpInfo.X_HW_Spec.X_HW_EthSpec
+    get global hgdetect                                     → InternetGatewayDevice.X_HW_AmpInfo.X_HW_Spec
+    get iot fwtype                                          → InternetGatewayDevice.X_HW_DEBUG.SMP.IOT.ZWaveFwType
+    get poe status                                          → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_PoEStatus
+    get speed test                                          → InternetGatewayDevice.LANDevice.WiFi.X_HW_VDFStaSpeedTest
+    get testself                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.GetSelfTest
+    poe                                                     → InternetGatewayDevice.X_HW_DEBUG.AMP.X_HW_PortPoEForcePower
+    set ATF                                                 → InternetGatewayDevice.LANDevice.WLANConfiguration.X_HW_AttachConf
+    set ap retrans                                          → InternetGatewayDevice.WANDevice.WANCommonInterfaceConfig.X_HW_RetransConfig
+    set aptelnet                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.UDM.Aptelnet
+    set broadcast                                           → InternetGatewayDevice.X_HW_DEBUG.AMP.SetBroadcast
+    set eth hgdetect                                        → InternetGatewayDevice.X_HW_AmpInfo.X_HW_Spec.X_HW_EthSpec
+    set ethportmirror                                       → InternetGatewayDevice.X_HW_DEBUG.AMP.LANPort.CommonConfig
+    set global hgdetect                                     → InternetGatewayDevice.X_HW_AmpInfo.X_HW_Spec
+    set iperf client                                        → InternetGatewayDevice.X_HW_DataModel.X_HW_IperfSpeedTest.IperfClient
+    set iperf server                                        → InternetGatewayDevice.X_HW_DataModel.X_HW_IperfSpeedTest.IperfServer
+    set okc                                                 → InternetGatewayDevice.X_HW_OKC
+    set portmirror                                          → InternetGatewayDevice.X_HW_DEBUG.AMP.LANPort.CommonConfig
+    set portvlan                                            → InternetGatewayDevice.X_HW_DEBUG.AMP.SetPortVlan
+    set ringcheck disable                                   → InternetGatewayDevice.X_HW_DEBUG.AMP.SetRingCheckDisable
+    set ringcheck enable                                    → InternetGatewayDevice.X_HW_DEBUG.AMP.SetRingCheckEnable
+    set speed test                                          → InternetGatewayDevice.LANDevice.WiFi.X_HW_VDFStaSpeedTest
+    set unkmulticast                                        → InternetGatewayDevice.X_HW_DEBUG.AMP.SetUnkMulitcast
+    set unkunicast                                          → InternetGatewayDevice.X_HW_DEBUG.AMP.SetUnkUnicast
+    set voice announcement                                  → InternetGatewayDevice.X_HW_DEBUG.VSPA.SetVoiceAnnouncementSwitch
+    set voice dtmfmethod                                    → InternetGatewayDevice.X_HW_DEBUG.VSPA.Setdtmfmethod
+    set voicedsploop                                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.setdsploopback
+    set voicelinetest                                       → InternetGatewayDevice.X_HW_DEBUG.VSPA.potscircuittest
+    set voiceportloop                                       → InternetGatewayDevice.X_HW_DEBUG.VSPA.setportloopback
+    set voicesignalingprint                                 → InternetGatewayDevice.X_HW_DEBUG.VSPA.VoiceSignalingPrint
+    set webpa                                               → InternetGatewayDevice.X_HW_Webpa
+    test apdev                                              → InternetGatewayDevice.X_HW_DEBUG.SMP.TestApDev
+    test webpa                                              → InternetGatewayDevice.X_HW_DEBUG.SMP.WebpaTestcmd
+    voice net diagnose start                                → InternetGatewayDevice.X_HW_DEBUG.VSPA.voicenetdiagnose
+    voice remote diagnose server set                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.RemoteCapServer
+    voice remote diagnose set                               → InternetGatewayDevice.X_HW_DEBUG.VSPA.RemoteCapSet
+    vspa clear rtp statistics                               → InternetGatewayDevice.X_HW_DEBUG.VSPA.clearvoicequality
+    vspa display conference info                            → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayconfrenceinfo
+    vspa display digitmap info                              → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydigitmapinfo
+    vspa display dsp running info                           → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydsprunninginfo
+    vspa display dsp state                                  → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydspstate
+    vspa display dsp template info                          → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaydsptemplateinfo
+    vspa display mg if state                                → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaymgifstate
+    vspa display mg info                                    → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaymginfo
+    vspa display online user info                           → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayonlineuserinfo
+    vspa display profilebody info                           → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayprofilebodyinfo
+    vspa display rtp statistics                             → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayvoicequality
+    vspa display signal scene info                          → InternetGatewayDevice.X_HW_DEBUG.VSPA.displaysceneinfo
+    vspa display signal scene list                          → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayscenelist
+    vspa display user call state                            → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayusercallstate
+    vspa display user status                                → InternetGatewayDevice.X_HW_DEBUG.VSPA.displayuserstaus
+    vspa shutdown mg                                        → InternetGatewayDevice.X_HW_DEBUG.VSPA.shutdownmg
+-->
+
+</InternetGatewayDevice>

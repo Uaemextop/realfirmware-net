@@ -5,3 +5,5 @@ assets/js/*.map
 assets/css/*.map
 desktop.ini
 dist/
+__pycache__/
+*.pyc
