@@ -869,7 +869,11 @@ class FirmwareEditorApp(tk.Tk):
                     section.text_content = new_text
 
             if section.text_content and section.content_type in ("xml", "shell", "text"):
-                new_data = section.text_content.encode("utf-8")
+                text = section.text_content
+                # XML sections use CRLF line endings (required by SWM parser)
+                if section.content_type == "xml" and "\r\n" not in text:
+                    text = text.replace("\n", "\r\n")
+                new_data = text.encode("utf-8")
                 if len(new_data) <= section.data_size:
                     fw.set_section_data(section.index, new_data)
 

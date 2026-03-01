@@ -57,6 +57,26 @@ CAUSA DEL ERROR "Firmware Upgrade failed" (AlarmID 104058/104509)
     v2.bin usa signinfo_v5 (con magic "whwh" + ceros) → FUNCIONA
     Los demás usan signinfo (con versión activa) → NO se puede bypasear
 
+  Causa raíz #5 — UpgradeCheck.xml con BoardIDs incompatibles:
+    El XML original del HG8145V5 tenía listas de BoardIDs específicos
+    (34 entries) que NO incluían 0x43ED (el HWVer del HG8145V5-12).
+    Aunque CheckEnable="0", el parser podía fallar con listas extensas.
+    Corregido con XML mínimo estilo v2 (todas vacías, CRLF).
+
+  Causa raíz #6 — Line endings XML:
+    El UpgradeCheck.xml original usa CRLF (\r\n) en todas las líneas.
+    La versión reemplazada usaba LF (\n) simple. El parser XML del SWM
+    espera CRLF. Corregido usando formato idéntico al v2.bin original.
+
+  Desensamblado con Capstone ARM de SWM_ProcSignInfoItem (@ 0x31404):
+    Verifica feature "HW_SSMP_FT_V5_CMS_SUPPORT" (habilitado=1 en device)
+    → return 0 → BYPASS completo de signinfo ✓
+
+  Desensamblado de SWM_FinishPacketCheckCrc (@ 0x3491C):
+    Compara state[0x134] vs header[0x10] (FileCRC)
+    Compara state[0x138] vs header[0x08] (HeadCRC)
+    Error 0xF7204039 si cualquiera falla
+
 ================================================================================
 FORMATO HWNP (Ingeniería inversa completa)
 ================================================================================
@@ -127,22 +147,32 @@ SOLUCIÓN APLICADA (4 correcciones de CRC + 3 modificaciones)
 ARCHIVOS GENERADOS
 ================================================================================
 
-  HG8145V5-12-COMMON-OK.bin   (16,356 bytes)
+  HG8145V5-12-COMMON-OK.bin    (21,026 bytes)
     Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-OK (dealosgfile.sh)
     Función: Restaurar modo hardware + reboot
+    CRCs: FileCRC=0x1B720504 HeadCRC=0xCD7FC201 ✓
 
-  HG8145V5-12-COMMON-PRE.bin  (195,357 bytes)
+  HG8145V5-12-COMMON-PRE.bin  (200,027 bytes)
     Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-PRE (hw_ctree.xml + script)
     Función: Reemplazar configuración de región/ISP
+    CRCs: FileCRC=0x28DB2FB1 HeadCRC=0x4E502643 ✓
 
-  HG8145V5-12-XPON.bin        (17,368 bytes)
+  HG8145V5-12-XPON.bin        (22,038 bytes)
     Base: v2.bin (UpgradeCheck + signinfo_v5) + XPON (dealosgfile.sh)
     Función: Conversión GPON↔EPON (modifica hw_boardinfo obj 0x00000001)
+    CRCs: FileCRC=0x82AB067A HeadCRC=0xA5600CB8 ✓
 
   HG8145V5-12-FULL.bin        (50,233,629 bytes / 47.9 MB)
     Base: HG8145V5-.bin (firmware completo con uboot+kernel+rootfs)
     Modificaciones: PIDs + checks + flash:signinfo → file:/var/signinfo_v5
     Función: Firmware completo con uboot, kernel, rootfs, plugins
+    CRCs: FileCRC=0xDF58816F HeadCRC=0x11665583 ✓
+
+  HG8145V5-12-v2.bin          (1,808,512 bytes / 1.7 MB)
+    Base: v2.bin original de HG8145V5/Tigo-Colombia
+    Modificaciones: 43ED añadido a Product IDs
+    Función: Firmware de unlock estándar con rootfs
+    CRCs: FileCRC=0x76754D8F HeadCRC=0x41E91641 ✓
 
 ================================================================================
 ROOTFS Y CADENA DE VERIFICACIÓN (Análisis Capstone ARM)
@@ -187,5 +217,12 @@ EDITOR DE FIRMWARE (tools/firmware-editor/)
     2. Recalcula ItemCRC = CRC32(file[storedOff:storedOff+size]) para cada sección
     3. Recalcula FileCRC = CRC32(file[0x14:HeadLen]) — descriptors + PIDs
     4. Recalcula HeadCRC = CRC32(file[0x0C:]) — cubre todo el archivo
+    5. XML: convierte LF a CRLF (\r\n) automáticamente (requerido por SWM parser)
 
   Construir: pip install pyinstaller && pyinstaller firmware_editor.py --onefile
+
+RECOMENDACIONES:
+  1. REINICIAR el router antes de subir firmware (limpiar buffer SWM)
+  2. Probar primero con HG8145V5-12-COMMON-OK.bin (21 KB, más pequeño)
+  3. Si funciona, usar HG8145V5-12-v2.bin (1.8 MB, firmware completo)
+  4. El router reiniciará automáticamente después del upgrade exitoso
