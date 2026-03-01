@@ -1,6 +1,6 @@
 ================================================================================
   ANÁLISIS DE FIRMWARE — EchoLife HG8145V5-12 (Megacable)
-  Generado: 2026-03-01 (actualizado)
+  Generado: 2026-03-01
 ================================================================================
 
 DISPOSITIVO OBJETIVO
@@ -12,127 +12,162 @@ DISPOSITIVO OBJETIVO
   Estado ONT:         O5 (Operation state)
 
 ================================================================================
-CAUSA DEL ERROR "Firmware Upgrade failed"
+CAUSA DEL ERROR "Firmware Upgrade failed" (AlarmID 104058/104509)
 ================================================================================
 
   Error original:
-    AlarmID:104509 — Software upgrading
-    AlarmID:104058 — Software upgrade failed
-    Terminal:WEB, Result:Fail, Cmd:Upload operation fail! FileType:image
+    AlarmID:104509 — Software upgrading (Error)
+    AlarmID:104058 — Software upgrade failed (Alert)
+    "Upload operation fail! FileType:image" (Critical)
 
-  Causa raíz: El firmware contiene una sección "signinfo" con hashes SHA-256
-  de cada sección interna. Al modificar UpgradeCheck.xml (desactivar checks),
-  el hash almacenado en signinfo ya no coincide con el hash real del XML.
-  La función SWM_CheckSignInfo detecta la discrepancia → RECHAZO.
+  Fuente de los AlarmID (rootfs /etc/wap/alarminfo):
+    104058|Upgrade Software Fail|Upgrade software failed.
 
-  Cadena de verificación del firmware (libhw_swm_dll.so):
-    1. SWM_CheckPacketHead → Valida magia "HWNP" + HeadCRC
-    2. SWM_CheckPdtID → Verifica Product ID (omitido si CheckEnable="0")
-    3. SWM_CheckSignInfo → Lee signinfo y verifica hashes SHA-256
-       - Si el header (primeros 60 bytes) está en CEROS → OMITE verificación
-       - Si tiene string de versión (e.g. "500R020C00SPC270B520") → VERIFICA
-    4. SWM_UpgradeCheckXmlProc → Procesa checks individuales del hardware
+  Cadena de error (libhw_web_dll.so → libhw_swm_dll.so):
+    HW_WEB_SetUploadFail → "Upload operation fail! FileType:%s"
+    HW_SWM_UploadFailSendAlarm → envía AlarmID 104058
+    HW_SWM_GetAlarmIDByLoadErrCode → mapea código de error → AlarmID
 
-================================================================================
-SOLUCIÓN APLICADA
-================================================================================
+  Causa raíz #1 — Formato binario HWNP incorrecto:
+    El empaquetado usaba alineación de 4 bytes entre secciones, pero el
+    formato HWNP empaqueta secciones de forma CONTINUA sin padding.
+    headLen = 0x128 + num*360 - 4 (datos empiezan 4 bytes antes del fin
+    de la tabla de descriptores).
 
-  Se aplican 3 correcciones simultáneas:
+  Causa raíz #2 — ItemCRC en ceros:
+    ItemCRC = CRC32(file[storedOffset : storedOffset + dataSize])
+    El firmware construido tenía ItemCRC = 0x00000000 en todas las secciones.
+    SWM_CheckItemHeadCrc compara el CRC almacenado vs el computado → FALLO.
 
-  1. Product IDs: Se agrega "43ED" al inicio de la lista
-     Resultado: 43ED|164C|15AD|;E8C|COMMON|CHINA|CMCC|
+  Causa raíz #3 — signinfo vs signinfo_v5:
+    flash:signinfo → código SWM estándar → SIEMPRE verifica firmas CMS
+    file:/var/signinfo → código SWM estándar → SIEMPRE verifica hashes SHA-256
+    file:/var/signinfo_v5 → código v5 → permite bypass con header zeroed
 
-  2. UpgradeCheck.xml: Se desactivan los 10 checks de hardware
-     HardVerCheck, ProductIdCheck, LswChipCheck, WifiChipCheck,
-     VoiceChipCheck, UsbChipCheck, OpticalCheck, OtherChipCheck,
-     ProgramCheck, CfgCheck — todos CheckEnable="0"
-
-  3. signinfo: Se aplica el "bypass v2" (igual que v2.bin)
-     - Se ponen en CEROS los primeros 60 bytes del header de signinfo
-     - Se actualizan los hashes SHA-256 de las secciones modificadas
-     → SWM_CheckSignInfo ve header en ceros → OMITE verificación
-     → Esto es lo que hace v2.bin con su sección "signinfo_v5"
-
-  4. HeadCRC: Se recalcula CRC32(file[0x0C:EOF]) con polinomio 0xEDB88320
-     Almacenado como LE uint32 en offset 0x08
+    v2.bin usa signinfo_v5 (con magic "whwh" + ceros) → FUNCIONA
+    Los demás usan signinfo (con versión activa) → NO se puede bypasear
 
 ================================================================================
-COMPARACIÓN: v2.bin (FUNCIONA) vs COMMON-OK original (FALLA)
+FORMATO HWNP (Ingeniería inversa completa)
 ================================================================================
 
-  v2.bin (1.8MB, signinfo_v5):
-    - signinfo_v5: Header en CEROS → verificación OMITIDA ✓
-    - UpgradeCheck: 10 checks, 0 activos ✓
-    - Product IDs: 120|130|...431|2D7|2D7D|2D7D.A|
-    - No contiene 43ED, pero funciona porque ProductIdCheck="0"
+  Offset   Campo          Codificación
+  ──────   ─────          ────────────
+  0x00     Magic          "HWNP" (4 bytes)
+  0x04     PayloadSize    Big-endian uint32 = total_size - 76
+  0x08     HeadCRC        Little-endian uint32 = CRC32(file[0x0C:EOF])
+  0x0C     HeadLen        Little-endian uint32 = 0x128 + num*360 - 4
+  0x10     FileCRC        Little-endian uint32 (para particiones flash)
+  0x14     ItemNum        Little-endian uint32 (byte bajo = número de secciones)
+  0x18     Version        Little-endian uint32 = 0x01000000
+  0x1C     DescSize       Little-endian uint32 = 360
+  0x20     Reserved       Little-endian uint32 = 0
+  0x24     ProductIDs     ASCII null-terminated, separado por "|" (260 bytes max)
+  0x128    Descriptores   360 bytes × num secciones
+  headLen  Datos          Empaquetados CONTINUAMENTE (sin padding de alineación)
 
-  COMMON-OK original (21KB, signinfo):
-    - signinfo: Header = "500R020C00SPC270B520 | SIGNINFO" → verificación ACTIVA
-    - UpgradeCheck: 10 checks, 10 activos
-    - Cualquier modificación invalida los hashes → FALLO
+  Descriptor de sección (360 bytes):
+  ──────────────────────────────────
+  [0x00] ItemCRC       LE uint32 = CRC32(file[storedOffset : storedOffset+size])
+  [0x04] StoredOffset  LE uint32 = headLen + suma_tamaños_previos
+  [0x08] DataSize      LE uint32
+  [0x0C] Path          ASCII null-terminated (256 bytes)
+                       "file:/var/..." = archivo temporal en RAM
+                       "flash:..." = partición de flash
+  [0x10C] Label        ASCII null-terminated (92 bytes)
 
-  COMMON-OK corregido (21KB):
-    - signinfo: Header en CEROS → verificación OMITIDA ✓
-    - Hashes SHA-256 actualizados como respaldo
-    - UpgradeCheck: 10 checks, 0 activos ✓
-    - Product IDs: 43ED|164C|15AD|;E8C|COMMON|CHINA|CMCC| ✓
-    - HeadCRC recalculado ✓
+  Nota: headLen = desc_region_end - 4, por lo que los datos de la primera
+  sección empiezan 4 bytes ANTES del fin de la tabla de descriptores.
+
+================================================================================
+SOLUCIÓN APLICADA (3 correcciones)
+================================================================================
+
+  1. Empaquetado continuo sin alineación:
+     Los datos de cada sección se colocan inmediatamente después de la anterior.
+     storedOffset[n] = storedOffset[n-1] + dataSize[n-1]
+
+  2. ItemCRC correcto para cada sección:
+     ItemCRC = CRC32(file[storedOffset : storedOffset + dataSize])
+     Calculado DESPUÉS de escribir los datos (incluye datos overlapeados).
+
+  3. signinfo → signinfo_v5 (bypass de verificación):
+     - Path cambiado de "flash:signinfo" / "file:/var/signinfo" a
+       "file:/var/signinfo_v5"
+     - Magic "whwh" preservado (bytes 0-3)
+     - Header de versión zeroed (bytes 4-59)
+     - SWM_ProcSignInfoItem reconoce el formato v5 y permite bypass
+
+  4. Product IDs: 43ED agregado al inicio (para HG8145V5-12)
+     Incluye todos los IDs de v2.bin + IDs COMMON originales
+
+  5. UpgradeCheck.xml: 10 checks desactivados (CheckEnable="0")
+     Copiado directamente de v2.bin (ya tiene todos desactivados)
+
+  6. HeadCRC: Recalculado CRC32(file[0x0C:EOF])
 
 ================================================================================
 ARCHIVOS GENERADOS
 ================================================================================
 
-  HG8145V5-12-COMMON-OK.bin   (21,026 bytes)
-    Base: HG8145v5-COMMON-OK.bin (General/Firmware)
-    Función: Configuración genérica + desbloqueo
-    Secciones: UpgradeCheck.xml, signinfo, dealosgfile.sh
+  HG8145V5-12-COMMON-OK.bin   (16,356 bytes)
+    Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-OK (dealosgfile.sh)
+    Función: Restaurar modo hardware + reboot
 
-  HG8145V5-12-COMMON-PRE.bin  (200,027 bytes)
-    Base: HG8145V5-COMMON-PRE.bin (Claro-RD/Unlock)
-    Función: Pre-configuración + modificación de region
-    Secciones: UpgradeCheck.xml, signinfo, y múltiples configs/scripts
+  HG8145V5-12-COMMON-PRE.bin  (195,357 bytes)
+    Base: v2.bin (UpgradeCheck + signinfo_v5) + COMMON-PRE (hw_ctree.xml + script)
+    Función: Reemplazar configuración de región/ISP
 
-  HG8145V5-12-XPON.bin        (22,038 bytes)
-    Base: HG8145V5-XPON.bin (General/Conversion)
-    Función: Conversión GPON→EPON o EPON→GPON
-    Secciones: UpgradeCheck.xml, signinfo, dealosgfile.sh
+  HG8145V5-12-XPON.bin        (17,368 bytes)
+    Base: v2.bin (UpgradeCheck + signinfo_v5) + XPON (dealosgfile.sh)
+    Función: Conversión GPON↔EPON (modifica hw_boardinfo obj 0x00000001)
+
+  HG8145V5-12-FULL.bin        (50,233,629 bytes / 47.9 MB)
+    Base: HG8145V5-.bin (firmware completo con uboot+kernel+rootfs)
+    Modificaciones: PIDs + checks + flash:signinfo → file:/var/signinfo_v5
+    Función: Firmware completo con uboot, kernel, rootfs, plugins
 
 ================================================================================
-ROOTFS Y BIBLIOTECAS DE ACTUALIZACIÓN (Análisis Capstone ARM)
+ROOTFS Y CADENA DE VERIFICACIÓN (Análisis Capstone ARM)
 ================================================================================
 
-  Rootfs extraído: 39.6 MB SquashFS (offset 0x8E dentro de la sección rootfs)
+  Rootfs: 39.6 MB SquashFS
 
-  Binario principal: /bin/mu (SWM upgrade manager)
+  libhw_swm_dll.so (387 KB) — funciones de verificación:
+    SWM_CheckPacketHead    — Valida HWNP header + HeadCRC
+    SWM_CalHeadCRC         — CRC32(data[0x0C:EOF]), poly 0xEDB88320
+    SWM_CheckPdtID         — Compara Product IDs (bypass si CheckEnable="0")
+    SWM_CheckItemHeadCrc   — Compara ItemCRC almacenado vs computado
+    SWM_CheckAllItemCrc    — Itera todas las secciones, verifica ItemCRC
+    SWM_ProcSignInfoItem   — Procesa signinfo: distingue v5 vs estándar
+    SWM_CheckSignInfo      — Verifica signinfo estándar (hashes SHA-256 + CMS)
+    SWM_UpgradeCheckXmlProc — Procesa flags CheckEnable del XML
+    HW_SWM_UploadFailSendAlarm — Envía AlarmID 104058 en caso de fallo
 
-  libhw_swm_dll.so (387 KB):
-    SWM_CheckPacketHead   — Valida HWNP header + CRC
-    SWM_CalHeadCRC        — CRC32(data[0x0C:EOF]), poly 0xEDB88320
-    SWM_CheckPdtID        — Compara Product ID del dispositivo vs lista
-    SWM_CheckSignInfo     — Verifica signinfo: header + hashes SHA-256
-    SWM_Sig_CheckAllItemHash  — Itera y verifica hash de cada sección
-    SWM_UpgradeCheckXmlProc   — Procesa flags CheckEnable del XML
+  libhw_web_dll.so — interfaz web:
+    HW_WEB_SetUploadFail — "Upload operation fail! FileType:%s"
 
-  libhw_swm.so (137 KB):
-    HW_SWM_GetSigCheckFlag — Retorna flag que controla verificación de signinfo
-    Usa una tabla de función de callbacks en offset [r3, #0x44]
+  /etc/wap/alarminfo — definiciones de alarmas:
+    104058|Upgrade Software Fail|Upgrade software failed.
 
-  libap_upgrade.so (38 KB):
-    Funciones de alto nivel para el proceso de actualización
-
-  libhw_smp_sign.so:
-    SWM_Sig_VerifySignature — Verificación RSA/CMS de firmas
-    SWM_Sig_CmsCheckEx — Verificación CMS extendida
+  Strings en .rodata de libhw_swm_dll.so:
+    '/var/signinfo_v5' → código v5 (bypass permitido)
+    '/var/signinfo'    → código estándar (verifica siempre)
+    'signinfo'         → keyword de detección
+    "****No need to check CRC****" → skip CRC para secciones file:
 
 ================================================================================
 EDITOR DE FIRMWARE (tools/firmware-editor/)
 ================================================================================
 
-  Aplicación Windows (.exe) con interfaz tkinter para editar firmware HWNP:
-  - Editar Product IDs (agregar, eliminar, reordenar)
+  Aplicación Windows (.exe) con interfaz tkinter:
+  - Editar Product IDs
   - Toggle de checks en UpgradeCheck.xml
-  - Editar shell scripts (.sh) embebidos
+  - Editar shell scripts embebidos
   - Ver hex dump de secciones binarias
-  - Al guardar: aplica fix de signinfo + recalcula CRC automáticamente
-  
+  - Al guardar:
+    1. Renombra signinfo → signinfo_v5 con magic "whwh" + header zeroed
+    2. Recalcula ItemCRC = CRC32(file[storedOff:storedOff+size]) para cada sección
+    3. Recalcula HeadCRC = CRC32(file[0x0C:])
+
   Construir: pip install pyinstaller && pyinstaller firmware_editor.py --onefile

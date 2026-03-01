@@ -21,7 +21,6 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 import struct
 import binascii
-import hashlib
 import os
 import re
 import sys
@@ -99,9 +98,8 @@ class HWNPFirmware:
         self.computed_crc = crc32(bytes(data[0x0C:]))
         self.crc_valid = self.computed_crc == self.head_crc
 
-        # Parse sections
+        # Parse sections — data is packed continuously from head_len
         self.sections = []
-        data_offset = SECT_DESC_START + self.item_num * SECT_DESC_SIZE
 
         for i in range(self.item_num):
             desc_off = SECT_DESC_START + i * SECT_DESC_SIZE
@@ -121,11 +119,11 @@ class HWNPFirmware:
             label_end = label_bytes.index(0) if 0 in label_bytes else 92
             label = label_bytes[:label_end].decode("ascii", errors="replace")
 
-            # Section data
-            sect_data = bytes(data[data_offset:data_offset + data_size])
+            # Section data at stored_offset (continuous packing, no alignment)
+            sect_data = bytes(data[stored_offset:stored_offset + data_size])
 
             # Determine content type
-            file_name = path.replace("file:", "")
+            file_name = path.replace("file:", "").replace("flash:", "")
             content_type = "binary"
             text_content = None
 
@@ -155,14 +153,10 @@ class HWNPFirmware:
 
             self.sections.append(HWNPSection(
                 index=i, item_crc=item_crc, stored_offset=stored_offset,
-                data_offset=data_offset, data_size=data_size, path=path,
+                data_offset=stored_offset, data_size=data_size, path=path,
                 label=label, data=sect_data, content_type=content_type,
                 text_content=text_content, desc_raw=desc_raw
             ))
-
-            data_offset += data_size
-            if data_offset % 4 != 0:
-                data_offset += 4 - (data_offset % 4)
 
     def set_product_ids(self, ids):
         """Update product IDs in the raw buffer."""
@@ -195,41 +189,51 @@ class HWNPFirmware:
                 pass
 
     def fix_signinfo(self):
-        """Zero signinfo header and update section hashes.
+        """Fix signinfo for successful upgrade.
 
-        The signinfo section contains SHA-256 hashes of other sections and
-        a header string (e.g. "500R020C00SPC270B520 | SIGNINFO").
-        If the header is non-zero, the router verifies every hash.
-        Zeroing the first 60 bytes disables signature checking
-        (same approach used by the working v2.bin / signinfo_v5 format).
-        We also update the hash entries as a belt-and-suspenders measure.
+        Two strategies depending on section path:
+        - flash:signinfo → rename path to file:/var/signinfo_v5, zero bytes 4-59
+        - file:/var/signinfo → rename path to file:/var/signinfo_v5, zero bytes 4-59
+        - file:/var/signinfo_v5 → already v5 format, ensure bytes 4-59 are zero
+
+        The v5 code path (SWM_ProcSignInfoItem) in libhw_swm_dll.so allows
+        bypass when the version header (bytes 4-59) is zeroed. The 'whwh'
+        magic (bytes 0-3) is preserved as it identifies the v5 format.
         """
         for section in self.sections:
             if "signinfo" not in section.path:
                 continue
 
-            sig_off = section.data_offset
+            sig_off = section.stored_offset
             sig_size = section.data_size
 
-            # Zero the header (first 60 bytes) → bypass signature check
-            self.raw[sig_off:sig_off + 60] = b"\x00" * 60
+            # Rename path to signinfo_v5 if needed
+            if section.path != "file:/var/signinfo_v5":
+                desc_off = SECT_DESC_START + section.index * SECT_DESC_SIZE
+                new_path = "file:/var/signinfo_v5"
+                self.raw[desc_off + 12:desc_off + 12 + 256] = b"\x00" * 256
+                self.raw[desc_off + 12:desc_off + 12 + len(new_path)] = new_path.encode("ascii")
+                section.path = new_path
 
-            # Update hash entries for modified sections
-            sig_text = self.raw[sig_off:sig_off + sig_size].decode("ascii", errors="replace")
-            for m in re.finditer(r"([0-9a-f]{64})\s+(/[^\n]+)", sig_text):
-                file_path = m.group(2).strip()
-                for sec in self.sections:
-                    dest = sec.path.replace("file:", "")
-                    if dest == file_path:
-                        new_hash = hashlib.sha256(
-                            bytes(self.raw[sec.data_offset:sec.data_offset + sec.data_size])
-                        ).hexdigest()
-                        start = sig_off + m.start(1)
-                        self.raw[start:start + 64] = new_hash.encode("ascii")
-                        break
+            # Ensure whwh magic is present, zero version header (bytes 4-59)
+            self.raw[sig_off:sig_off + 4] = b"whwh"
+            self.raw[sig_off + 4:sig_off + 60] = b"\x00" * 56
 
             section.data = bytes(self.raw[sig_off:sig_off + sig_size])
             break
+
+    def recalculate_item_crcs(self):
+        """Recalculate ItemCRC for each section.
+
+        ItemCRC = CRC32(file[storedOffset : storedOffset + dataSize])
+        """
+        for section in self.sections:
+            desc_off = SECT_DESC_START + section.index * SECT_DESC_SIZE
+            soff = section.stored_offset
+            sz = section.data_size
+            new_crc = crc32(bytes(self.raw[soff:soff + sz]))
+            struct.pack_into("<I", self.raw, desc_off, new_crc)
+            section.item_crc = new_crc
 
     def recalculate_crc(self):
         """Recalculate and update HeadCRC."""
@@ -242,6 +246,7 @@ class HWNPFirmware:
     def save(self, output_path):
         """Save the modified firmware to a file."""
         self.fix_signinfo()
+        self.recalculate_item_crcs()
         self.recalculate_crc()
         with open(output_path, "wb") as f:
             f.write(self.raw)
